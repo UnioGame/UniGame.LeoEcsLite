@@ -42,6 +42,12 @@ namespace UniGame.LeoEcs.Converter.Runtime
             world.ApplyEcsComponents(entity,converters,cancellationToken);
         }
 
+        public T GetConverter<T>() where T :class, IComponentConverter
+        {
+            var converter = converters.FirstOrDefault(x => x.Value is T);
+            return converter?.Value as T;
+        }
+        
         protected virtual void OnApply(EcsWorld world, int entity, CancellationToken cancellationToken = default)
         {
             
