@@ -30,6 +30,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         [Space(8)]
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
+        [InlineEditor()]
         public List<LeoEcsConverterAsset> assetConverters = new List<LeoEcsConverterAsset>();
 
         [Space] 

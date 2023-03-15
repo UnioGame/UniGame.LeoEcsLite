@@ -18,7 +18,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
         /// </summary>
         public static List<ILeoEcsMonoComponentConverter> DefaultGameObjectConverters = new List<ILeoEcsMonoComponentConverter>()
         {
-            new BaseGameObjectComponentConverter()
+            new BaseGameObjectComponentConverter(),
         };
 
         public static void ApplyEcsComponents(this GameObject target, 
