@@ -52,12 +52,18 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         public async UniTask InitializeFeatureAsync(EcsSystems ecsSystems)
         {
             if (!IsFeatureEnabled) return;
-            
+
             foreach (var featureAsset in nestedFeatures)
+            {
+                if(!featureAsset.IsFeatureEnabled) continue; 
                 await featureAsset.InitializeFeatureAsync(ecsSystems);
+            }
 
             foreach (var ecsFeature in serializableFeatures)
+            {
+                if(!ecsFeature.IsFeatureEnabled) continue; 
                 await ecsFeature.InitializeFeatureAsync(ecsSystems);
+            }
 
             await OnInitializeFeatureAsync(ecsSystems);
         }
