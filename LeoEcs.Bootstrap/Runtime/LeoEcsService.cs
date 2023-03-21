@@ -4,12 +4,16 @@ using UniModules.UniGame.Core.Runtime.DataFlow.Extensions;
 
 namespace UniGame.LeoEcs.Bootstrap.Runtime
 {
+    using System;
     using System.Collections.Generic;
+    using System.Threading;
     using Abstract;
     using Config;
     using Converter.Runtime;
+    using Core.Runtime.Extension;
     using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
+    using UniModules.UniCore.Runtime.DataFlow;
     using Object = UnityEngine.Object;
 
     public class LeoEcsService : GameService,ILeoEcsService
@@ -18,6 +22,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
         private readonly IEcsExecutorFactory _ecsExecutorFactory;
         private readonly IEnumerable<ISystemsPlugin> _plugins;
         private readonly bool _ownThisWorld;
+        private readonly float _featureTimeout;
         private readonly Dictionary<string, EcsSystems> _systemsMap;
         private readonly Dictionary<string, ILeoEcsExecutor> _systemsExecutors;
 
@@ -33,7 +38,8 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
             ILeoEcsSystemsConfig config,
             IEcsExecutorFactory ecsExecutorFactory, 
             IEnumerable<ISystemsPlugin> plugins,
-            bool ownThisWorld)
+            bool ownThisWorld,
+            float featureTimeout)
         {
             _systemsMap = new Dictionary<string, EcsSystems>(8);
             _systemsExecutors = new Dictionary<string, ILeoEcsExecutor>(8);
@@ -45,6 +51,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
             _ecsExecutorFactory = ecsExecutorFactory;
             _plugins = plugins;
             _ownThisWorld = ownThisWorld;
+            _featureTimeout = featureTimeout;
 
             LifeTime.AddCleanUpAction(CleanUp);
         }
@@ -137,8 +144,13 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
             {
                 if (!feature.IsFeatureEnabled) continue;
 
-                if (feature is ILeoEcsInitializableFeature initializableFeature)
-                    await initializableFeature.InitializeFeatureAsync(ecsSystems);
+                if (feature is ILeoEcsInitializableFeature initializeFeature)
+                {
+                    var featureLifeTime = new LifeTimeDefinition();
+                    await initializeFeature.InitializeFeatureAsync(ecsSystems)
+                        .AttachTimeoutLogAsync(GetErrorMessage(initializeFeature),_featureTimeout,featureLifeTime.TokenSource);
+                    featureLifeTime.Terminate();
+                }
 
                 foreach (var system in feature.EcsSystems)
                 {
@@ -151,14 +163,26 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
                         leoEcsSystem = systemAsset as IEcsSystem;
                     }
 
-                    if (leoEcsSystem is ILeoEcsInitializableFeature configureAsyncSystem)
+                    if (leoEcsSystem is ILeoEcsInitializableFeature initFeature)
                     {
-                        await configureAsyncSystem.InitializeFeatureAsync(ecsSystems);
+                        var featureLifeTime = new LifeTimeDefinition();
+                        await initFeature.InitializeFeatureAsync(ecsSystems)
+                            .AttachTimeoutLogAsync(GetErrorMessage(initFeature),_featureTimeout,featureLifeTime.TokenSource);
+                        featureLifeTime.Terminate();
                     }
 
                     ecsSystems.Add(leoEcsSystem);
                 }
             }
+        }
+
+        private string GetErrorMessage(ILeoEcsInitializableFeature feature)
+        {
+            var featureName = feature is ILeoEcsFeature ecsFeature
+                ? ecsFeature.FeatureName
+                : feature.GetType().Name;
+            
+            return $"ECS Feature Timeout Error for {featureName}";
         }
     }
 }

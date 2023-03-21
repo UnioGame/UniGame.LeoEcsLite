@@ -18,6 +18,12 @@
     {
         #region inspector
 
+        /// <summary>
+        /// timeout in ms for feature initialization
+        /// </summary>
+        [Tooltip("timeout in ms for feature initialization")]
+        public float featureTimeout = 20000f;
+
         [InlineEditor] 
         public LeoEcsFeaturesConfiguration ecsConfiguration;
 
@@ -62,7 +68,9 @@
             
             var ecsService = new LeoEcsService(context,world, 
                 config,
-                this, plugins,true);
+                this, 
+                plugins,
+                true,featureTimeout);
 
             //start ecs service update
             await ecsService.InitializeAsync();
