@@ -62,6 +62,7 @@
         {
             new CheckEditorStatusFilter(),
             new CheckEcsWorldStatusFilter(),
+            new IdEntitiesFilter(),
             new FilterEntitiesComponents(),
         };
 

@@ -8,6 +8,7 @@
     using Leopotam.EcsLite;
     using Runtime.ObjectPool.Extensions;
 
+
     [Serializable]
     public class FilterEntitiesComponents : IEcsWorldSearchFilter
     {
