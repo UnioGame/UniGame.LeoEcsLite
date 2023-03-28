@@ -8,7 +8,50 @@
     using UniModules.UniGame.UISystem.Runtime.WindowStackControllers.Abstract;
     using Unity.IL2CPP.CompilerServices;
     using ViewType = UniModules.UniGame.UiSystem.Runtime.ViewType;
+    
+    /// <summary>
+    /// await target event and create view
+    /// </summary>
+    [Il2CppSetOption(Option.NullChecks, false)]
+    [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+    [Il2CppSetOption(Option.DivideByZeroChecks, false)]
+    [Serializable]
+    public class ShowSingleLayoutViewWhen<TEvent,TView> : IEcsInitSystem, IEcsRunSystem
+        where TEvent : struct
+        where TView : IView
+    {
+        private ViewType _viewLayoutType;
+        
+        private EcsWorld _world;
+        private EcsFilter _eventFilter;
 
+        public ShowSingleLayoutViewWhen(ViewType viewLayoutType = ViewType.Window)
+        {
+            _viewLayoutType = viewLayoutType;
+        }
+        
+        public void Init(EcsSystems systems)
+        {
+            _world = systems.GetWorld();
+            _eventFilter = _world.Filter<TEvent>()
+                .Exc<SingleViewMarkerComponent<TView>>()
+                .End();
+        }
+
+        public void Run(EcsSystems systems)
+        {
+            foreach (var eventEntity in _eventFilter)
+            {
+                var requestEntity = _world.NewEntity();
+                ref var requestComponent = ref _world.AddComponent<CreateLayoutViewRequest>(requestEntity);
+                ref var markerComponent = ref _world.AddComponent<SingleViewMarkerComponent<TView>>(eventEntity);
+
+                requestComponent.Type = typeof(TView);
+                requestComponent.LayoutType = _viewLayoutType;
+            }
+        }
+    }
+            
     /// <summary>
     /// await target event and create view
     /// </summary>

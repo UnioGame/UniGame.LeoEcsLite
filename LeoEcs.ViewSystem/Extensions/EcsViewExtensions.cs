@@ -16,14 +16,20 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
     {
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static EcsFilter ViewFilter<TModel>(this EcsWorld world)
+        public static EcsWorld.Mask ViewFilter<TModel>(this EcsWorld world)
             where TModel : IViewModel
         {
             return world
                 .Filter<ViewModelComponent>()
                 .Inc<ViewDataComponent<TModel>>()
-                .Inc<ViewInitializedComponent>()
-                .End();
+                .Inc<ViewInitializedComponent>();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static EcsFilter CreateViewFilter<TModel>(this EcsWorld world)
+            where TModel : IViewModel
+        {
+            return world.ViewFilter<TModel>().End();
         }
         
         public static void MakeChildViewRequest(this IEcsView view, Type viewType,
@@ -34,7 +40,20 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
         {
             
         }
-
+        
+        /// <summary>
+        /// Show view and mark entity forbidden for same view
+        /// </summary>
+        public static EcsSystems ShowSingleViewWhen<TEvent, TView>(
+            this EcsSystems systems,
+            ViewType layoutType = ViewType.Window)
+            where TEvent : struct
+            where TView : IView
+        {
+            systems.Add(new ShowSingleLayoutViewWhen<TEvent, TView>(layoutType));
+            return systems;
+        } 
+            
         public static EcsSystems ShowViewWhen<TView>(
             this EcsSystems systems,
             EcsFilter filter,

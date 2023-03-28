@@ -77,6 +77,16 @@ namespace UniGame.LeoEcs.Shared.Extensions
             pool.Del(entity);
             return true;
         }
+        
+#if ENABLE_IL2CPP
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static void RemoveComponent<TComponent>(this EcsWorld world, int entity)
+            where TComponent : struct
+        {
+            var pool = world.GetPool<TComponent>();
+            pool.Del(entity);
+        }
 
 #if ENABLE_IL2CPP
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
