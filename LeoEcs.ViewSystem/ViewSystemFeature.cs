@@ -34,6 +34,7 @@ namespace UniGame.LeoEcs.ViewSystem
             ecsSystems.Add(new ViewUpdateStatusSystem());
             ecsSystems.Add(new CreateViewSystem(context,viewSystem,_ecsViewTools));
             ecsSystems.Add(new InitializeViewsSystem(_ecsViewTools));
+            ecsSystems.Add(new InitializeModelOfViewsSystem());
             ecsSystems.Add(new RemoveUpdateRequest());
             
             ecsSystems.DelHere<CreateViewRequest>();
