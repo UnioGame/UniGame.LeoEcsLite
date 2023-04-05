@@ -10,9 +10,8 @@
 
     [RequireComponent(typeof(LeoEcsMonoConverter))]
     [RequireComponent(typeof(EcsViewConverter))]
-    public abstract class EcsCanvasGroupView<TViewModel> 
-        : UiCanvasGroupView<TViewModel>,ILeoEcsComponentConverter,IEcsView
-        where TViewModel : class, IViewModel, new()
+    public abstract class EcsCanvasGroupView<TViewModel> : UiCanvasGroupView<TViewModel>,ILeoEcsComponentConverter,IEcsView
+        where TViewModel : class, IViewModel
     {
         private EcsViewDataConverter<TViewModel> _dataConverter = new EcsViewDataConverter<TViewModel>();
         
