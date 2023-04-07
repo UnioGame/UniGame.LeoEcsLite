@@ -37,8 +37,9 @@ namespace UniGame.LeoEcs.Converter.Runtime
                 if (converter == null)
                     Debug.LogError($"ECS CONVERTER: Converter == null FOR GameObject {target} is NULL | ENTITY {entityId}",target);
 #endif
-                if(converter is ILeoEcsConverterStatus converterStatus && !converterStatus.IsEnabled)
+                if(converter is ILeoEcsConverterStatus {IsEnabled: false})
                     continue;
+                
                 converter.Apply(target, world, entityId, cancellationToken);
             }
         }

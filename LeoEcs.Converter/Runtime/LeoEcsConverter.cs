@@ -16,6 +16,8 @@
         private bool _isEnabled = true;
 
         public virtual bool IsEnabled => _isEnabled;
+
+        public bool IsRuntime => Application.isPlaying;
         
         public abstract void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default);
         
