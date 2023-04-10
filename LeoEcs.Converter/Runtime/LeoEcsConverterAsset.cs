@@ -42,7 +42,18 @@ namespace UniGame.LeoEcs.Converter.Runtime
             world.ApplyEcsComponents(entity,converters,cancellationToken);
         }
 
-        public T GetConverter<T>() where T :class, IComponentConverter
+        public T GetOrAddConverter<T>() where T : class, IComponentConverter,new()
+        {
+            var converter = GetConverter<T>();
+            if (converter != null) return converter;
+            converter = new T();
+            var converterValue = new ComponentConverterValue();
+            converterValue.converter = converter;
+            converters.Add(converterValue);
+            return converter;
+        }
+        
+        public T GetConverter<T>() where T : class, IComponentConverter
         {
             var converter = converters.FirstOrDefault(x => x.Value is T);
             return converter?.Value as T;
