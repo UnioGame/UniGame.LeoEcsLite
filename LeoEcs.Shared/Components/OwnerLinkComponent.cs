@@ -23,4 +23,10 @@ namespace UniGame.LeoEcs.Shared.Components
     {
         public EcsPackedEntity Entity;
     }
+    
+    [Serializable]
+    public struct ValueLinkComponent<T>
+    {
+        public T Value;
+    }
 }
