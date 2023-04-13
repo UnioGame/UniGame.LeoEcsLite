@@ -183,8 +183,11 @@ namespace UniGame.LeoEcs.Converter.Runtime
             }
             foreach (var converter in assetConverters)
             {
-                if(converter is ILeoEcsGizmosDrawer gizmosDrawer)
-                    gizmosDrawer.DrawGizmos(gameObject);
+                foreach (var converterValue in converter.converters)
+                {
+                    if(converterValue.Value is ILeoEcsGizmosDrawer gizmosDrawer)
+                        gizmosDrawer.DrawGizmos(gameObject);
+                }
             }
         }
 

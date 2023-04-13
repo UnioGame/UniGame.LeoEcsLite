@@ -33,6 +33,7 @@ namespace UniGame.LeoEcs.Shared.Extensions
             return false;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref TComponent GetComponent<TComponent>(this EcsWorld world, int entity)
             where TComponent : struct
         {
