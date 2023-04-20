@@ -14,11 +14,14 @@
             entities = Array.Empty<int>();
             
             world.GetAllEntities(ref entities);
+            var isEmptyFilter = string.IsNullOrEmpty(filterData.filter);
+            
             foreach (var entity in entities)
             {
                 var idValue = entity.ToStringFromCache();
-                if(!idValue.Contains(filterData.filter,StringComparison.OrdinalIgnoreCase))
-                    continue;
+                var isValid = isEmptyFilter || idValue.Contains(filterData.filter, StringComparison.OrdinalIgnoreCase);
+                if(!isValid) continue;
+                
                 filterData.entities.Add(entity);
             }
 
