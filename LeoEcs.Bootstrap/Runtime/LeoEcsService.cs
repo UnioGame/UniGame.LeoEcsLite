@@ -148,7 +148,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
                 {
                     var featureLifeTime = new LifeTimeDefinition();
                     await initializeFeature.InitializeFeatureAsync(ecsSystems)
-                        .AttachTimeoutLogAsync(GetErrorMessage(initializeFeature),_featureTimeout,featureLifeTime.TokenSource);
+                        .AttachTimeoutLogAsync(GetErrorMessage(initializeFeature),_featureTimeout,featureLifeTime.CancellationToken);
                     featureLifeTime.Terminate();
                 }
 
@@ -167,7 +167,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
                     {
                         var featureLifeTime = new LifeTimeDefinition();
                         await initFeature.InitializeFeatureAsync(ecsSystems)
-                            .AttachTimeoutLogAsync(GetErrorMessage(initFeature),_featureTimeout,featureLifeTime.TokenSource);
+                            .AttachTimeoutLogAsync(GetErrorMessage(initFeature),_featureTimeout,featureLifeTime.CancellationToken);
                         featureLifeTime.Terminate();
                     }
 

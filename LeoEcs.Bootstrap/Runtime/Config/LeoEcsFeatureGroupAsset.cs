@@ -17,6 +17,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
     {
         #region inspector
 
+        
         [HideLabel]
         [InlineProperty]
         public LeoEcsSystemsGroupConfiguration groupConfiguration = new LeoEcsSystemsGroupConfiguration();

@@ -55,7 +55,7 @@
                 if (view.IsInitialized.Value) continue;
                 
                 _viewTools.AddModelComponentAsync(_world, packedEntity, view, viewType)
-                    .AttachExternalCancellation(_viewTools.LifeTime.TokenSource)
+                    .AttachExternalCancellation(_viewTools.LifeTime.CancellationToken)
                     .Forget();
             }
         }

@@ -55,7 +55,7 @@
             if (!converter.IsEnabled)
                 return UniTask.CompletedTask;
             
-            converter.Apply(world,entity,LifeTime.TokenSource);
+            converter.Apply(world,entity,LifeTime.CancellationToken);
             
             return UniTask.CompletedTask;
         }
