@@ -44,7 +44,7 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
         /// <summary>
         /// Show view and mark entity forbidden for same view
         /// </summary>
-        public static EcsSystems ShowOnSingle<TEvent, TView>(
+        public static EcsSystems ShowSingleOn<TEvent, TView>(
             this EcsSystems systems,
             ViewType layoutType = ViewType.Window)
             where TEvent : struct
