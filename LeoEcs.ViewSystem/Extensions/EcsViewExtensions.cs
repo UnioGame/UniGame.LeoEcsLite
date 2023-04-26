@@ -44,7 +44,7 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
         /// <summary>
         /// Show view and mark entity forbidden for same view
         /// </summary>
-        public static EcsSystems ShowSingleViewWhen<TEvent, TView>(
+        public static EcsSystems ShowOnSingle<TEvent, TView>(
             this EcsSystems systems,
             ViewType layoutType = ViewType.Window)
             where TEvent : struct
@@ -54,7 +54,7 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             return systems;
         } 
             
-        public static EcsSystems ShowViewWhen<TView>(
+        public static EcsSystems ShowOn<TView>(
             this EcsSystems systems,
             EcsFilter filter,
             ViewType layoutType = ViewType.Window)
@@ -64,7 +64,7 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             return systems;
         }
         
-        public static EcsSystems ShowViewWhen<TEvent, TView>(
+        public static EcsSystems ShowOn<TEvent, TView>(
             this EcsSystems systems,
             ViewType layoutType = ViewType.Window)
             where TEvent : struct
@@ -75,7 +75,7 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
         }
 
         
-        public static EcsSystems ShowViewWhen<TComponent1,TComponent2, TView>(
+        public static EcsSystems ShowOn<TComponent1,TComponent2, TView>(
             this EcsSystems systems,
             ViewType layoutType = ViewType.Window)
             where TComponent1 : struct
@@ -86,7 +86,7 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             return systems;
         }
 
-        public static EcsSystems ShowViewWhen<TView>(
+        public static EcsSystems ShowOn<TView>(
             this EcsSystems systems,
             EcsFilter filter,
             ViewRequestData viewData)
@@ -96,7 +96,7 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             return systems;
         }
         
-        public static EcsSystems ShowViewWhen<TEvent, TView>(
+        public static EcsSystems ShowOn<TEvent, TView>(
             this EcsSystems systems,
             ViewRequestData viewData)
             where TEvent : struct
@@ -106,7 +106,7 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             return systems;
         }
         
-        public static EcsSystems ShowViewWhen<TComponent1,TComponent2, TView>(
+        public static EcsSystems ShowOn<TComponent1,TComponent2, TView>(
             this EcsSystems systems,
             ViewRequestData viewData)
             where TComponent1 : struct
