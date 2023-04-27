@@ -8,13 +8,12 @@ namespace UniGame.LeoEcs.Converter.Runtime
     using Sirenix.OdinInspector;
     using UniModules.UniCore.Runtime.DataFlow;
     using UnityEngine;
-    using UnityEngine.Serialization;
 
     public class LeoEcsMonoConverter : MonoBehaviour, ILeoEcsMonoConverter
     {
         #region inspector data
 
-        public EntityState state = EntityState.None;
+        public EntityState state = EntityState.Destroyed;
         
         [SerializeField]
         public bool destroyEntityOnDisable = true;
@@ -82,7 +81,8 @@ namespace UniGame.LeoEcs.Converter.Runtime
         {
             if (IsCreated || world.IsAlive() == false) 
                 return _entityId;
-
+            
+            state = EntityState.Created;
             _world = world;
             
             ecsEntityId = gameObject.CreateEcsEntityFromGameObject(world,
@@ -90,8 +90,6 @@ namespace UniGame.LeoEcs.Converter.Runtime
                     _entityLifeTime.CancellationToken);
 
             _entityId = world.PackEntity(ecsEntityId);
-            
-            state = EntityState.Created;
             
             world.ApplyEcsComponents(ecsEntityId,assetConverters,_entityLifeTime.CancellationToken);
             
@@ -147,8 +145,12 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         private void CreateEntity()
         {
+            if (state == EntityState.Created) 
+                return;
+            
             state = EntityState.Creating;
             _entityLifeTime.Release();
+            
             Convert().Forget();
         }
 
@@ -224,7 +226,6 @@ namespace UniGame.LeoEcs.Converter.Runtime
     [Serializable]
     public enum EntityState : byte
     {
-        None,
         Creating,
         Created,
         Destroyed,
