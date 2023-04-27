@@ -14,9 +14,11 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
     using Core.Runtime;
     using Shared.Extensions;
 
+#if ENABLE_IL2CPP
     [Il2CppSetOption(Option.NullChecks, false)]
     [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
+#endif
     [Serializable]
     public class CreateViewSystem : IEcsRunSystem,IEcsInitSystem
     {

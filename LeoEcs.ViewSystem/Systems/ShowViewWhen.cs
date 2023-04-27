@@ -11,9 +11,11 @@
     /// <summary>
     /// await target event and create view
     /// </summary>
+#if ENABLE_IL2CPP
     [Il2CppSetOption(Option.NullChecks, false)]
     [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
+#endif
     [Serializable]
     public class ShowViewWhen<TView> : IEcsInitSystem, IEcsRunSystem
         where TView : IView

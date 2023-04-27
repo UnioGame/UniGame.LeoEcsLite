@@ -7,9 +7,11 @@
     using Shared.Extensions;
     using Unity.IL2CPP.CompilerServices;
 
+#if ENABLE_IL2CPP
     [Il2CppSetOption(Option.NullChecks, false)]
     [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
+#endif
     [Serializable]
     public class InitializeModelOfViewsSystem : IEcsInitSystem,IEcsRunSystem
     {

@@ -12,9 +12,11 @@
     /// <summary>
     /// await target event and create view
     /// </summary>
+#if ENABLE_IL2CPP
     [Il2CppSetOption(Option.NullChecks, false)]
     [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
+#endif
     [Serializable]
     public class ShowSingleLayoutViewWhen<TEvent,TView> : IEcsInitSystem, IEcsRunSystem
         where TEvent : struct
@@ -55,9 +57,11 @@
     /// <summary>
     /// await target event and create view
     /// </summary>
+#if ENABLE_IL2CPP
     [Il2CppSetOption(Option.NullChecks, false)]
     [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
+#endif
     [Serializable]
     public class ShowLayoutViewWhen<TEvent,TView> : IEcsInitSystem, IEcsRunSystem
         where TEvent : struct
@@ -95,9 +99,11 @@
     /// <summary>
     /// await target event and create view
     /// </summary>
+#if ENABLE_IL2CPP
     [Il2CppSetOption(Option.NullChecks, false)]
     [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
+#endif
     [Serializable]
     public class ShowLayoutViewWhen<TView> : IEcsInitSystem, IEcsRunSystem
         where TView : IView
@@ -134,9 +140,11 @@
     /// <summary>
     /// await target event and create view
     /// </summary>
+#if ENABLE_IL2CPP
     [Il2CppSetOption(Option.NullChecks, false)]
     [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
+#endif
     [Serializable]
     public class ShowLayoutViewWhen<TEvent1,TEvent2,TView> : IEcsInitSystem, IEcsRunSystem
         where TEvent1 : struct
