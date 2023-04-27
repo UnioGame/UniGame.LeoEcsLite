@@ -9,8 +9,10 @@ using Unity.IL2CPP.CompilerServices;
 
 namespace UniGame.LeoEcs.ViewSystem.Systems
 {
+    using System.Threading;
     using Behavriour;
     using Converter.Runtime;
+    using Converter.Runtime.Abstract;
     using Core.Runtime;
     using Shared.Extensions;
 
@@ -55,7 +57,7 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
             }
         }
 
-        public async UniTask<IView> CreateViewByRequest(CreateViewRequest request)
+        public async UniTask CreateViewByRequest(CreateViewRequest request)
         {
             var viewType = request.Type;
             var modelType = _viewSystem.ModelTypeMap.GetViewModelTypeByView(viewType);
@@ -74,19 +76,21 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
             };
 
             var viewObject = view.GameObject;
-            if (viewObject == null) return view;
+            if (viewObject == null) return;
 
-            var converter = viewObject.GetComponent<LeoEcsMonoConverter>();
-            if (converter == null) return view;
+            var converter = viewObject.GetComponent<ILeoEcsMonoConverter>();
+            if (converter == null) return;
             
-            var viewPackedEntity = converter.Convert(_world);
+            converter.RegisterDynamicCallback(x => ConvertView(x,model));
+        }
+
+        public void ConvertView(EcsPackedEntity viewPackedEntity,IViewModel model)
+        {
             if (!viewPackedEntity.Unpack(_world, out var viewEntity))
-                return view;
+                return;
             
             _world.GetOrAddComponent<ViewInitializedComponent>(viewEntity);
             _viewTools.AddViewModelData(_world,viewPackedEntity,model);
-            
-            return view;
         }
     }
 }

@@ -21,7 +21,8 @@ namespace UniGame.LeoEcs.Converter.Runtime
             new BaseGameObjectComponentConverter(),
         };
 
-        public static void ApplyEcsComponents(this GameObject target, 
+        public static void ApplyEcsComponents(
+            this GameObject target, 
             EcsWorld world, 
             int entityId, 
             IEnumerable<ILeoEcsComponentConverter> converterTasks,
@@ -46,8 +47,18 @@ namespace UniGame.LeoEcs.Converter.Runtime
         
         public static void ApplyEcsComponents(
             this EcsWorld world, 
+            GameObject target, 
             int entityId, 
-            IEnumerable<IComponentConverter> converterTasks,
+            IEnumerable<ILeoEcsComponentConverter> converterTasks,
+            CancellationToken cancellationToken = default)
+        {
+            ApplyEcsComponents(target,world, entityId, converterTasks, cancellationToken);
+        }
+        
+        public static void ApplyEcsComponents(
+            this EcsWorld world, 
+            int entityId, 
+            IEnumerable<IEcsComponentConverter> converterTasks,
             CancellationToken cancellationToken = default)
         {
 #if UNITY_EDITOR
@@ -70,25 +81,13 @@ namespace UniGame.LeoEcs.Converter.Runtime
                 if (targetConverter is ScriptableObject scriptableConverter)
                     targetConverter = Object.Instantiate(scriptableConverter) as IComponentConverter;
                 
-                if(targetConverter is ILeoEcsConverterStatus converterStatus && !converterStatus.IsEnabled)
+                if(targetConverter is ILeoEcsConverterStatus { IsEnabled: false })
                     continue;
                 
-                targetConverter.Apply(world, entityId, cancellationToken);
+                targetConverter?.Apply(world, entityId, cancellationToken);
             }
         }
 
-        public static int Convert(this GameObject target,EcsWorld world)
-        {
-            if (target == null)
-                return -1;
-            
-            var converter = target.GetComponent<ILeoEcsMonoConverter>();
-            var packedEntity = converter.Convert(world);
-            if (packedEntity.Unpack(world, out var resultEntity))
-                return resultEntity;
-            return -1;
-        }
-        
         public static async UniTask<int> CreateEcsEntityFromGameObject(this GameObject target, IEnumerable<ILeoEcsMonoComponentConverter> converterTasks, bool spawnInstance,
             CancellationToken cancellationToken = default)
         {
