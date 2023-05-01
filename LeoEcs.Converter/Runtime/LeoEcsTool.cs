@@ -76,6 +76,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
                 if (targetConverter == null)
                 {
                     Debug.LogError($"ECS CONVERTER: Converter == null FOR GameObject {gameObject?.name} is NULL | ENTITY {entityId}",gameObject);
+                    continue;
                 }
 #endif
                 if (targetConverter is ScriptableObject scriptableConverter)
