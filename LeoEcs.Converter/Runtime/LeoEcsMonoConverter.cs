@@ -3,11 +3,14 @@ namespace UniGame.LeoEcs.Converter.Runtime
     using System;
     using System.Collections.Generic;
     using Abstract;
+    using Components;
     using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
+    using Shared.Extensions;
     using Sirenix.OdinInspector;
     using UniModules.UniCore.Runtime.DataFlow;
     using UnityEngine;
+    using UnityEngine.Serialization;
 
     public class LeoEcsMonoConverter : MonoBehaviour, ILeoEcsMonoConverter
     {
@@ -16,7 +19,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
         [SerializeField] public bool destroyEntityOnDisable = true;
         [SerializeField] public bool createEntityOnEnabled = true;
         [SerializeField] public bool createEntityOnStart = false;
-        [SerializeField] public bool destroyEntityOnDestroy = true;
+        [SerializeField] public bool destroyOnDestroy = false;
 
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
         [Space(8)]
@@ -119,7 +122,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         private void OnDestroy()
         {
-            if (!destroyEntityOnDestroy)
+            if (!destroyOnDestroy)
                 return;
             DestroyEntity();
         }
@@ -172,6 +175,8 @@ namespace UniGame.LeoEcs.Converter.Runtime
             _dynamicComponentConverters.Clear();
             _dynamicConverters.Clear();
 
+            world.GetOrAddComponent<ObjectConverterComponent>(ecsEntityId);
+            
             return _entityId;
         }
 
@@ -212,17 +217,18 @@ namespace UniGame.LeoEcs.Converter.Runtime
             //notify converters about destroy
             foreach (var converter in assetConverters)
             {
-                if (converter is IConverterEntityDestroyHandler destroyHandler)
-                    destroyHandler.OnEntityDestroy(_world, ecsEntityId);
+                if (converter is not IConverterEntityDestroyHandler destroyHandler)
+                    continue;
+                destroyHandler.OnEntityDestroy(_world, ecsEntityId);
             }
-
-            LeoEcsTool.DestroyEntity(_entityId, _world);
-
+            
             MarkAsDestroyed();
         }
 
         private void MarkAsDestroyed()
         {
+            LeoEcsTool.DestroyEntity(_entityId, _world);
+            
             ecsEntityId = -1;
 
             _state = EntityState.Destroyed;

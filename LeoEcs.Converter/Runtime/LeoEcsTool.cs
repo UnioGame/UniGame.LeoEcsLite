@@ -6,8 +6,11 @@ namespace UniGame.LeoEcs.Converter.Runtime
     using System.Collections.Generic;
     using System.Threading;
     using Abstract;
+    using Components;
     using Converters;
     using Cysharp.Threading.Tasks;
+    using Game.Ecs.Core.Death.Components;
+    using LeoEcsLite.LeoEcs.Bootstrap.Runtime.Components;
     using Leopotam.EcsLite;
     using UnityEngine;
 
@@ -41,7 +44,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
                 if(converter is ILeoEcsConverterStatus {IsEnabled: false})
                     continue;
                 
-                converter.Apply(target, world, entityId, cancellationToken);
+                converter?.Apply(target, world, entityId, cancellationToken);
             }
         }
         
@@ -118,7 +121,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
             DestroyEntity(entityId, world);
         }
         
-        public static async UniTask DestroyEntity(EcsPackedEntity entityId, CancellationToken cancellationToken = default)
+        public static async UniTask DestroyEntityAsync(EcsPackedEntity entityId, CancellationToken cancellationToken = default)
         {
             var world = await WaitWorldReady(cancellationToken);
             DestroyEntity(entityId, world);
@@ -126,14 +129,28 @@ namespace UniGame.LeoEcs.Converter.Runtime
         
         public static void DestroyEntity(EcsPackedEntity entityId, EcsWorld world)
         {
+            if (world == null || world.IsAlive() == false) return;
+            
             if(entityId.Unpack(world,out var entity))
                 DestroyEntity(entity, world);
         }
 
         public static void DestroyEntity(int entityId, EcsWorld world)
         {
-            if (!world.IsAlive())
-                return;
+            if (!world.IsAlive()) return;
+            
+            var packed = world.PackEntity(entityId);
+            if (!packed.Unpack(world, out var aliveEntity)) return;
+
+            //world.AddComponent<InstantDestroyComponent>(aliveEntity);
+            world.DelEntity(aliveEntity);
+        }
+
+        public static async UniTask DestroyEntityAsync(int entityId, EcsWorld world)
+        {
+            await UniTask.Yield(PlayerLoopTiming.PreLateUpdate);
+            
+            if (!world.IsAlive()) return;
             
             var packed = world.PackEntity(entityId);
             if(packed.Unpack(world,out var aliveEntity))

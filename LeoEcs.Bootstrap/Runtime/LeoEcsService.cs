@@ -4,14 +4,14 @@ using UniModules.UniGame.Core.Runtime.DataFlow.Extensions;
 
 namespace UniGame.LeoEcs.Bootstrap.Runtime
 {
-    using System;
     using System.Collections.Generic;
-    using System.Threading;
     using Abstract;
     using Config;
     using Converter.Runtime;
     using Core.Runtime.Extension;
     using Cysharp.Threading.Tasks;
+    using Game.Ecs.Core.Systems;
+    using LeoEcsLite.LeoEcs.Bootstrap.Runtime.Systems;
     using Leopotam.EcsLite;
     using UniModules.UniCore.Runtime.DataFlow;
     using Object = UnityEngine.Object;
@@ -29,6 +29,17 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
         private readonly IContext _context;
         private EcsWorld _world;
         private bool _isInitialized;
+
+        private List<IEcsSystem> _startupSystems = new List<IEcsSystem>()
+        {
+            new InstantDestroySystem(),
+            //new DestroyNullTransformSystem(),
+        };
+        
+        private List<IEcsSystem> _lateSystems = new List<IEcsSystem>()
+        {
+            //new DestroyNullTransformSystem(),
+        };
 
         public EcsWorld World => _world;
 
@@ -139,6 +150,9 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
                 ecsSystems = new EcsSystems(world,_context);
                 _systemsMap[updateType] = ecsSystems;
             }
+                        
+            foreach (var startupSystem in _startupSystems)
+                ecsSystems.Add(startupSystem);
 
             foreach (var feature in features)
             {
@@ -174,6 +188,9 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
                     ecsSystems.Add(leoEcsSystem);
                 }
             }
+
+            foreach (var startupSystem in _lateSystems)
+                ecsSystems.Add(startupSystem);
         }
 
         private string GetErrorMessage(ILeoEcsInitializableFeature feature)
