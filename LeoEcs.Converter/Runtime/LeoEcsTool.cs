@@ -6,11 +6,8 @@ namespace UniGame.LeoEcs.Converter.Runtime
     using System.Collections.Generic;
     using System.Threading;
     using Abstract;
-    using Components;
     using Converters;
     using Cysharp.Threading.Tasks;
-    using Game.Ecs.Core.Death.Components;
-    using LeoEcsLite.LeoEcs.Bootstrap.Runtime.Components;
     using Leopotam.EcsLite;
     using UnityEngine;
 
