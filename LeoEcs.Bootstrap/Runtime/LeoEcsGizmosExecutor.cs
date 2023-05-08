@@ -12,9 +12,9 @@
         private EcsWorld _world;
         private GameObject _executor;
         
-        private List<EcsSystems> _systems = new List<EcsSystems>();
-        private IEcsSystem[] _allSystems = Array.Empty<IEcsSystem>();
-        private Dictionary<ILeoEcsGizmosSystem,EcsSystems> _gizmosSystems = new Dictionary<ILeoEcsGizmosSystem,EcsSystems>();
+        private List<IEcsSystems> _systems = new List<IEcsSystems>();
+        private List<IEcsSystem> _allSystems = new List<IEcsSystem>();
+        private Dictionary<ILeoEcsGizmosSystem,IEcsSystems> _gizmosSystems = new Dictionary<ILeoEcsGizmosSystem,IEcsSystems>();
         
         public void Dispose()
         {
@@ -31,7 +31,7 @@
             _world = world;
         }
 
-        public void Add(EcsSystems ecsSystems)
+        public void Add(IEcsSystems ecsSystems)
         {
 #if !UNITY_EDITOR
             return; 
@@ -40,7 +40,9 @@
                 return;
 
             _systems.Add(ecsSystems);
-            ecsSystems.GetAllSystems(ref _allSystems);
+            
+            _allSystems = ecsSystems.GetAllSystems();
+            
             foreach (var system in _allSystems)
             {
                 if (system is ILeoEcsGizmosSystem gizmosSystem)
@@ -75,9 +77,9 @@
 
         private void Awake()
         {
-            _systems ??= new List<EcsSystems>();
-            _allSystems ??= Array.Empty<IEcsSystem>();
-            _gizmosSystems ??= new Dictionary<ILeoEcsGizmosSystem, EcsSystems>();
+            _systems ??= new List<IEcsSystems>();
+            _allSystems ??= new List<IEcsSystem>();
+            _gizmosSystems ??= new Dictionary<ILeoEcsGizmosSystem, IEcsSystems>();
         }
     }
 }

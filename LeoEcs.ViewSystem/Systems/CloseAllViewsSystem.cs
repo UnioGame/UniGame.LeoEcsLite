@@ -24,13 +24,13 @@
             _gameViewSystem = gameViewSystem;
         }
 
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             _closeAllFilter = _world.Filter<CloseAllViewsRequest>().End();
         }
         
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
             foreach (var entity in _closeAllFilter)
             {

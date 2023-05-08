@@ -11,7 +11,7 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
         private EcsFilter _viewFilter;
         private EcsWorld _world;
         
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             _viewFilter = _world
@@ -20,7 +20,7 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
                 .End();
         }
 
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
             var viewPool = _world.GetPool<ViewComponent>();
             var statusPool = _world.GetPool<ViewStatusComponent>();

@@ -21,14 +21,14 @@ namespace UniGame.LeoEcs.Shared.Systems
             _counterLimit = counterLimit;
         }
         
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             _filter = _world.Filter<Component<TRequestType>>().End();
             _pool = _world.GetPool<Component<TRequestType>>();
         }
         
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
             foreach (var entity in _filter)
             {

@@ -4,6 +4,6 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Abstract
 
     public interface ILeoEcsGizmosSystem
     {
-        void RunGizmosSystem(EcsSystems systems);
+        void RunGizmosSystem(IEcsSystems systems);
     }
 }

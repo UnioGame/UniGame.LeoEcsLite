@@ -30,12 +30,12 @@
             _data = data;
         }
         
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
         }
 
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
             foreach (var eventEntity in _eventFilter)
             {
@@ -81,13 +81,13 @@
             _data = data;
         }
         
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             _eventFilter = _world.Filter<TEvent>().End();
         }
 
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
             foreach (var eventEntity in _eventFilter)
             {
@@ -133,7 +133,7 @@
             _data = data;
         }
         
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             _eventFilter = _world.Filter<TEvent1>()
@@ -141,7 +141,7 @@
                 .End();
         }
 
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
             foreach (var eventEntity in _eventFilter)
             {

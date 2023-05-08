@@ -11,7 +11,7 @@
     [Serializable]
     public class LeoEcsExecutor : ILeoEcsExecutor
     {
-        private List<EcsSystems> _systems = new List<EcsSystems>();
+        private List<IEcsSystems> _systems = new List<IEcsSystems>();
         private EcsWorld _world;
 
         private LeoEcsPlayerUpdateType _loopTiming = LeoEcsPlayerUpdateType.Update;
@@ -40,7 +40,7 @@
             ExecuteAsync().Forget();
         }
 
-        public void Add(EcsSystems systems)
+        public void Add(IEcsSystems systems)
         {
             _systems.Add(systems);
         }

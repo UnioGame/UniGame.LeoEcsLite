@@ -19,14 +19,14 @@
         private EcsFilter _filter;
         private EcsPool<TComponent> _pool;
 
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             _filter = _world.Filter<TFilter>().End();
             _pool = _world.GetPool<TComponent>();
         }
 
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
             foreach (var entity in _filter)
             {
@@ -52,7 +52,7 @@
         private EcsFilter _filter;
         private EcsPool<TComponent> _pool;
 
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             _filter = _world
@@ -63,7 +63,7 @@
             _pool = _world.GetPool<TComponent>();
         }
 
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
             foreach (var entity in _filter)
             {
@@ -90,7 +90,7 @@
         private EcsFilter _filter;
         private EcsPool<TComponent> _pool;
 
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             _filter = _world
@@ -102,7 +102,7 @@
             _pool = _world.GetPool<TComponent>();
         }
 
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
             foreach (var entity in _filter)
             {

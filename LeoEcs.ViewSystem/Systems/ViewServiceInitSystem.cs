@@ -29,7 +29,7 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
             _gameViewSystem = gameViewSystem;
         }
 
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             var entity = _world.NewEntity();

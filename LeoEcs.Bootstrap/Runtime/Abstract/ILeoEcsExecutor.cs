@@ -9,7 +9,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Abstract
 
         void Execute(EcsWorld world);
 
-        void Add(EcsSystems systems);
+        void Add(IEcsSystems systems);
 
         void Stop();
     }
@@ -20,7 +20,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Abstract
 
         void Execute(EcsWorld world);
 
-        void Add(EcsSystems systems);
+        void Add(IEcsSystems systems);
 
         void Stop();
     }

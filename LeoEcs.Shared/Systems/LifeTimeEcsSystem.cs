@@ -11,24 +11,24 @@ namespace UniGame.LeoEcs.Shared.Systems
 
         public ILifeTime LifeTime => _lifeTime;
         
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _lifeTime.Release();
             OnInit(systems,_lifeTime);
         }
 
-        public void Destroy(EcsSystems systems)
+        public void Destroy(IEcsSystems systems)
         {
             OnDestroy(systems);
             _lifeTime.Release();
         }
 
-        protected virtual void OnInit(EcsSystems systems, ILifeTime lifeTime)
+        protected virtual void OnInit(IEcsSystems systems, ILifeTime lifeTime)
         {
             
         }
         
-        protected virtual void OnDestroy(EcsSystems systems)
+        protected virtual void OnDestroy(IEcsSystems systems)
         {
             
         }

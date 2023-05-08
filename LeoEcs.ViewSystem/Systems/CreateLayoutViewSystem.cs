@@ -19,7 +19,7 @@
         private EcsPool<CreateLayoutViewRequest> _requestLayoutPool;
         private EcsPool<CreateViewRequest> _requestPool;
 
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             _createFilter = _world.Filter<CreateLayoutViewRequest>().End();
@@ -28,7 +28,7 @@
             _requestPool = _world.GetPool<CreateViewRequest>();
         }
         
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
             foreach (var entity in _createFilter)
             {

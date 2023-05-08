@@ -32,7 +32,7 @@
             _viewLayoutType = viewLayoutType;
         }
         
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             _eventFilter = _world.Filter<TEvent>()
@@ -40,7 +40,7 @@
                 .End();
         }
 
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
             foreach (var eventEntity in _eventFilter)
             {
@@ -77,13 +77,13 @@
             _viewLayoutType = viewLayoutType;
         }
         
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             _eventFilter = _world.Filter<TEvent>().End();
         }
 
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
             foreach (var eventEntity in _eventFilter)
             {
@@ -119,12 +119,12 @@
             _viewLayoutType = viewLayoutType;
         }
         
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
         }
 
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
             foreach (var eventEntity in _eventFilter)
             {
@@ -161,7 +161,7 @@
             _viewLayoutType = viewLayoutType;
         }
         
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             _eventFilter = _world
@@ -170,7 +170,7 @@
                 .End();
         }
 
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
             foreach (var eventEntity in _eventFilter)
             {

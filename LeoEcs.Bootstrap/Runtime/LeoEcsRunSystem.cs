@@ -20,7 +20,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
 
         public bool Enabled => _enabled;
 
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
 #if UNITY_EDITOR
             if (!_enabled)
@@ -30,6 +30,6 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected abstract void RunSystem(EcsSystems systems);
+        protected abstract void RunSystem(IEcsSystems systems);
     }
 }

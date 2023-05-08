@@ -40,14 +40,14 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
             _viewTools = viewTools;
         }
         
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             _createFilter = _world.Filter<CreateViewRequest>().End();
             _createViewPool = _world.GetPool<CreateViewRequest>();
         }
         
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
             foreach (var entity in _createFilter)
             {

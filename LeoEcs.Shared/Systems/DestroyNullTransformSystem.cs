@@ -23,7 +23,7 @@
         private EcsFilter _transformFilter;
         private EcsPool<TransformComponent> _transformPool;
 
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
 
@@ -36,7 +36,7 @@
 
         }
 
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
             foreach (var transformEntity in _transformFilter)
             {

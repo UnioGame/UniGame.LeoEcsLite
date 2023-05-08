@@ -12,7 +12,7 @@
         private bool _isActive;
         private EcsWorld _world;
         
-        private List<EcsSystems> _systems = new List<EcsSystems>();
+        private List<IEcsSystems> _systems = new List<IEcsSystems>();
         private IEcsSystem[] _allSystems = Array.Empty<IEcsSystem>();
 
         public bool IsActive => _isActive;
@@ -29,7 +29,7 @@
             _world = world;
         }
 
-        public void Add(EcsSystems ecsSystems)
+        public void Add(IEcsSystems ecsSystems)
         {
             if (_systems.Contains(ecsSystems))
                 return;
@@ -58,7 +58,7 @@
 
         private void Awake()
         {
-            _systems ??= new List<EcsSystems>();
+            _systems ??= new List<IEcsSystems>();
             _allSystems ??= Array.Empty<IEcsSystem>();
         }
     }

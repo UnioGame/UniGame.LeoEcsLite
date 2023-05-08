@@ -20,7 +20,7 @@
         
         private EcsPool<ViewComponent> _viewComponentPool;
         
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             
@@ -33,7 +33,7 @@
             _viewComponentPool = _world.GetPool<ViewComponent>();
         }
 
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
             foreach (var entity in _filter)
             {

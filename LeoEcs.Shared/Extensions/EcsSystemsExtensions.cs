@@ -8,14 +8,14 @@ namespace UniGame.LeoEcs.Shared.Extensions
     public static class LeoEcsExtensions
     {
         
-        public static void FireOn<TFilter,TComponent>(this EcsSystems systems)
+        public static void FireOn<TFilter,TComponent>(this IEcsSystems systems)
             where TFilter : struct
             where TComponent : struct
         {
             systems.Add(new FireOnSystem<TFilter,TComponent>());
         }
         
-        public static void FireOn<TFilter1,TFilter2,TComponent>(this EcsSystems systems)
+        public static void FireOn<TFilter1,TFilter2,TComponent>(this IEcsSystems systems)
             where TFilter1 : struct
             where TFilter2 : struct
             where TComponent : struct
@@ -23,7 +23,7 @@ namespace UniGame.LeoEcs.Shared.Extensions
             systems.Add(new FireOnSystem<TFilter1,TFilter2,TComponent>());
         }
         
-        public static void FireOn<TFilter1,TFilter2,TFilter3,TComponent>(this EcsSystems systems)
+        public static void FireOn<TFilter1,TFilter2,TFilter3,TComponent>(this IEcsSystems systems)
             where TFilter1 : struct
             where TFilter2 : struct
             where TFilter3 : struct
@@ -32,12 +32,12 @@ namespace UniGame.LeoEcs.Shared.Extensions
             systems.Add(new FireOnSystem<TFilter1,TFilter2,TFilter3,TComponent>());
         }
         
-        public static void DelEventHere<TRequest>(this EcsSystems systems, int cyclesAmount = 1)
+        public static void DelEventHere<TRequest>(this IEcsSystems systems, int cyclesAmount = 1)
         {
             systems.Add(new UpdateCounterRequestSystem<TRequest>(cyclesAmount));
         }
         
-        public static void DelRequestHere<TRequest>(this EcsSystems systems, int cyclesAmount = 0)
+        public static void DelRequestHere<TRequest>(this IEcsSystems systems, int cyclesAmount = 0)
         {
             systems.Add(new UpdateCounterRequestSystem<TRequest>(cyclesAmount));
         }
@@ -78,48 +78,48 @@ namespace UniGame.LeoEcs.Shared.Extensions
             return pool1.Has(entity) && pool2.Has(entity) && pool3.Has(entity) && pool4.Has(entity);
         }
         
-        public static EcsFilter GetFilter<TComponent>(this EcsSystems ecsSystems)
+        public static EcsFilter GetFilter<TComponent>(this IEcsSystems IEcsSystems)
             where TComponent : struct
         {
-            var world = ecsSystems.GetWorld();
+            var world = IEcsSystems.GetWorld();
             var filter = world.Filter<TComponent>().End();
 
             return filter;
         }
 
-        public static EcsPool<TComponent> GetPool<TComponent>(this EcsSystems ecsSystems)
+        public static EcsPool<TComponent> GetPool<TComponent>(this IEcsSystems IEcsSystems)
             where TComponent : struct
         {
-            var world = ecsSystems.GetWorld();
+            var world = IEcsSystems.GetWorld();
             var pool = world.GetPool<TComponent>();
 
             return pool;
         }
 
-        public static bool TryRemoveComponent<TComponent>(this EcsSystems systems, int entity)
+        public static bool TryRemoveComponent<TComponent>(this IEcsSystems systems, int entity)
             where TComponent : struct
         {
             var world = systems.GetWorld();
             return world.TryRemoveComponent<TComponent>(entity);
         }
 
-        public static ref TComponent GetComponent<TComponent>(this EcsSystems ecsSystems, int entity)
+        public static ref TComponent GetComponent<TComponent>(this IEcsSystems systems, int entity)
             where TComponent : struct
         {
-            var world = ecsSystems.GetWorld();
+            var world = systems.GetWorld();
             var pool = world.GetPool<TComponent>();
 
             return ref pool.Get(entity);
         }
 
-        public static ref TComponent AddComponent<TComponent>(this EcsSystems ecsSystems, int entity)
+        public static ref TComponent AddComponent<TComponent>(this IEcsSystems systems, int entity)
             where TComponent : struct
         {
-            var world = ecsSystems.GetWorld();
+            var world = systems.GetWorld();
             return ref world.AddComponent<TComponent>(entity);
         }
         
-        public static EcsSystems Add(this EcsSystems ecsSystems, IEnumerable<IEcsSystem> systems)
+        public static IEcsSystems Add(this IEcsSystems ecsSystems, IEnumerable<IEcsSystem> systems)
         {
             foreach (var system in systems)
             {

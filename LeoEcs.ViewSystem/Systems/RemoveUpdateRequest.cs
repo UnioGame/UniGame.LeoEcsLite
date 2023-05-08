@@ -21,7 +21,7 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
 
         public EcsPool<UpdateViewRequest> _updatePool;
 
-        public void Init(EcsSystems systems)
+        public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             _filter = _world.Filter<UpdateViewRequest>().End();
@@ -29,7 +29,7 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
             _updatePool = _world.GetPool<UpdateViewRequest>();
         }
         
-        public void Run(EcsSystems systems)
+        public void Run(IEcsSystems systems)
         {
             foreach (var entity in _filter)
             {
