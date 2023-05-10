@@ -121,7 +121,7 @@
         
         public void Show()
         {
-            EntityViewWindow.OpenPopupWindow(this);
+            EntityDataWindow.OpenPopupWindow(id);
         }
         
         public Color GetElementColor(int index, Color defaultColor)

@@ -6,6 +6,9 @@
     public interface IEntityEditorViewBuilder
     {
         void Initialize(EcsWorld world);
+        
         void Execute(List<EntityEditorView> views);
+
+        void Execute(EntityEditorView view);
     }
 }

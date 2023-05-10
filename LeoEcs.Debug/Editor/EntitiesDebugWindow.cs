@@ -62,9 +62,9 @@ namespace UniGame.LeoEcs.Debug.Editor
         [LabelText("entities :")]
         public int totalEntities;
         
-        [HideInInspector]
-        [InlineButton(nameof(Fill),nameof(Fill),Icon = SdfIconType.TerminalFill)]
-        public int count = 10;
+        // [HideInInspector]
+        // [InlineButton(nameof(Fill),nameof(Fill),Icon = SdfIconType.TerminalFill)]
+        // public int count = 10;
 
         [HideLabel]
         [BoxGroup("entities")]
@@ -126,14 +126,12 @@ namespace UniGame.LeoEcs.Debug.Editor
         }
 
         private string testName = "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest";
-        private void Fill()
+        public void Fill(int amount)
         {
-            var itemsCount = count;
-        
             var items = gridEditorView.items;
             items.Clear();
             
-            for (int j = 0; j < itemsCount; j++)
+            for (int j = 0; j < amount; j++)
             {
                 var id = j;
                 var item = ClassPool.Spawn<EntityIdEditorView>();

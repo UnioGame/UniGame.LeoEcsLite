@@ -39,6 +39,8 @@
             EcsFilterData filterData)
         {
             var filter = filterData.filter;
+            if (filter == null) return false;
+            
             var world = filterData.world;
             var count = world.GetComponentsCount(entity);
             var found = false;

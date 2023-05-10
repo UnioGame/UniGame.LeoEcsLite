@@ -15,10 +15,10 @@
         };
 
         public EcsWorld world;
-        public string filter;
+        public string filter = string.Empty;
         public string errorMessage;
-        public string message;
-        public ResultType type;
+        public string message = string.Empty;
+        public ResultType type = ResultType.None;
         public List<int> entities = new List<int>();
     }
 }

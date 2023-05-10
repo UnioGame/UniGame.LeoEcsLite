@@ -3,9 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Leopotam.EcsLite;
-    using Runtime.ObjectPool;
     using Shared.Components;
-    using UnityEngine;
 
     [Serializable]
     public class GameObjectEntityBuilder : IEntityEditorViewBuilder
@@ -37,5 +35,23 @@
                 }
             }
         }
+
+        public void Execute(EntityEditorView view)
+        {
+            ref var entityId = ref view.id;
+            var packed = _world.PackEntity(entityId);
+            if(packed.Unpack(_world, out var entity) == false) return;
+            
+            if (!_gameObjectPool.Has(entityId)) return;
+                
+            ref var gameObjectComponent = ref _gameObjectPool.Get(entity);
+            var gameObject = gameObjectComponent.GameObject;
+
+            if (gameObject == null) return;
+                    
+            view.gameObject = gameObject;
+            view.name = gameObject.name;
+        }
     }
+    
 }

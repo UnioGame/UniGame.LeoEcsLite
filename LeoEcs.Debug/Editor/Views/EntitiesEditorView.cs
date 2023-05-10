@@ -2,20 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
-    using Converter.Runtime;
     using Leopotam.EcsLite;
-    using Runtime.ObjectPool;
     using Runtime.ObjectPool.Extensions;
-    using Shared.Components;
     using Sirenix.OdinInspector;
-    using UniModules.UniCore.Runtime.Utils;
     using UnityEngine;
-    using UnityEngine.UIElements;
 
     [Serializable]
     public class EntitiesEditorView
     {
-        
         #region static data
 
         private static Color _oddColor = new Color(0.3f, 0.5f, 0.4f);
@@ -54,34 +48,21 @@
 
         #endregion
 
-        private HashSet<int> _uniqueEntities = new HashSet<int>();
         private EcsWorld _world;
-        private EcsFilterData _statusData = EcsFilterData.NoneFilterData;
-
-        private List<IEcsWorldSearchFilter> _ecsResultFilter = new List<IEcsWorldSearchFilter>()
-        {
-            new CheckEditorStatusFilter(),
-            new CheckEcsWorldStatusFilter(),
-            new IdEntitiesFilter(),
-            new FilterEntitiesComponents(),
-        };
-
-        private List<IEntityEditorViewBuilder> _builders = new List<IEntityEditorViewBuilder>()
-        {
-            new ComponentsEntityBuilder(),
-            new GameObjectEntityBuilder(),
-        };
+        private HashSet<int> _uniqueEntities = new HashSet<int>();
+        private EcsFilterData _cachedFilter = EcsFilterData.NoneFilterData;
+        private EcsEditorFilter _filter = new EcsEditorFilter();
+        private EditorEntityViewBuilder _viewBuilder = new EditorEntityViewBuilder();
 
         public void Initialize(EcsWorld world)
         {
             _world = world;
 
             if (_world == null || !VerifyView()) return;
-
+            
+            _viewBuilder.Initialize(_world);
+            
             IsInitialized = true;
-
-            foreach (var composer in _builders)
-                composer.Initialize(_world);
         }
 
         public void UpdateFilter(string filterValue)
@@ -90,7 +71,7 @@
             
             if (!IsInitialized) return;
             
-            var data = ApplyFilters(filterValue);
+            var data = _filter.Filter(filterValue,_world);
             if (data.type != ResultType.Success)
                 return;
             
@@ -108,40 +89,10 @@
             IsInitialized = false;
             return false;
         }
-        
-        public EcsFilterData ApplyFilters(string filterValue)
-        {
-            ResetStatus();
-            
-            _statusData.filter = filterValue;
-            
-            var filter = _statusData;
-
-            foreach (var searchFilter in _ecsResultFilter)
-            {
-                filter = searchFilter.Execute(_statusData);
-
-                if (filter.type == ResultType.Error)
-                    break;
-            }
-
-            _statusData = filter;
-            status = filter.type != ResultType.Success
-                ? filter.errorMessage
-                : filter.type.ToStringFromCache();
-
-            message = filter.message;
-
-            return filter;
-        }
 
         public void ResetStatus()
         {
-            _statusData.world = _world;
-            _statusData.filter = string.Empty;
-            _statusData.message = string.Empty;
-            _statusData.type = ResultType.Success;
-            _statusData.entities.Clear();
+            _cachedFilter = new EcsFilterData();
         }
         
         public void UpdateEntitiesView(EcsFilterData data)
@@ -153,15 +104,9 @@
             
             foreach (var dataEntity in _uniqueEntities)
             {
-                var view = ClassPool.Spawn<EntityEditorView>();
-                view.id = dataEntity;
-                view.packedEntity = _world.PackEntity(dataEntity);
-                view.name = dataEntity.ToStringFromCache();
+                var view = _viewBuilder.Create(dataEntity,_world);
                 entities.Add(view);
             }
-
-            foreach (var builder in _builders)
-                builder.Execute(entities);
         }
 
         public void ReleaseEntityViews()
@@ -177,13 +122,14 @@
 
         public Color GetStatusColor()
         {
-            var resultType = _statusData.type;
+            var resultType = _cachedFilter.type;
 
             var resultColor = resultType switch
             {
                 ResultType.Error => Color.red,
                 ResultType.None => Color.yellow,
-                ResultType.Success => Color.green
+                ResultType.Success => Color.green,
+                _ => Color.magenta,
             };
 
             return resultColor;
