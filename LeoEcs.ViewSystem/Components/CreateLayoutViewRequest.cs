@@ -1,6 +1,7 @@
 ﻿namespace UniGame.LeoEcs.ViewSystem.Components
 {
     using System;
+    using System.Collections.Generic;
     using Leopotam.EcsLite;
     using UniModules.UniGame.UiSystem.Runtime;
 
