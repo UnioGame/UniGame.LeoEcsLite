@@ -24,6 +24,19 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
                 .Inc<ViewDataComponent<TModel>>()
                 .Inc<ViewInitializedComponent>();
         }
+
+        public static bool TryGetViewModel<TModel>(this EcsWorld world, int entity, out TModel model)
+        {
+            model = default;
+            if (!world.HasComponent<ViewModelComponent>(entity))
+                return false;
+
+            ref var viewModelComponent = ref world.GetComponent<ViewModelComponent>(entity);
+            if (viewModelComponent.Model is not TModel viewModel) return false;
+
+            model = viewModel;
+            return true;
+        }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static EcsFilter CreateViewFilter<TModel>(this EcsWorld world)
