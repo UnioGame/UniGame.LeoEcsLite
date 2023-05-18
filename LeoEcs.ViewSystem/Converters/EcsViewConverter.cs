@@ -3,6 +3,7 @@
     using System.Threading;
     using Components;
     using Converter.Runtime;
+    using Converter.Runtime.Components;
     using Core.Runtime;
     using Leopotam.EcsLite;
     using Shared.Extensions;
@@ -13,14 +14,26 @@
     [RequireComponent(typeof(LeoEcsMonoConverter))]
     public class EcsViewConverter : MonoLeoEcsConverter, IEcsViewConverter
     {
+
+        #region inspector
+
+        public int entityId;
+
+        public bool addChildOrderComponent = false;
+        
+        #endregion
+        
+        #region private fields
+
         private bool _isEntityAlive;
         private EcsWorld _ecsWorld;
         private EcsPackedEntity _viewPackedEntity;
         private IView _view;
-        
-        public int entityId;
 
+        #endregion
+        
         #region public properties
+        
         public bool IsEnabled => isActiveAndEnabled;
         public bool IsEntityAlive => _isEntityAlive;
         public EcsWorld World => _ecsWorld;
@@ -60,6 +73,13 @@
             viewComponent.View = _view;
             viewComponent.Type = _view.GetType();
 
+            if (addChildOrderComponent)
+            {
+                ref var childOrderComponent = ref world.GetOrAddComponent<ViewOrderComponent>(entity);
+                childOrderComponent.Order = target.transform.GetSiblingIndex();
+            }
+            
+            
             _isEntityAlive = true;
         }
 

@@ -3,7 +3,9 @@
     using System;
     using System.Threading;
     using Components;
+    using Converter.Runtime;
     using Converter.Runtime.Abstract;
+    using Converter.Runtime.Components;
     using Leopotam.EcsLite;
     using Shared.Extensions;
     using UnityEngine;
@@ -19,6 +21,16 @@
             ref var dataComponent = ref world.GetOrAddComponent<ViewDataComponent<TData>>(entity);
             if (addUpdateRequestOnCreate)
                 world.AddComponent<UpdateViewRequest<TData>>(entity);
+        }
+    }
+    
+    [Serializable]
+    public class ViewOrderConverter : GameObjectConverter
+    {
+        protected override void OnApply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        {
+            ref var dataComponent = ref world.GetOrAddComponent<ViewOrderComponent>(entity);
+            dataComponent.Order = target.transform.GetSiblingIndex();
         }
     }
 }
