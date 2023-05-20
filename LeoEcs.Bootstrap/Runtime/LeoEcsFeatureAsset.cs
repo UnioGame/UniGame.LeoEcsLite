@@ -74,7 +74,9 @@
     public class LeoEcsFeatureAssetT<TFeature> : LeoEcsFeatureAsset
         where TFeature : ILeoEcsFeature
     {
+#if ODIN_INSPECTOR
         [HideLabel]
+#endif
         [SerializeField] 
         public TFeature feature;
 
