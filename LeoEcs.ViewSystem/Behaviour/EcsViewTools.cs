@@ -29,7 +29,7 @@
             EcsWorld world,EcsPackedEntity packedEntity,
             IView view,Type viewType)
         {
-            var modelType = _viewSystem.ModelTypeMap.GetViewModelTypeByView(viewType);
+            var modelType = _viewSystem.ModelTypeMap.GetViewModelType(viewType);
             var model = await _viewSystem.CreateViewModel(_context, modelType);
             
             AddViewModelData(world, packedEntity, model);

@@ -59,20 +59,20 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
 
         public async UniTask CreateViewByRequest(CreateViewRequest request)
         {
-            var viewType = request.Type;
-            var modelType = _viewSystem.ModelTypeMap.GetViewModelTypeByView(viewType);
+            var viewType = request.ViewId;
+            var modelType = _viewSystem.ModelTypeMap.GetViewModelType(viewType);
             var model = await _viewSystem.CreateViewModel(_context, modelType);
             
             var view = request.LayoutType switch
             {
                 ViewType.None => await _viewSystem
-                    .Create(model,request.Type,request.Tag,request.Parent,request.ViewName,request.StayWorld),
+                    .Create(model,request.ViewId,request.Tag,request.Parent,request.ViewName,request.StayWorld),
                 ViewType.Screen => await _viewSystem
-                    .OpenScreen(model,request.Type,request.Tag,request.ViewName),
+                    .OpenScreen(model,request.ViewId,request.Tag,request.ViewName),
                 ViewType.Window => await _viewSystem
-                    .OpenWindow(model,request.Type,request.Tag,request.ViewName),
+                    .OpenWindow(model,request.ViewId,request.Tag,request.ViewName),
                 ViewType.Overlay => await _viewSystem
-                    .OpenOverlay(model,request.Type,request.Tag,request.ViewName),
+                    .OpenOverlay(model,request.ViewId,request.Tag,request.ViewName),
             };
 
             var viewObject = view.GameObject;

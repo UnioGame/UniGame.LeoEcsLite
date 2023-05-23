@@ -4,16 +4,17 @@
     using System.Collections.Generic;
     using Leopotam.EcsLite;
     using UniModules.UniGame.UiSystem.Runtime;
+    using UnityEngine.Serialization;
 
     [Serializable]
     public struct CreateLayoutViewRequest : IEcsAutoReset<CreateLayoutViewRequest>
     {
-        public Type Type;
+        public string View;
         public ViewType LayoutType;
 
         public void AutoReset(ref CreateLayoutViewRequest c)
         {
-            c.Type = null;
+            c.View = string.Empty;
             c.LayoutType = ViewType.Window;
         }
     }

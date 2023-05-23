@@ -38,7 +38,7 @@
                 requestComponent.Parent = null;
                 requestComponent.Tag = string.Empty;
                 requestComponent.ViewName = string.Empty;
-                requestComponent.Type = requestLayoutComponent.Type;
+                requestComponent.ViewId = requestLayoutComponent.View;
                 requestComponent.LayoutType = requestLayoutComponent.LayoutType;
                 requestComponent.StayWorld = false;
 

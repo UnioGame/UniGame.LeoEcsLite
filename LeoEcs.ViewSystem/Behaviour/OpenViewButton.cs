@@ -1,6 +1,7 @@
 namespace UniGame.LeoEcs.ViewSystem.Behavriour
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using Converter.Runtime;
     using Converter.Runtime.Abstract;
@@ -12,6 +13,7 @@ namespace UniGame.LeoEcs.ViewSystem.Behavriour
     using UniGame.Core.Runtime.SerializableType.Attributes;
     using Converters;
     using Extensions;
+    using UISystem.Runtime.Utils;
     using UniGame.Rx.Runtime.Extensions;
     using UniGame.ViewSystem.Runtime;
     using UniModules.UniGame.Core.Runtime.DataFlow.Extensions;
@@ -25,26 +27,31 @@ namespace UniGame.LeoEcs.ViewSystem.Behavriour
         #region inspector
 
         public Button trigger;
-
+        
+        /// <summary>
+        /// target view type
+        /// </summary>
 #if ODIN_INSPECTOR
-        [DrawWithUnity]
+        [ValueDropdown(nameof(GetViewTypes))]
 #endif
-        [STypeFilter(typeof(IEcsView))]
-        public SType targetViewType;
+        public string view;
+        
+        /// <summary>
+        /// target layout
+        /// </summary>
+        public ViewType layoutType = ViewType.Window;
 
         #endregion
 
         private ILifeTime _lifeTime;
 
         public ILifeTime LifeTime => _lifeTime;
-        
-        public ViewType layoutType = ViewType.Window;
-        
+
         public void Apply(GameObject target, EcsWorld world, 
             int entity, CancellationToken cancellationToken = default)
         {
             this.Bind(trigger, x => world
-                .MakeViewRequest(targetViewType, layoutType));
+                .MakeViewRequest(view, layoutType));
         }
         
         [OnInspectorInit]
@@ -57,6 +64,12 @@ namespace UniGame.LeoEcs.ViewSystem.Behavriour
         private void Awake()
         {
             _lifeTime = this.GetAssetLifeTime();
+            trigger ??= GetComponent<Button>();
+        }
+
+        private IEnumerable<string> GetViewTypes()
+        {
+            return ViewSystemTool.GetViewNames();
         }
     }
 }

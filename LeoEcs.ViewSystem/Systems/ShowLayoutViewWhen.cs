@@ -48,7 +48,7 @@
                 ref var requestComponent = ref _world.AddComponent<CreateLayoutViewRequest>(requestEntity);
                 ref var markerComponent = ref _world.AddComponent<SingleViewMarkerComponent<TView>>(eventEntity);
 
-                requestComponent.Type = typeof(TView);
+                requestComponent.View = typeof(TView).Name;
                 requestComponent.LayoutType = _viewLayoutType;
             }
         }
@@ -90,7 +90,7 @@
                 var requestEntity = _world.NewEntity();
                 ref var requestComponent = ref _world.AddComponent<CreateLayoutViewRequest>(requestEntity);
 
-                requestComponent.Type = typeof(TView);
+                requestComponent.View = typeof(TView).Name;
                 requestComponent.LayoutType = _viewLayoutType;
             }
         }
@@ -131,7 +131,7 @@
                 var requestEntity = _world.NewEntity();
                 ref var requestComponent = ref _world.AddComponent<CreateLayoutViewRequest>(requestEntity);
 
-                requestComponent.Type = typeof(TView);
+                requestComponent.View = typeof(TView).Name;
                 requestComponent.LayoutType = _viewLayoutType;
             }
         }
@@ -177,7 +177,7 @@
                 var requestEntity = _world.NewEntity();
                 ref var requestComponent = ref _world.AddComponent<CreateLayoutViewRequest>(requestEntity);
 
-                requestComponent.Type = typeof(TView);
+                requestComponent.View = typeof(TView).Name;
                 requestComponent.LayoutType = _viewLayoutType;
             }
         }

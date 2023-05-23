@@ -51,7 +51,7 @@
                 }
 
                 requestComponent.Parent = parent;
-                requestComponent.Type = typeof(TView);
+                requestComponent.ViewId = typeof(TView).Name;
                 requestComponent.LayoutType = requestComponent.LayoutType;
                 requestComponent.Tag = requestComponent.Tag;
                 requestComponent.ViewName = requestComponent.ViewName;
@@ -103,7 +103,7 @@
                 }
 
                 requestComponent.Parent = parent;
-                requestComponent.Type = typeof(TView);
+                requestComponent.ViewId = typeof(TView).Name;
                 requestComponent.LayoutType = requestComponent.LayoutType;
                 requestComponent.Tag = requestComponent.Tag;
                 requestComponent.ViewName = requestComponent.ViewName;
@@ -157,7 +157,7 @@
                 }
 
                 requestComponent.Parent = parent;
-                requestComponent.Type = typeof(TView);
+                requestComponent.ViewId = typeof(TView).Name;
                 requestComponent.LayoutType = requestComponent.LayoutType;
                 requestComponent.Tag = requestComponent.Tag;
                 requestComponent.ViewName = requestComponent.ViewName;

@@ -129,10 +129,22 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             systems.Add(new ShowViewWhen<TComponent1,TComponent2, TView>(viewData));
             return systems;
         }
+
+        public static void MakeViewRequest(
+            this EcsWorld world,
+            Type viewType,
+            ViewType layoutType = ViewType.None,
+            Transform parent = null,
+            string tag = null,
+            string viewName = null,
+            bool stayWorld = false)
+        {
+            MakeViewRequest(world, viewType.Name, layoutType, parent, tag, viewName, stayWorld);
+        }
         
         public static void MakeViewRequest(
             this EcsWorld world, 
-            Type viewType,
+            string view,
             ViewType layoutType = ViewType.None,
             Transform parent = null,
             string tag = null,
@@ -146,7 +158,7 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             
             component.Parent = parent;
             component.Tag = tag;
-            component.Type = viewType;
+            component.ViewId = view;
             component.LayoutType = layoutType;
             component.ViewName = viewName;
             component.StayWorld = stayWorld;

@@ -5,11 +5,12 @@ using Transform = UnityEngine.Transform;
 namespace UniGame.LeoEcs.ViewSystem.Components
 {
     using System;
-    
+    using UnityEngine.Serialization;
+
     [Serializable]
     public struct CreateViewRequest : IEcsAutoReset<CreateViewRequest>
     {
-        public Type Type;
+        public string ViewId;
         public ViewType LayoutType;
         public string Tag;
         public Transform Parent;
