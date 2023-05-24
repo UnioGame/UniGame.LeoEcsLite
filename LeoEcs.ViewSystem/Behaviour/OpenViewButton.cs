@@ -1,21 +1,14 @@
 namespace UniGame.LeoEcs.ViewSystem.Behavriour
 {
-    using System;
-    using System.Collections.Generic;
     using System.Threading;
     using Converter.Runtime;
     using Converter.Runtime.Abstract;
     using Core.Runtime;
-    using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
     using Sirenix.OdinInspector;
-    using UniGame.Core.Runtime.SerializableType;
-    using UniGame.Core.Runtime.SerializableType.Attributes;
-    using Converters;
     using Extensions;
-    using UISystem.Runtime.Utils;
+    using UiSystem.Runtime.Settings;
     using UniGame.Rx.Runtime.Extensions;
-    using UniGame.ViewSystem.Runtime;
     using UniModules.UniGame.Core.Runtime.DataFlow.Extensions;
     using UniModules.UniGame.UiSystem.Runtime;
     using UnityEngine;
@@ -31,10 +24,7 @@ namespace UniGame.LeoEcs.ViewSystem.Behavriour
         /// <summary>
         /// target view type
         /// </summary>
-#if ODIN_INSPECTOR
-        [ValueDropdown(nameof(GetViewTypes))]
-#endif
-        public string view;
+        public ViewId view;
         
         /// <summary>
         /// target layout
@@ -67,9 +57,5 @@ namespace UniGame.LeoEcs.ViewSystem.Behavriour
             trigger ??= GetComponent<Button>();
         }
 
-        private IEnumerable<string> GetViewTypes()
-        {
-            return ViewSystemTool.GetViewNames();
-        }
     }
 }
