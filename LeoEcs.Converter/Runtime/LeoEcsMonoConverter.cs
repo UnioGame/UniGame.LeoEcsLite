@@ -27,7 +27,9 @@ namespace UniGame.LeoEcs.Converter.Runtime
         [SerializeReference]
         public List<ILeoEcsMonoComponentConverter> _serializableConverters = new List<ILeoEcsMonoComponentConverter>();
 
-        [Space(8)] [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)] [InlineEditor()]
+        [Space(8)] 
+        [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)] 
+        [InlineEditor()]
         public List<LeoEcsConverterAsset> assetConverters = new List<LeoEcsConverterAsset>();
 
         [Space] [ReadOnly] [BoxGroup("runtime info")] [ShowIf(nameof(IsRuntime))] [SerializeField]
@@ -250,7 +252,8 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
             foreach (var converter in assetConverters)
             {
-                foreach (var converterValue in converter.converters)
+                var converters = converter.converters;
+                foreach (var converterValue in converters)
                 {
                     if (converterValue.Value is ILeoEcsGizmosDrawer gizmosDrawer)
                         gizmosDrawer.DrawGizmos(gameObject);
