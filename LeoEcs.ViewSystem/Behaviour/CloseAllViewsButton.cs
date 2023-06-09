@@ -23,13 +23,24 @@
         #endregion
 
         private ILifeTime _lifeTime;
+        private EcsPackedEntity _packedEntity;
+        private EcsWorld _world;
 
         public ILifeTime LifeTime => _lifeTime;
 
-        public void Apply(GameObject target, EcsWorld world, 
-            int entity, CancellationToken cancellationToken = default)
+        public void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
         {
-            this.Bind(trigger, x => world.GetOrAddComponent<CloseAllViewsRequest>(entity));
+            _world = world;
+            _packedEntity = world.PackEntity(entity);
+            
+            this.Bind(trigger, CloseAll);
+        }
+
+        [Button]
+        private void CloseAll()
+        {
+            if (!_packedEntity.Unpack(_world, out var entity)) return;
+            _world.GetOrAddComponent<CloseAllViewsRequest>(entity);
         }
         
         [OnInspectorInit]
