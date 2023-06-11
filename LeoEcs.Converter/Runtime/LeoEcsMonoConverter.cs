@@ -20,7 +20,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
         [SerializeField] public bool createEntityOnEnabled = true;
         [SerializeField] public bool createEntityOnStart = false;
         [SerializeField] public bool destroyOnDestroy = false;
-
+        
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
         [Space(8)]
         [InlineProperty]
@@ -32,7 +32,10 @@ namespace UniGame.LeoEcs.Converter.Runtime
         [InlineEditor()]
         public List<LeoEcsConverterAsset> assetConverters = new List<LeoEcsConverterAsset>();
 
-        [Space] [ReadOnly] [BoxGroup("runtime info")] [ShowIf(nameof(IsRuntime))] [SerializeField]
+        [Space] [ReadOnly] 
+        [BoxGroup("runtime info")] 
+        [ShowIf(nameof(IsRuntime))] 
+        [SerializeField]
         public int ecsEntityId = -1;
 
         #endregion
