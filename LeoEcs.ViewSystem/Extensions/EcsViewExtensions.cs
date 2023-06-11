@@ -151,7 +151,7 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
         
         public static void MakeViewRequest(
             this EcsWorld world, 
-            Type viewType,
+            string viewId,
             ViewType layoutType)
         {
             var entity = world.NewEntity();
@@ -159,8 +159,16 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             ref var component = ref world
                 .GetOrAddComponent<CreateLayoutViewRequest>(entity);
             
-            component.Type = viewType;
+            component.View = viewId;
             component.LayoutType = layoutType;
+        }
+        
+        public static void MakeViewRequest(
+            this EcsWorld world, 
+            Type viewType,
+            ViewType layoutType)
+        {
+            MakeViewRequest(world,viewType.Name, layoutType);
         }
         
         public static void MakeViewRequest(
