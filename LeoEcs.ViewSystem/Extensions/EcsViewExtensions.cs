@@ -142,6 +142,27 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             MakeViewRequest(world, viewType.Name, layoutType, parent, tag, viewName, stayWorld);
         }
         
+        public static void MakeViewRequest<TView>(
+            this EcsWorld world, 
+            ViewType layoutType)
+        {
+            MakeViewRequest(world,typeof(TView),layoutType);
+        }
+        
+        public static void MakeViewRequest(
+            this EcsWorld world, 
+            Type viewType,
+            ViewType layoutType)
+        {
+            var entity = world.NewEntity();
+            
+            ref var component = ref world
+                .GetOrAddComponent<CreateLayoutViewRequest>(entity);
+            
+            component.Type = viewType;
+            component.LayoutType = layoutType;
+        }
+        
         public static void MakeViewRequest(
             this EcsWorld world, 
             string view,
