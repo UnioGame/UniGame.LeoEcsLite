@@ -3,24 +3,35 @@ using UniGame.LeoEcs.Shared.Systems;
 namespace UniGame.LeoEcs.Shared.Extensions
 {
     using System.Collections.Generic;
+    using Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.Shared.Systems;
     using Leopotam.EcsLite;
 
     public static class LeoEcsExtensions
     {
+        public static IEcsSystems CreateOn<TTrigger,TTarget>(this IEcsSystems systems)
+            where TTrigger : struct
+            where TTarget : struct
+        {
+            systems.Add(new SelfConvertComponentSystem<TTrigger,TTarget>());
+            return systems;
+        }
         
-        public static void FireOn<TFilter,TComponent>(this IEcsSystems systems)
+        
+        public static IEcsSystems FireOn<TFilter,TComponent>(this IEcsSystems systems)
             where TFilter : struct
             where TComponent : struct
         {
             systems.Add(new FireOnSystem<TFilter,TComponent>());
+            return systems;
         }
         
-        public static void FireOn<TFilter1,TFilter2,TComponent>(this IEcsSystems systems)
+        public static IEcsSystems FireOn<TFilter1,TFilter2,TComponent>(this IEcsSystems systems)
             where TFilter1 : struct
             where TFilter2 : struct
             where TComponent : struct
         {
             systems.Add(new FireOnSystem<TFilter1,TFilter2,TComponent>());
+            return systems;
         }
         
         public static void FireOn<TFilter1,TFilter2,TFilter3,TComponent>(this IEcsSystems systems)
