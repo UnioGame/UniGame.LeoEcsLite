@@ -24,6 +24,13 @@
                 return;
             
             _converter.Apply(target, world, entity, cancellationToken);
+
+            OnApply(gameObject, world, entity, cancellationToken);
+        }
+
+        protected virtual void OnApply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        {
+            
         }
         
         private void OnDrawGizmos()
