@@ -1,6 +1,4 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
-using UniGame.Core.Runtime.ScriptableObjects;
+﻿using Cysharp.Threading.Tasks;
 
 namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 {
@@ -16,7 +14,6 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         ILeoEcsSystemsGroup
     {
         #region inspector
-
         
         [HideLabel]
         [InlineProperty]
