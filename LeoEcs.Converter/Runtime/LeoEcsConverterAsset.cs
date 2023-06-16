@@ -61,6 +61,8 @@ namespace UniGame.LeoEcs.Converter.Runtime
             foreach (var converter in converters)
             {
                 var converterValue = converter.Value;
+                if(converterValue == null) continue;
+                
                 if (converterValue.GetType() == target)
                 {
                     result = converterValue;
