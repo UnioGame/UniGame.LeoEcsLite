@@ -12,7 +12,9 @@ namespace UniGame.LeoEcs.Converter.Runtime
     using UnityEngine;
     
     [CreateAssetMenu(menuName = "UniGame/LeoEcs/Converter/Ecs Converter")]
-    public class LeoEcsConverterAsset : ScriptableObject,IComponentConverter,ILeoEcsGizmosDrawer
+    public class LeoEcsConverterAsset : ScriptableObject,IComponentConverter,
+        ILeoEcsGizmosDrawer, 
+        IEcsConverterProvider
     {
         [BoxGroup("settings")]
         public bool enabled = true;
@@ -53,10 +55,43 @@ namespace UniGame.LeoEcs.Converter.Runtime
             return converter;
         }
         
-        public T GetConverter<T>() where T : class, IComponentConverter
+        public IComponentConverter GetConverter(Type target)
         {
-            var converter = converters.FirstOrDefault(x => x.Value is T);
-            return converter?.Value as T;
+            var result = default(IComponentConverter);
+            foreach (var converter in converters)
+            {
+                var converterValue = converter.Value;
+                if (converterValue.GetType() == target)
+                {
+                    result = converterValue;
+                    break;
+                }
+                
+                if(converterValue is IEcsConverterProvider converterProvider)
+                    result = converterProvider.GetConverter(target);
+                
+                if (result != null) break;
+            }
+
+            return result;
+        }
+        
+        public T GetConverter<T>() where T : class
+        {
+            var result = default(T);
+            foreach (var converterValue in converters)
+            {
+                result = converterValue.Value switch
+                {
+                    T converter => converter,
+                    IEcsConverterProvider converterProvider => converterProvider.GetConverter<T>(),
+                    _ => null
+                };
+                
+                if (result != null) break;
+            }
+
+            return result;
         }
         
         protected virtual void OnApply(EcsWorld world, int entity, CancellationToken cancellationToken = default)
