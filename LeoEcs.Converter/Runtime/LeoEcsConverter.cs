@@ -32,7 +32,7 @@
             Apply(gameObjectComponent.GameObject,world,entity,cancellationToken);
         }
         
-        public bool IsMatch(string searchString)
+        public virtual bool IsMatch(string searchString)
         {
             if (string.IsNullOrEmpty(searchString)) return true;
 
