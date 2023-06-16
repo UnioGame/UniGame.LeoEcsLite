@@ -5,25 +5,28 @@
     using Leopotam.EcsLite;
     using Sirenix.OdinInspector;
     using UnityEngine;
+    using UnityEngine.Serialization;
 
     public class MonoLeoEcsConverter<TConverter> : MonoBehaviour,ILeoEcsMonoComponentConverter
         where TConverter : ILeoEcsMonoComponentConverter
     {
 
+        [FormerlySerializedAs("_converter")]
         [HideLabel]
         [SerializeField]
-        private TConverter _converter;
+        [InlineProperty]
+        public TConverter converter;
 
-        public TConverter Converter => _converter;
+        public TConverter Converter => converter;
         
-        public bool IsEnabled => _converter.IsEnabled;
+        public bool IsEnabled => converter.IsEnabled;
         
         public void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
         {
-            if (_converter == null) 
+            if (converter == null) 
                 return;
             
-            _converter.Apply(target, world, entity, cancellationToken);
+            converter.Apply(target, world, entity, cancellationToken);
 
             OnApply(gameObject, world, entity, cancellationToken);
         }
@@ -35,7 +38,7 @@
         
         private void OnDrawGizmos()
         {
-            if (_converter is ILeoEcsGizmosDrawer gizmosDrawer)
+            if (converter is ILeoEcsGizmosDrawer gizmosDrawer)
                 gizmosDrawer.DrawGizmos(gameObject);
         }
     }
