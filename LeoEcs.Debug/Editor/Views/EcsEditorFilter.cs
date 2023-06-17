@@ -14,6 +14,7 @@
             new CheckEditorStatusFilter(),
             new CheckEcsWorldStatusFilter(),
             new IdEntitiesFilter(),
+            new EntitiesNamesFilter(),
             new FilterEntitiesComponents(),
         };
 

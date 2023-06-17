@@ -14,9 +14,6 @@
     {
         public int[] entities = Array.Empty<int>();
         public Type[] componentsTypesOnEntity = Array.Empty<Type>();
-        public HashSet<Type> componentTypes = new HashSet<Type>();
-        public StringBuilder messageBuilder = new StringBuilder();
-        public List<int> filteredEntities = new List<int>();
 
         public EcsFilterData Execute(EcsFilterData filterData)
         {
@@ -57,6 +54,7 @@
                 break;
             }
 
+            componentsTypesOnEntity.Despawn();
             return found;
         }
     }

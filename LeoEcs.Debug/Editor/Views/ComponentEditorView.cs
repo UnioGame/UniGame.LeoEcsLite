@@ -20,12 +20,13 @@
         private const string ComponentKey = "Component";
         private const string ComponentGroupValue = "Component/Value";
         private const string ComponentGroupActions = "Component/Actions";
+        
         #region inspector
         
         [HideInInspector]
         public int entity;
         
-        [HorizontalGroup(ComponentKey, 0.9f)]
+        [HorizontalGroup(ComponentKey, 0.75f)]
         [BoxGroup(ComponentGroupValue,LabelText = BoxGroupLabel)]
         [InlineProperty]
         [HideLabel]

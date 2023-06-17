@@ -16,31 +16,32 @@ namespace UniGame.LeoEcs.Debug.Editor
     using Object = UnityEngine.Object;
     using Random = UnityEngine.Random;
 
-    public class EntitiesDebugWindow : OdinEditorWindow
+    public class EntitiesBrowserWindow : OdinEditorWindow
     {
         #region statics data
 
         private static Color buttonColor = new Color(0.2f, 1, 0.6f);
 
-        [MenuItem("UniGame/LeoEcs/Entities Debug View")]
-        public static EntitiesDebugWindow OpenWindow()
+        [MenuItem("UniGame/LeoEcs/Entities Browser")]
+        [MenuItem("Game/Editors/Entities Browser")]
+        public static EntitiesBrowserWindow OpenWindow()
         {
             var window = Create();
             window.Show();
             return window;
         }
     
-        public static EntitiesDebugWindow OpenPopupWindow()
+        public static EntitiesBrowserWindow OpenPopupWindow()
         {
             var window = Create();
             window.ShowPopup();
             return window;
         }
 
-        public static EntitiesDebugWindow Create()
+        public static EntitiesBrowserWindow Create()
         {
-            var window = GetWindow<EntitiesDebugWindow>();
-            window.titleContent.text = "Entities Debug View";
+            var window = GetWindow<EntitiesBrowserWindow>();
+            window.titleContent.text = "Entities Browser";
             return window;
         }
 
