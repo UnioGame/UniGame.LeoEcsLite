@@ -45,7 +45,8 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         {
             if (base.IsMatch(searchString)) return true;
 
-            return groupConfiguration.IsMatch(searchString);
+            return groupConfiguration != null && 
+                   groupConfiguration.IsMatch(searchString);
         }
         
         protected virtual UniTask OnInitializeFeatureAsync(EcsSystems ecsSystems)

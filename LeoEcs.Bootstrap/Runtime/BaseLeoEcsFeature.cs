@@ -25,9 +25,11 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
 
         public virtual bool IsMatch(string searchString)
         {
+            if (this == null) return false;
+            
             if (string.IsNullOrEmpty(searchString)) return true;
             
-            if (ContainsSearchString(name,searchString)) 
+            if (!string.IsNullOrEmpty(name) && ContainsSearchString(name,searchString)) 
                 return true;
             
             return ContainsSearchString(FeatureName, searchString);
