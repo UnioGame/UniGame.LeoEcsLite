@@ -159,7 +159,8 @@ namespace UniGame.LeoEcs.Converter.Runtime
                 return _entityId;
 
             _world = world;
-            
+
+            _converters ??= new List<ILeoEcsComponentConverter>();
             _converters.Clear();
             _converters.AddRange(_serializableConverters);
             _converters.AddRange(GetComponents<ILeoEcsComponentConverter>());
