@@ -127,9 +127,11 @@ namespace UniGame.LeoEcs.Converter.Runtime
         public static void DestroyEntity(EcsPackedEntity entityId, EcsWorld world)
         {
             if (world == null || world.IsAlive() == false) return;
+
+            if (!entityId.Unpack(world, out var entity))
+                return;
             
-            if(entityId.Unpack(world,out var entity))
-                DestroyEntity(entity, world);
+            DestroyEntity(entity, world);
         }
 
         public static void DestroyEntity(int entityId, EcsWorld world)

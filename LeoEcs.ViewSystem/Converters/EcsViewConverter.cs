@@ -3,6 +3,7 @@
     using System.Threading;
     using Components;
     using Converter.Runtime;
+    using Converter.Runtime.Abstract;
     using Converter.Runtime.Components;
     using Core.Runtime;
     using Leopotam.EcsLite;
@@ -12,7 +13,7 @@
     using UnityEngine;
 
     [RequireComponent(typeof(LeoEcsMonoConverter))]
-    public class EcsViewConverter : MonoLeoEcsConverter, IEcsViewConverter
+    public class EcsViewConverter : MonoLeoEcsConverter, IEcsViewConverter,ILeoEcsComponentConverter
     {
 
         #region inspector
@@ -34,7 +35,6 @@
         
         #region public properties
         
-        public bool IsEnabled => isActiveAndEnabled;
         public bool IsEntityAlive => _isEntityAlive;
         public EcsWorld World => _ecsWorld;
         public EcsPackedEntity PackedEntity => _viewPackedEntity;

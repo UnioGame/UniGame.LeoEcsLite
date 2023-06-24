@@ -54,7 +54,7 @@
                 var view = viewComponent.View;
                 var viewType = viewComponent.Type;
 
-                if (view.IsInitialized.Value) continue;
+                if (view.IsModelAttached) continue;
                 
                 _viewTools.AddModelComponentAsync(_world, packedEntity, view, viewType)
                     .AttachExternalCancellation(_viewTools.LifeTime.CancellationToken)

@@ -137,8 +137,6 @@ namespace UniGame.LeoEcs.Converter.Runtime
             _entityLifeTime ??= new LifeTimeDefinition();
             //get all converters
             _converters ??= new List<ILeoEcsComponentConverter>();
-            _converters.AddRange(_serializableConverters);
-            _converters.AddRange(GetComponents<ILeoEcsComponentConverter>());
         }
 
         #endregion
@@ -161,7 +159,11 @@ namespace UniGame.LeoEcs.Converter.Runtime
                 return _entityId;
 
             _world = world;
-
+            
+            _converters.Clear();
+            _converters.AddRange(_serializableConverters);
+            _converters.AddRange(GetComponents<ILeoEcsComponentConverter>());
+            
             ecsEntityId = gameObject.CreateEcsEntityFromGameObject(world,
                 _converters, false,
                 _entityLifeTime.CancellationToken);
@@ -232,6 +234,8 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         private void MarkAsDestroyed()
         {
+            if (ecsEntityId < 0) return;
+            
             LeoEcsTool.DestroyEntity(_entityId, _world);
             
             ecsEntityId = -1;
