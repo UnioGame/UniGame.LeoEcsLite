@@ -157,15 +157,16 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         private EcsPackedEntity Convert(EcsWorld world)
         {
-            if (IsCreated || world.IsAlive() == false)
-                return _entityId;
+            if (this == null) return new EcsPackedEntity();
+
+            if (IsCreated || world.IsAlive() == false) return _entityId;
 
             _world = world;
-
             _converters ??= new List<ILeoEcsComponentConverter>();
             _converters.Clear();
             
             GetComponents(_converters);
+            
             _converters.AddRange(_serializableConverters);
             
             ecsEntityId = gameObject.CreateEcsEntityFromGameObject(world,
