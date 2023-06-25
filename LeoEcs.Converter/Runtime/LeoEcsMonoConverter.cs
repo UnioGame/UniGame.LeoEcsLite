@@ -53,6 +53,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
         private LifeTimeDefinition _entityLifeTime = new LifeTimeDefinition();
 
         private EcsWorld _world;
+        private string _originalName;
 
         #endregion
 
@@ -134,6 +135,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         private void Awake()
         {
+            _originalName = name;
             _entityLifeTime ??= new LifeTimeDefinition();
             //get all converters
             _converters ??= new List<ILeoEcsComponentConverter>();
@@ -162,8 +164,9 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
             _converters ??= new List<ILeoEcsComponentConverter>();
             _converters.Clear();
+            
+            GetComponents(_converters);
             _converters.AddRange(_serializableConverters);
-            _converters.AddRange(GetComponents<ILeoEcsComponentConverter>());
             
             ecsEntityId = gameObject.CreateEcsEntityFromGameObject(world,
                 _converters, false,
@@ -172,6 +175,10 @@ namespace UniGame.LeoEcs.Converter.Runtime
             _entityId = world.PackEntity(ecsEntityId);
             _state = EntityState.Created;
 
+#if UNITY_EDITOR
+            gameObject.name = $"{_originalName}_ENT_{ecsEntityId}";
+#endif
+            
             world.ApplyEcsComponents(ecsEntityId, assetConverters, _entityLifeTime.CancellationToken);
             world.ApplyEcsComponents(ecsEntityId, _dynamicComponentConverters, _entityLifeTime.CancellationToken);
             world.ApplyEcsComponents(gameObject, ecsEntityId, _dynamicConverters, _entityLifeTime.CancellationToken);

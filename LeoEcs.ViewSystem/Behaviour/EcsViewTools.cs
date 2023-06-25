@@ -26,8 +26,10 @@
         public ILifeTime LifeTime => _lifeTime;
         
         public async UniTask AddModelComponentAsync(
-            EcsWorld world,EcsPackedEntity packedEntity,
-            IView view,Type viewType)
+            EcsWorld world,
+            EcsPackedEntity packedEntity,
+            IView view,
+            Type viewType)
         {
             var modelType = _viewSystem.ModelTypeMap.GetViewModelType(viewType);
             var model = await _viewSystem.CreateViewModel(_context, modelType);

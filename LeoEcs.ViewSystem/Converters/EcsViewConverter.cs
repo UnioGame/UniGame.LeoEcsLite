@@ -5,11 +5,9 @@
     using Converter.Runtime;
     using Converter.Runtime.Abstract;
     using Converter.Runtime.Components;
-    using Core.Runtime;
     using Leopotam.EcsLite;
     using Shared.Extensions;
     using UniGame.ViewSystem.Runtime;
-    using UniModules.UniCore.Runtime.DataFlow;
     using UnityEngine;
 
     [RequireComponent(typeof(LeoEcsMonoConverter))]
@@ -60,7 +58,7 @@
         {
             _view = GetComponent<IView>();
             
-            if (!isActiveAndEnabled || _view == null) return;
+            if (!isActiveAndEnabled && _view == null) return;
 
             _ecsWorld = world;
             _viewPackedEntity = world.PackEntity(entity);

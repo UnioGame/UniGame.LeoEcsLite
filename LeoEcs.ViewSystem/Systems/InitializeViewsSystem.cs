@@ -6,6 +6,7 @@
     using Core.Runtime;
     using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
+    using Shared.Extensions;
     using UniGame.ViewSystem.Runtime;
     using Unity.IL2CPP.CompilerServices;
 
@@ -24,7 +25,8 @@
         
         private EcsPool<ViewInitializedComponent> _viewInitializedPool;
         private EcsPool<ViewComponent> _viewComponentPool;
-        
+        private EcsPool<ViewModelComponent> _viewModelPool;
+
         public InitializeViewsSystem(IEcsViewTools viewTools)
         {
             _viewTools = viewTools;
@@ -41,6 +43,7 @@
 
             _viewInitializedPool = _world.GetPool<ViewInitializedComponent>();
             _viewComponentPool = _world.GetPool<ViewComponent>();
+            _viewModelPool = _world.GetPool<ViewModelComponent>();
         }
 
         public void Run(IEcsSystems systems)
@@ -53,8 +56,13 @@
                 var packedEntity = _world.PackEntity(entity);
                 var view = viewComponent.View;
                 var viewType = viewComponent.Type;
-
-                if (view.IsModelAttached) continue;
+                ref var viewModelComponent = ref _viewModelPool.GetOrAddComponent(entity);
+                
+                if (view.IsModelAttached)
+                {
+                    viewModelComponent.Model = view.ViewModel;
+                    continue;
+                }
                 
                 _viewTools.AddModelComponentAsync(_world, packedEntity, view, viewType)
                     .AttachExternalCancellation(_viewTools.LifeTime.CancellationToken)

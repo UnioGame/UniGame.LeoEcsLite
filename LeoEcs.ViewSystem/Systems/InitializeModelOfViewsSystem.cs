@@ -19,18 +19,19 @@
         private EcsFilter _filter;
         
         private EcsPool<ViewComponent> _viewComponentPool;
-        
+        private EcsPool<ViewInitializedComponent> _initializedPool;
+
         public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             
             _filter = _world
                 .Filter<ViewComponent>()
-                .Inc<ViewInitializedComponent>()
-                .Exc<ViewModelComponent>()
+                .Exc<ViewInitializedComponent>()
                 .End();
 
             _viewComponentPool = _world.GetPool<ViewComponent>();
+            _initializedPool = _world.GetPool<ViewInitializedComponent>();
         }
 
         public void Run(IEcsSystems systems)
@@ -40,11 +41,12 @@
                 ref var viewComponent = ref _viewComponentPool.Get(entity);
                 var view = viewComponent.View;
 
-                if (!view.IsInitialized.Value) continue;
                 if(view.ViewModel == null) continue;
 
                 ref var viewModelComponent = ref _world.GetOrAddComponent<ViewModelComponent>(entity);
                 viewModelComponent.Model = view.ViewModel;
+
+                _initializedPool.GetOrAddComponent(entity);
             }
         }
 
