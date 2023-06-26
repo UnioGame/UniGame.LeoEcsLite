@@ -40,6 +40,9 @@ namespace UniGame.LeoEcs.ViewSystem.Behavriour
         public void Apply(GameObject target, EcsWorld world, 
             int entity, CancellationToken cancellationToken = default)
         {
+            _lifeTime = this.GetAssetLifeTime();
+            trigger ??= GetComponent<Button>();
+            
             this.Bind(trigger, x => world
                 .MakeViewRequest(view, layoutType));
         }
@@ -49,12 +52,6 @@ namespace UniGame.LeoEcs.ViewSystem.Behavriour
         {
             if (trigger == null)
                 trigger = GetComponent<Button>();
-        }
-
-        private void Awake()
-        {
-            _lifeTime = this.GetAssetLifeTime();
-            trigger ??= GetComponent<Button>();
         }
 
     }

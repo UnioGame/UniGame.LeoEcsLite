@@ -103,8 +103,19 @@ namespace UniGame.LeoEcs.Converter.Runtime
             bool spawnInstance,
             CancellationToken cancellationToken = default)
         {
-            target = spawnInstance ? Object.Instantiate(target) : target;
             var entity = world.NewEntity();
+            return CreateEcsEntityFromGameObject(target, entity, world, converterTasks, spawnInstance, cancellationToken);
+        }
+        
+        public static int CreateEcsEntityFromGameObject(
+            this GameObject target, 
+            int entity,
+            EcsWorld world, 
+            IEnumerable<ILeoEcsComponentConverter> converterTasks, 
+            bool spawnInstance,
+            CancellationToken cancellationToken = default)
+        {
+            target = spawnInstance ? Object.Instantiate(target) : target;
 
             ApplyEcsComponents(target, world, entity, DefaultGameObjectConverters, cancellationToken);
             ApplyEcsComponents(target, world, entity, converterTasks, cancellationToken);

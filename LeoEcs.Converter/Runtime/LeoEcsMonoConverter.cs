@@ -147,20 +147,37 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         private async UniTask<EcsPackedEntity> Convert()
         {
-            var world = await gameObject
-                .WaitWorldReady(_entityLifeTime.CancellationToken);
+            if(IsCreated) return _entityId;
+            
+            var world = LeoEcsConvertersData.World ?? 
+                        await gameObject.WaitWorldReady(_entityLifeTime.CancellationToken);
 
-            return _state == EntityState.Destroyed
-                ? _entityId
-                : Convert(world);
+            if (this == null) return new EcsPackedEntity();
+            
+            if (world.IsAlive() == false)
+            {
+                _state = EntityState.Destroyed;
+                return new EcsPackedEntity();
+            }
+            
+            if (_state == EntityState.Destroyed)
+            {
+                if(_entityId.Unpack(_world,out var entity))
+                    _world.DelEntity(entity);
+                return new EcsPackedEntity();
+            }
+
+            ecsEntityId = world.NewEntity();
+            _state = EntityState.Created;
+            _entityId = world.PackEntity(ecsEntityId);
+            
+            Convert(world,ecsEntityId);
+
+            return _entityId;
         }
 
-        private EcsPackedEntity Convert(EcsWorld world)
+        private void Convert(EcsWorld world, int ecsEntity)
         {
-            if (this == null) return new EcsPackedEntity();
-
-            if (IsCreated || world.IsAlive() == false) return _entityId;
-
             _world = world;
             _converters ??= new List<ILeoEcsComponentConverter>();
             _converters.Clear();
@@ -169,11 +186,14 @@ namespace UniGame.LeoEcs.Converter.Runtime
             
             _converters.AddRange(_serializableConverters);
             
-            ecsEntityId = gameObject.CreateEcsEntityFromGameObject(world,
-                _converters, false,
+            gameObject.CreateEcsEntityFromGameObject(
+                ecsEntity,
+                world,
+                _converters,
+                false,
                 _entityLifeTime.CancellationToken);
 
-            _entityId = world.PackEntity(ecsEntityId);
+            
             _state = EntityState.Created;
 
 #if UNITY_EDITOR
@@ -192,8 +212,6 @@ namespace UniGame.LeoEcs.Converter.Runtime
             _dynamicConverters.Clear();
 
             world.GetOrAddComponent<ObjectConverterComponent>(ecsEntityId);
-            
-            return _entityId;
         }
 
         private void CreateEntity()

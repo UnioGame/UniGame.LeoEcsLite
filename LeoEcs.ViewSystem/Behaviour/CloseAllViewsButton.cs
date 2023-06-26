@@ -30,6 +30,7 @@
 
         public void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
         {
+            _lifeTime = this.GetAssetLifeTime();
             _world = world;
             _packedEntity = world.PackEntity(entity);
             
@@ -50,9 +51,5 @@
                 trigger = GetComponent<Button>();
         }
 
-        private void Awake()
-        {
-            _lifeTime = this.GetAssetLifeTime();
-        }
     }
 }
