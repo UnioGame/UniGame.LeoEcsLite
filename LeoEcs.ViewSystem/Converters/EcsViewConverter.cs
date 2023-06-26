@@ -59,7 +59,9 @@
             _view = GetComponent<IView>();
             
             if (!isActiveAndEnabled && _view == null) return;
-
+            
+            Debug.LogError($"VIEW CONVERTER {target.name} ENTT {entity} Apply STARTED",target);
+            
             _ecsWorld = world;
             _viewPackedEntity = world.PackEntity(entity);
             

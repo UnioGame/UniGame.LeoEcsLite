@@ -38,14 +38,16 @@ namespace UniGame.LeoEcs.Converter.Runtime
         [SerializeField]
         public int ecsEntityId = -1;
 
+        [BoxGroup("runtime info")] 
+        [ReadOnly] 
+        public EntityState state = EntityState.Destroyed;
+        
         #endregion
 
         #region private data
 
         private EcsPackedEntity _entityId;
-
-        private EntityState _state = EntityState.Destroyed;
-
+        
         private List<ILeoEcsComponentConverter> _converters = new List<ILeoEcsComponentConverter>();
         private List<ILeoEcsComponentConverter> _dynamicConverters = new List<ILeoEcsComponentConverter>();
         private List<IEcsComponentConverter> _dynamicComponentConverters = new List<IEcsComponentConverter>();
@@ -61,7 +63,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         public bool IsPlayingAndReady => IsRuntime && ecsEntityId >= 0;
 
-        public bool IsCreated => _state == EntityState.Created;
+        public bool IsCreated => state == EntityState.Created;
 
         public EcsPackedEntity EntityId => _entityId;
 
@@ -145,35 +147,32 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         #region private methods
 
-        private async UniTask<EcsPackedEntity> Convert()
+        private async UniTask Convert()
         {
-            if(IsCreated) return _entityId;
+            if(IsCreated) return;
             
             var world = LeoEcsConvertersData.World ?? 
                         await gameObject.WaitWorldReady(_entityLifeTime.CancellationToken);
 
-            if (this == null) return new EcsPackedEntity();
+            if (this == null) return;
             
             if (world.IsAlive() == false)
             {
-                _state = EntityState.Destroyed;
-                return new EcsPackedEntity();
+                state = EntityState.Destroyed;
+                return;
             }
             
-            if (_state == EntityState.Destroyed)
+            if (state == EntityState.Destroyed)
             {
-                if(_entityId.Unpack(_world,out var entity))
-                    _world.DelEntity(entity);
-                return new EcsPackedEntity();
+                DestroyEntity();
+                return;
             }
 
             ecsEntityId = world.NewEntity();
-            _state = EntityState.Created;
+            state = EntityState.Created;
             _entityId = world.PackEntity(ecsEntityId);
             
             Convert(world,ecsEntityId);
-
-            return _entityId;
         }
 
         private void Convert(EcsWorld world, int ecsEntity)
@@ -194,7 +193,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
                 _entityLifeTime.CancellationToken);
 
             
-            _state = EntityState.Created;
+            state = EntityState.Created;
 
 #if UNITY_EDITOR
             gameObject.name = $"{_originalName}_ENT_{ecsEntityId}";
@@ -216,10 +215,10 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         private void CreateEntity()
         {
-            if (_state == EntityState.Created)
+            if (state == EntityState.Created)
                 return;
 
-            _state = EntityState.Creating;
+            state = EntityState.Creating;
             _entityLifeTime.Release();
 
             Convert().Forget();
@@ -235,12 +234,22 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         private void DestroyEntity()
         {
-            if (_state != EntityState.Created)
-            {
-                MarkAsDestroyed();
-                return;
-            }
+            DestroyEntity(_entityId);
+        }
 
+        private void DestroyEntity(EcsPackedEntity entity)
+        {
+            //mark state as destroyed
+            state = EntityState.Destroyed;
+            
+            //if entity already created when destroy immediate
+            if (ecsEntityId < 0) return;
+            
+            if (_world == null || _world.IsAlive() == false) return;
+
+            if (!entity.Unpack(_world, out var targetEntity))
+                return;
+            
             //notify converters about destroy
             foreach (var converter in _converters)
             {
@@ -255,19 +264,12 @@ namespace UniGame.LeoEcs.Converter.Runtime
                     continue;
                 destroyHandler.OnEntityDestroy(_world, ecsEntityId);
             }
-            
-            MarkAsDestroyed();
-        }
 
-        private void MarkAsDestroyed()
-        {
-            if (ecsEntityId < 0) return;
-            
-            LeoEcsTool.DestroyEntity(_entityId, _world);
-            
+            //clean up converter entity data
+            LeoEcsTool.DestroyEntity(targetEntity, _world);
+                
             ecsEntityId = -1;
 
-            _state = EntityState.Destroyed;
             _entityId = new EcsPackedEntity();
             _entityLifeTime.Release();
         }
