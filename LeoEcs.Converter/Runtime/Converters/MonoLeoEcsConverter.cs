@@ -7,6 +7,7 @@
     using UnityEngine;
     using UnityEngine.Serialization;
 
+    [RequireComponent(typeof(LeoEcsMonoConverter))]
     public class MonoLeoEcsConverter<TConverter> : MonoBehaviour,ILeoEcsMonoComponentConverter
         where TConverter : ILeoEcsMonoComponentConverter
     {
