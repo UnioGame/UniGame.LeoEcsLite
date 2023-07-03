@@ -9,6 +9,7 @@
     using Cysharp.Threading.Tasks;
     using LeoEcsLite.LeoEcs.Bootstrap.Runtime.Systems;
     using Leopotam.EcsLite;
+    using PostInitialize;
     using UniModules.UniCore.Runtime.DataFlow;
     using Object = UnityEngine.Object;
 
@@ -36,6 +37,11 @@
         {
             //new DestroyNullTransformSystem(),
         };
+        
+        private List<IEcsPostInitializeAction> _postInitializeActions = new List<IEcsPostInitializeAction>()
+        {
+            new EcsDiPostInitialize(),
+        };
 
         public EcsWorld World => _world;
 
@@ -62,7 +68,6 @@
 
             LifeTime.AddCleanUpAction(CleanUp);
         }
-
         
         public void SetDefaultWorld(EcsWorld world)
         {
@@ -76,7 +81,10 @@
             _isInitialized = true;
 
             foreach (var systems in _systemsMap.Values)
+            {
                 systems.Init();
+                ApplyPostInitialize(systems);
+            }
         }
 
         public void Execute()
@@ -119,6 +127,15 @@
             if (_ownThisWorld)
                 _world?.Destroy();
             _world = null;
+        }
+
+        private void ApplyPostInitialize(IEcsSystems ecsSystems)
+        {
+            foreach (var postInitializeAction in _postInitializeActions)
+            {
+                foreach (var system in ecsSystems.GetAllSystems())
+                    postInitializeAction.Apply(ecsSystems,system);
+            }
         }
         
         private async UniTask InitializeEcsService(EcsWorld world)
