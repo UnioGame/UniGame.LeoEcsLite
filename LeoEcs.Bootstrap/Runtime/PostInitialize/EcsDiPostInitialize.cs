@@ -13,7 +13,7 @@
         private const string PoolMethodName = "GetPool";
         
         private MethodInfo _poolMethod;
-        private Type _diAttributeType = typeof(EcsDiAttribute);
+        private Type _diAttributeType = typeof(ECSDIAttribute);
         private Type _poolType = typeof(EcsPool<>);
         
         public void Apply(IEcsSystems ecsSystems,IEcsSystem system)
@@ -26,7 +26,7 @@
             if(_poolMethod == null) return;
             
             var systemType = system.GetType();
-            var isDiSystem = systemType.HasAttribute<EcsDiAttribute>();
+            var isDiSystem = systemType.HasAttribute<ECSDIAttribute>();
             var fields = systemType.GetInstanceFields();
             
             foreach (var field in fields)

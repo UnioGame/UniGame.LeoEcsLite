@@ -3,7 +3,7 @@
     using System;
 
     [AttributeUsage(AttributeTargets.Class|AttributeTargets.Struct|AttributeTargets.Field)]
-    public class EcsDiAttribute : Attribute
+    public class ECSDIAttribute : Attribute
     {
         
     }
