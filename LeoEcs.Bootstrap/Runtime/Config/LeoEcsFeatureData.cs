@@ -9,7 +9,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
     using UnityEngine;
 
     [Serializable]
-    public class LeoEcsFeatureData : ILeoEcsGroupData,ISearchFilterable
+    public class LeoEcsFeatureData : ILeoEcsFeature
     {
         private static List<IEcsSystem> emptySystems = new List<IEcsSystem>();
         
@@ -19,7 +19,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         [InlineEditor]
         [HideLabel]
         [ShowIf(nameof(UseAssetGroup))]
-        public LeoEcsFeatureGroupAsset featureGroupAsset;
+        public BaseLeoEcsFeature featureGroupAsset;
 
         [FoldoutGroup("$"+nameof(FeatureName))]
         [SerializeReference]
@@ -37,26 +37,27 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         public bool UseAssetGroup => featureGroupAsset != null || 
                                      (featureGroupAsset == null && featureGroup == null);
 
-        public ILeoEcsSystemsGroup Feature => UseSerializedGroup 
+        public ILeoEcsFeature Feature => UseSerializedGroup 
             ? featureGroup 
             : featureGroupAsset;
 
         public bool IsFeatureEnabled => Feature is { IsFeatureEnabled: true };
 
-        public IReadOnlyList<IEcsSystem> EcsSystems => Feature == null 
+        public IReadOnlyList<IEcsSystem> EcsSystems => Feature is not ILeoEcsSystemsGroup group
             ? emptySystems 
-            : Feature.EcsSystems;
+            : group.EcsSystems;
         
         public bool IsMatch(string searchString)
         {
             if (string.IsNullOrEmpty(searchString)) return true;
 
-            if (UseSerializedGroup && nameof(UseSerializedGroup).Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            if (UseSerializedGroup && 
+                !string.IsNullOrEmpty(FeatureName) &&
+                FeatureName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
 
             if (Feature != null && 
-                Feature.GetType().Name
-                    .Contains(searchString, StringComparison.OrdinalIgnoreCase)) 
+                Feature.GetType().Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)) 
                 return true;
 
             if (EcsSystems == null)
@@ -68,10 +69,9 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
                     
                 if (system is ISearchFilterable searchFilterable && searchFilterable.IsMatch(searchString))
                     return true;
-                
-                if (system.GetType()
-                    .Name
-                    .Contains(searchString, StringComparison.OrdinalIgnoreCase)) 
+
+                var typeName = system.GetType().Name;
+                if (typeName.Contains(searchString, StringComparison.OrdinalIgnoreCase)) 
                     return true;
             }
 

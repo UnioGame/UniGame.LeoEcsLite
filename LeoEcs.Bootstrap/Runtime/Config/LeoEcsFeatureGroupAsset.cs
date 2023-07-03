@@ -1,7 +1,6 @@
-﻿using Cysharp.Threading.Tasks;
-
-namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
+﻿namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 {
+    using Cysharp.Threading.Tasks;
     using System.Collections.Generic;
     using Abstract;
     using Leopotam.EcsLite;
@@ -24,9 +23,11 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         #region public properties
 
         public IReadOnlyList<IEcsSystem> EcsSystems => groupConfiguration.EcsSystems;
- 
-        public override string FeatureName => groupConfiguration.FeatureName;
 
+        public override string FeatureName => string.IsNullOrEmpty(groupConfiguration.FeatureName)
+            ? name
+            : groupConfiguration.FeatureName;
+        
         public override bool IsFeatureEnabled => groupConfiguration.IsFeatureEnabled;
 
         public override bool ShowFeatureInfo => false;
@@ -64,7 +65,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         {
             if (groupConfiguration != null && 
                 string.IsNullOrEmpty(groupConfiguration.FeatureName))
-                groupConfiguration._name = name;
+                groupConfiguration.name = name;
         }
     }
 }

@@ -8,6 +8,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
     using Leopotam.EcsLite;
     using Sirenix.OdinInspector;
     using UnityEngine;
+    using UnityEngine.Serialization;
 
     [Serializable]
     public class LeoEcsSystemsGroupConfiguration : ILeoEcsSystemsGroup
@@ -16,10 +17,11 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         
         public bool showFeatureInfo = true;
         
+        [FormerlySerializedAs("_name")]
         [BoxGroup(FeatureInfoGroup)]
         [ShowIf(nameof(showFeatureInfo))]
         [SerializeField]
-        public string _name;
+        public string name;
         
         [BoxGroup(FeatureInfoGroup)]
         [ShowIf(nameof(showFeatureInfo))]
@@ -42,7 +44,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         public List<ILeoEcsFeature> serializableFeatures = new List<ILeoEcsFeature>();
 
         
-        public string FeatureName => _name;
+        public string FeatureName => name;
         
         public bool IsFeatureEnabled => _active;
 

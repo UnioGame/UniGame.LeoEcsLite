@@ -6,7 +6,7 @@
 #endif
 
     /// <summary>
-    /// ADD DESCRIPTION HERE
+    /// mark as converted object
     /// </summary>
     [Serializable]
 #if ENABLE_IL2CPP

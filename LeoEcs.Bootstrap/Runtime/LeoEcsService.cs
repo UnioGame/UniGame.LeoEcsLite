@@ -1,16 +1,12 @@
-﻿using UniGame.Core.Runtime;
-using UniGame.UniNodes.GameFlow.Runtime;
-using UniModules.UniGame.Core.Runtime.DataFlow.Extensions;
-
-namespace UniGame.LeoEcs.Bootstrap.Runtime
+﻿namespace UniGame.LeoEcs.Bootstrap.Runtime
 {
+    using UniGame.Core.Runtime;
+    using UniGame.UniNodes.GameFlow.Runtime;
     using System.Collections.Generic;
     using Abstract;
-    using Config;
     using Converter.Runtime;
     using Core.Runtime.Extension;
     using Cysharp.Threading.Tasks;
-    using Game.Ecs.Core.Systems;
     using LeoEcsLite.LeoEcs.Bootstrap.Runtime.Systems;
     using Leopotam.EcsLite;
     using UniModules.UniCore.Runtime.DataFlow;
@@ -25,8 +21,8 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
         private readonly float _featureTimeout;
         private readonly Dictionary<string, EcsSystems> _systemsMap;
         private readonly Dictionary<string, ILeoEcsExecutor> _systemsExecutors;
-
         private readonly IContext _context;
+        
         private EcsWorld _world;
         private bool _isInitialized;
 
@@ -124,11 +120,19 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
                 _world?.Destroy();
             _world = null;
         }
-
+        
         private async UniTask InitializeEcsService(EcsWorld world)
         {
+            var features = new List<ILeoEcsFeature>();
+            
             foreach (var updateGroup in _config.FeatureGroups)
-                await CreateEcsGroupRunner(updateGroup.updateType, world, updateGroup.features);
+            {
+                features.Clear();
+                foreach (var feature in updateGroup.features)
+                    features.Add(feature.Feature);
+                
+                await CreateEcsGroupRunner(updateGroup.updateType, world, features);
+            }
         }
 
         private void ApplyPlugins(EcsWorld world)
@@ -143,7 +147,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
             }
         }
 
-        private async UniTask CreateEcsGroupRunner(string updateType, EcsWorld world, IReadOnlyList<LeoEcsFeatureData> features)
+        private async UniTask CreateEcsGroupRunner(string updateType, EcsWorld world, IReadOnlyList<ILeoEcsFeature> runnerFeatures)
         {
             if (!_systemsMap.TryGetValue(updateType, out var ecsSystems))
             {
@@ -154,10 +158,10 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
             foreach (var startupSystem in _startupSystems)
                 ecsSystems.Add(startupSystem);
 
-            foreach (var feature in features)
+            foreach (var feature in runnerFeatures)
             {
                 if (!feature.IsFeatureEnabled) continue;
-
+                
                 if (feature is ILeoEcsInitializableFeature initializeFeature)
                 {
                     var featureLifeTime = new LifeTimeDefinition();
@@ -165,8 +169,11 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
                         .AttachTimeoutLogAsync(GetErrorMessage(initializeFeature),_featureTimeout,featureLifeTime.CancellationToken);
                     featureLifeTime.Terminate();
                 }
+                
+                if(feature is not ILeoEcsSystemsGroup groupFeature)
+                    continue;
 
-                foreach (var system in feature.EcsSystems)
+                foreach (var system in groupFeature.EcsSystems)
                 {
                     var leoEcsSystem = system;
 

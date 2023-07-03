@@ -21,11 +21,12 @@ namespace UniGame.LeoEcs.Converter.Runtime
         [SerializeField] public bool createEntityOnStart = false;
         [SerializeField] public bool destroyOnDestroy = false;
         
+        [FormerlySerializedAs("_serializableConverters")]
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
         [Space(8)]
         [InlineProperty]
         [SerializeReference]
-        public List<ILeoEcsMonoComponentConverter> _serializableConverters = new List<ILeoEcsMonoComponentConverter>();
+        public List<ILeoEcsMonoComponentConverter> serializableConverters = new List<ILeoEcsMonoComponentConverter>();
 
         [Space(8)] 
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)] 
@@ -183,7 +184,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
             
             GetComponents(_converters);
             
-            _converters.AddRange(_serializableConverters);
+            _converters.AddRange(serializableConverters);
             
             gameObject.CreateEcsEntityFromGameObject(
                 ecsEntity,
@@ -280,7 +281,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         private void OnDrawGizmos()
         {
-            foreach (var converter in _serializableConverters)
+            foreach (var converter in serializableConverters)
             {
                 if (converter is ILeoEcsGizmosDrawer gizmosDrawer)
                     gizmosDrawer.DrawGizmos(gameObject);

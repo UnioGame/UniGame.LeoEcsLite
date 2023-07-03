@@ -5,11 +5,11 @@
     using Shared.Components;
     using Shared.Extensions;
     using UnityEngine;
-
+    
     public sealed class ColliderConverter : MonoLeoEcsConverter
     {
         [SerializeField]
-        private Collider _collider;
+        public Collider _collider;
         
         public override void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
         {

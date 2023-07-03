@@ -17,7 +17,6 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         public string updateType;
         
         [Space(8)]
-        [TitleGroup("ECS Features")]
         [SerializeField]
         [InlineProperty]
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]

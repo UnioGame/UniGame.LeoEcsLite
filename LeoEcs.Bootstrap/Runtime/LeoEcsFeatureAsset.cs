@@ -40,13 +40,17 @@
         
         public override bool IsMatch(string searchString)
         {
+            if (this == null) return false;
+            
             if (string.IsNullOrEmpty(searchString)) return true;
 
             var typeName = GetType().Name;
             if (typeName.IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0) 
                 return true;
-            if (name.IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0) 
+            
+            if (name.IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0)
                 return true;
+                
             if (FeatureName.IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0)
                 return true;
 
