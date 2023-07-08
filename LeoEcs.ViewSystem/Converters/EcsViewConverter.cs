@@ -5,6 +5,7 @@
     using Converter.Runtime;
     using Converter.Runtime.Abstract;
     using Converter.Runtime.Components;
+    using Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.ViewSystem.Components;
     using Leopotam.EcsLite;
     using Shared.Extensions;
     using UniGame.ViewSystem.Runtime;
@@ -13,11 +14,11 @@
     [RequireComponent(typeof(LeoEcsMonoConverter))]
     public class EcsViewConverter : MonoLeoEcsConverter, IEcsViewConverter,ILeoEcsComponentConverter
     {
-
         #region inspector
 
         public int entityId;
 
+        public bool followEntityLifeTime = false;
         public bool addChildOrderComponent = false;
         
         #endregion
@@ -76,7 +77,15 @@
                 ref var childOrderComponent = ref world.GetOrAddComponent<ViewOrderComponent>(entity);
                 childOrderComponent.Order = target.transform.GetSiblingIndex();
             }
-            
+
+            //follow entity lifetime  and close view if entity is dead
+            if (followEntityLifeTime)
+            {
+                var lifeTimeEntity = world.NewEntity();
+                ref var lifeTimeComponent = ref world.AddComponent<ViewEntityLifeTimeComponent>(lifeTimeEntity);
+                lifeTimeComponent.View = _view;
+                lifeTimeComponent.Value = _viewPackedEntity;
+            }
             
             _isEntityAlive = true;
         }

@@ -2,6 +2,7 @@ namespace UniGame.LeoEcs.ViewSystem
 {
     using Behavriour;
     using Cysharp.Threading.Tasks;
+    using Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.ViewSystem.Systems;
     using Leopotam.EcsLite;
     using Leopotam.EcsLite.ExtendedSystems;
     using UniGame.Context.Runtime.Extension;
@@ -24,6 +25,8 @@ namespace UniGame.LeoEcs.ViewSystem
             
             _ecsViewTools = new EcsViewTools(context, viewSystem);
             
+            //if view entity is dead and 
+            ecsSystems.Add(new CloseViewByDeadEntitySystem());
             ecsSystems.Add(new CloseViewSystem());
             ecsSystems.Add(new ViewServiceInitSystem(viewSystem));
             ecsSystems.Add(new CloseAllViewsSystem(viewSystem));
