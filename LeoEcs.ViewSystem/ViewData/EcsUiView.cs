@@ -10,7 +10,7 @@
 
     [RequireComponent(typeof(LeoEcsMonoConverter))]
     [RequireComponent(typeof(EcsViewConverter))]
-    public abstract class EcsUiView<TViewModel> : UiView<TViewModel>,
+    public abstract class EcsUiView<TViewModel> : View<TViewModel>,
         ILeoEcsComponentConverter,IEcsView
         where TViewModel : class, IViewModel
     {
