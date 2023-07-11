@@ -4,12 +4,15 @@ using System.Linq;
 namespace UniGame.LeoEcs.Converter.Runtime
 {
     using System.Collections.Generic;
-    using System.Runtime.InteropServices;
     using System.Threading;
     using Leopotam.EcsLite;
     using Sirenix.OdinInspector;
     using Abstract;
     using UnityEngine;
+
+#if UNITY_EDITOR
+    using UniModules.Editor;
+#endif
     
     [CreateAssetMenu(menuName = "UniGame/LeoEcs/Converter/Ecs Converter")]
     public class LeoEcsConverterAsset : ScriptableObject,IComponentConverter,
@@ -53,6 +56,18 @@ namespace UniGame.LeoEcs.Converter.Runtime
             converterValue.converter = converter;
             converters.Add(converterValue);
             return converter;
+        }
+        
+        public void RemoveConverter<T>() where T : IComponentConverter
+        {
+            converters.RemoveAll(x => x.Value is T);
+            
+            foreach (var converter in converters)
+            {
+                if(converter.Value is not IEcsConverterProvider converterProvider)
+                    continue;
+                converterProvider.RemoveConverter<T>();
+            }
         }
         
         public IComponentConverter GetConverter(Type target)
@@ -119,5 +134,6 @@ namespace UniGame.LeoEcs.Converter.Runtime
                     gizmosDrawer.DrawGizmos(target);
             }
         }
+        
     }
 }

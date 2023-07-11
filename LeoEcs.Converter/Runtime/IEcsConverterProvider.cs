@@ -7,6 +7,8 @@
     {
         T GetConverter<T>() where T : class;
 
+        void RemoveConverter<T>() where T : IComponentConverter;
+        
         IComponentConverter GetConverter(Type target);
     }
 }
