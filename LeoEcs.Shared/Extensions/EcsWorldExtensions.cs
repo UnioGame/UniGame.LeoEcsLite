@@ -48,6 +48,14 @@ namespace UniGame.LeoEcs.Shared.Extensions
                 yield return world.PackEntity(entity);
             }
         }
+        
+        public static void PackAll(this EcsWorld world,List<EcsPackedEntity> container, IEnumerable<int> entities)
+        {
+            foreach (var entity in entities)
+            {
+                container.Add(world.PackEntity(entity));
+            }
+        }
 
         public static bool UnpackAll(this EcsWorld world,List<int> result, List<EcsPackedEntity> packedEntities)
         {
