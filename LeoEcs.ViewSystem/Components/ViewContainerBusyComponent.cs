@@ -1,11 +1,9 @@
 ﻿namespace UniGame.LeoEcs.ViewSystem.Components
 {
     using System;
-    using global::UniGame.ViewSystem.Runtime;
-    using Leopotam.EcsLite;
 
     /// <summary>
-    /// link view with entity and follow it's lifetime
+    /// mark container as busy
     /// </summary>
 #if ENABLE_IL2CPP
     using Unity.IL2CPP.CompilerServices;
@@ -15,9 +13,8 @@
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 #endif
     [Serializable]
-    public struct ViewEntityLifeTimeComponent
+    public struct ViewContainerBusyComponent
     {
-        public EcsPackedEntity Value;
-        public IView View;
+        
     }
 }

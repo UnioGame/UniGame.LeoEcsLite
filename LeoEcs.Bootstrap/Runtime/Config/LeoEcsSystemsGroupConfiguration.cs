@@ -35,11 +35,14 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         [InlineProperty]
 #endif
         [SerializeReference]
+        [Searchable]
         private List<IEcsSystem> _systems = new List<IEcsSystem>();
         
+        [Searchable]
         [InlineEditor()]
         public List<BaseLeoEcsFeature> nestedFeatures = new List<BaseLeoEcsFeature>();
 
+        [Searchable]
         [SerializeReference]
         public List<ILeoEcsFeature> serializableFeatures = new List<ILeoEcsFeature>();
 

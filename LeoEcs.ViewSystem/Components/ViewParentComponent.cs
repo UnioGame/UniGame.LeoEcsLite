@@ -1,11 +1,10 @@
-﻿namespace UniGame.LeoEcs.ViewSystem.Components
+﻿namespace Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.ViewSystem.Components
 {
     using System;
-    using global::UniGame.ViewSystem.Runtime;
-    using Leopotam.EcsLite;
+    using UnityEngine;
 
     /// <summary>
-    /// link view with entity and follow it's lifetime
+    /// link to parent Componentn
     /// </summary>
 #if ENABLE_IL2CPP
     using Unity.IL2CPP.CompilerServices;
@@ -15,9 +14,8 @@
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 #endif
     [Serializable]
-    public struct ViewEntityLifeTimeComponent
+    public struct ViewParentComponent
     {
-        public EcsPackedEntity Value;
-        public IView View;
+        public Transform Value;
     }
 }

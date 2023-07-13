@@ -25,6 +25,7 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
                 .Inc<ViewInitializedComponent>();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryGetViewModel<TModel>(this EcsWorld world, int entity, out TModel model)
         {
             model = default;
@@ -140,6 +141,39 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             bool stayWorld = false)
         {
             MakeViewRequest(world, viewType.Name, layoutType, parent, tag, viewName, stayWorld);
+        }
+        
+        public static void MakeViewInContainerRequest<TView>(
+            this EcsWorld world, 
+            bool useBusyContainer = false,
+            EcsPackedEntity owner = default,
+            string tag = null,
+            string viewName = null,
+            bool stayWorld = false)
+        {
+            world.MakeViewInContainerRequest(typeof(TView).Name, useBusyContainer, owner, tag, viewName, stayWorld);
+        }
+        
+        public static void MakeViewInContainerRequest(
+            this EcsWorld world, 
+            string view,
+            bool useBusyContainer = false,
+            EcsPackedEntity owner = default,
+            string tag = null,
+            string viewName = null,
+            bool stayWorld = false)
+        {
+            var entity = world.NewEntity();
+            
+            ref var component = ref world
+                .GetOrAddComponent<CreateViewInContainerRequest>(entity);
+            
+            component.Tag = tag;
+            component.View = view;
+            component.ViewName = viewName;
+            component.StayWorld = stayWorld;
+            component.UseBusyContainer = useBusyContainer;
+            component.Owner = owner;
         }
         
         public static void MakeViewRequest<TView>(

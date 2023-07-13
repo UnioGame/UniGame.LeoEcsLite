@@ -2,13 +2,12 @@ namespace UniGame.LeoEcs.ViewSystem
 {
     using Behavriour;
     using Cysharp.Threading.Tasks;
-    using Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.ViewSystem.Systems;
     using Leopotam.EcsLite;
     using Leopotam.EcsLite.ExtendedSystems;
     using UniGame.Context.Runtime.Extension;
     using UniGame.Core.Runtime;
-    using UniGame.LeoEcs.ViewSystem.Components;
-    using UniGame.LeoEcs.ViewSystem.Systems;
+    using Components;
+    using Systems;
     using UniGame.ViewSystem.Runtime;
     using UniGame.LeoEcs.Bootstrap.Runtime.Config;
     using UnityEngine;
@@ -24,16 +23,23 @@ namespace UniGame.LeoEcs.ViewSystem
             var viewSystem = await context.ReceiveFirstAsync<IGameViewSystem>();
             
             _ecsViewTools = new EcsViewTools(context, viewSystem);
-            
+
             //if view entity is dead and 
             ecsSystems.Add(new CloseViewByDeadEntitySystem());
             ecsSystems.Add(new CloseViewSystem());
             ecsSystems.Add(new ViewServiceInitSystem(viewSystem));
             ecsSystems.Add(new CloseAllViewsSystem(viewSystem));
             
+            //container systems
+            ecsSystems.Add(new CreateViewInContainerSystem());
+            //check is container free
+            ecsSystems.Add(new UpdateViewContainerBusyStatusSystem());
+
+            //view creation systems
             ecsSystems.Add(new CreateLayoutViewSystem());
             ecsSystems.DelHere<CreateLayoutViewRequest>();
 
+            //update view status systems
             ecsSystems.Add(new ViewUpdateStatusSystem());
             ecsSystems.Add(new CreateViewSystem(context,viewSystem,_ecsViewTools));
             ecsSystems.Add(new InitializeViewsSystem(_ecsViewTools));

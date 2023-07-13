@@ -14,6 +14,8 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
     using Converter.Runtime;
     using Converter.Runtime.Abstract;
     using Core.Runtime;
+    using Game.Ecs.Core.Components;
+    using Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.ViewSystem.Components;
     using Shared.Extensions;
 
 #if ENABLE_IL2CPP
@@ -32,6 +34,8 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
         public EcsWorld _world;
 
         private EcsPool<CreateViewRequest> _createViewPool;
+        private EcsPool<OwnerComponent> _ownerPool;
+        private EcsPool<ViewParentComponent> _parentPool;
 
         public CreateViewSystem(IContext context,IGameViewSystem viewSystem,IEcsViewTools viewTools)
         {
@@ -44,7 +48,10 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
         {
             _world = systems.GetWorld();
             _createFilter = _world.Filter<CreateViewRequest>().End();
+            
             _createViewPool = _world.GetPool<CreateViewRequest>();
+            _ownerPool = _world.GetPool<OwnerComponent>();
+            _parentPool = _world.GetPool<ViewParentComponent>();
         }
         
         public void Run(IEcsSystems systems)
@@ -81,16 +88,31 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
             var converter = viewObject.GetComponent<ILeoEcsMonoConverter>();
             if (converter == null) return;
             
-            converter.RegisterDynamicCallback(x => ConvertView(x,model));
+            converter.RegisterDynamicCallback(x => ConvertView(x,model,request));
         }
 
-        public void ConvertView(EcsPackedEntity viewPackedEntity,IViewModel model)
+        public void ConvertView(EcsPackedEntity viewPackedEntity,IViewModel model,CreateViewRequest request)
         {
             if (!viewPackedEntity.Unpack(_world, out var viewEntity))
                 return;
+
+            var owner = request.Owner;
+            var parent = request.Parent;
             
             _world.GetOrAddComponent<ViewInitializedComponent>(viewEntity);
             _viewTools.AddViewModelData(_world,viewPackedEntity,model);
+
+            if (owner.Unpack(_world, out var ownerEntity)) 
+            {
+                ref var ownerComponent = ref _ownerPool.GetOrAddComponent(viewEntity);
+                ownerComponent.Entity = owner;
+            }
+            
+            if (parent != null)
+            {
+                ref var parentComponent = ref _parentPool.GetOrAddComponent(viewEntity);
+                parentComponent.Value = parent;
+            }
         }
     }
 }
