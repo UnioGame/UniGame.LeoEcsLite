@@ -67,6 +67,8 @@ namespace UniGame.LeoEcs.Converter.Runtime
         public bool IsCreated => state == EntityState.Created;
 
         public EcsPackedEntity EntityId => _entityId;
+        
+        public EcsWorld World => _world;
 
         #region public methods
 
