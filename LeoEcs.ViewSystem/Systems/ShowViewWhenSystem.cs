@@ -17,14 +17,14 @@
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 #endif
     [Serializable]
-    public class ShowViewWhen<TView> : IEcsInitSystem, IEcsRunSystem
+    public class ShowViewWhenSystem<TView> : IEcsInitSystem, IEcsRunSystem
         where TView : IView
     {
         private ViewRequestData _data;
         private EcsWorld _world;
         private EcsFilter _eventFilter;
 
-        public ShowViewWhen(EcsFilter eventFilter,ViewRequestData data)
+        public ShowViewWhenSystem(EcsFilter eventFilter,ViewRequestData data)
         {
             _eventFilter = eventFilter;
             _data = data;
@@ -59,8 +59,7 @@
             }
         }
     }
-    
-    
+
     /// <summary>
     /// await target event and create view
     /// </summary>
@@ -68,7 +67,7 @@
     [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
     [Serializable]
-    public class ShowViewWhen<TEvent,TView> : IEcsInitSystem, IEcsRunSystem
+    public class ShowViewWhenSystem<TEvent,TView> : IEcsInitSystem, IEcsRunSystem
         where TEvent : struct
         where TView : IView
     {
@@ -76,7 +75,7 @@
         private EcsWorld _world;
         private EcsFilter _eventFilter;
 
-        public ShowViewWhen(ViewRequestData data)
+        public ShowViewWhenSystem(ViewRequestData data)
         {
             _data = data;
         }
@@ -119,7 +118,7 @@
     [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
     [Serializable]
-    public class ShowViewWhen<TEvent1,TEvent2,TView> : IEcsInitSystem, IEcsRunSystem
+    public class ShowViewWhenSystem<TEvent1,TEvent2,TView> : IEcsInitSystem, IEcsRunSystem
         where TEvent1 : struct
         where TEvent2 : struct
         where TView : IView
@@ -128,7 +127,7 @@
         private EcsWorld _world;
         private EcsFilter _eventFilter;
 
-        public ShowViewWhen(ViewRequestData data)
+        public ShowViewWhenSystem(ViewRequestData data)
         {
             _data = data;
         }

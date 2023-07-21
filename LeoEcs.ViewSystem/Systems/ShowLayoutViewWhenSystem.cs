@@ -63,7 +63,7 @@
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 #endif
     [Serializable]
-    public class ShowLayoutViewWhen<TEvent,TView> : IEcsInitSystem, IEcsRunSystem
+    public class ShowLayoutViewWhenSystem<TEvent,TView> : IEcsInitSystem, IEcsRunSystem
         where TEvent : struct
         where TView : IView
     {
@@ -72,7 +72,7 @@
         private EcsWorld _world;
         private EcsFilter _eventFilter;
 
-        public ShowLayoutViewWhen(ViewType viewLayoutType = ViewType.Window)
+        public ShowLayoutViewWhenSystem(ViewType viewLayoutType = ViewType.Window)
         {
             _viewLayoutType = viewLayoutType;
         }
@@ -105,7 +105,7 @@
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 #endif
     [Serializable]
-    public class ShowLayoutViewWhen<TView> : IEcsInitSystem, IEcsRunSystem
+    public class ShowLayoutViewWhenSystem<TView> : IEcsInitSystem, IEcsRunSystem
         where TView : IView
     {
         private ViewType _viewLayoutType;
@@ -113,7 +113,7 @@
         private EcsWorld _world;
         private EcsFilter _eventFilter;
 
-        public ShowLayoutViewWhen(EcsFilter eventFilter,ViewType viewLayoutType = ViewType.Window)
+        public ShowLayoutViewWhenSystem(EcsFilter eventFilter,ViewType viewLayoutType = ViewType.Window)
         {
             _eventFilter = eventFilter;
             _viewLayoutType = viewLayoutType;
@@ -146,7 +146,7 @@
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 #endif
     [Serializable]
-    public class ShowLayoutViewWhen<TEvent1,TEvent2,TView> : IEcsInitSystem, IEcsRunSystem
+    public class ShowLayoutViewWhenSystem<TEvent1,TEvent2,TView> : IEcsInitSystem, IEcsRunSystem
         where TEvent1 : struct
         where TEvent2 : struct
         where TView : IView
@@ -156,7 +156,7 @@
         private EcsWorld _world;
         private EcsFilter _eventFilter;
 
-        public ShowLayoutViewWhen(ViewType viewLayoutType = ViewType.Window)
+        public ShowLayoutViewWhenSystem(ViewType viewLayoutType = ViewType.Window)
         {
             _viewLayoutType = viewLayoutType;
         }
