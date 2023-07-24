@@ -2,15 +2,45 @@ namespace UniGame.LeoEcs.Shared.Extensions
 {
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
+    using Core.Runtime;
+    using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
+    using UniModules.UniCore.Runtime.DataFlow;
+    using UniModules.UniCore.Runtime.Utils;
     using Unity.IL2CPP.CompilerServices;
+    using UnityEngine;
 
     [Il2CppSetOption(Option.NullChecks, false)]
     [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
     public static class EcsWorldExtensions
     {
-        
+        private static MemorizeItem<EcsWorld,ILifeTime> _memorizeItem = MemorizeTool
+            .Memorize<EcsWorld, ILifeTime>(static x =>
+            {
+                var lifeTime = new LifeTimeDefinition();
+                UpdateWorldLifeTime(x,lifeTime).Forget();
+                return lifeTime;
+                
+                static async UniTask UpdateWorldLifeTime(EcsWorld world,LifeTimeDefinition lifeTime)
+                {
+                    while (world.IsAlive())
+                    {
+#if UNITY_EDITOR
+                        if (!Application.isPlaying)
+                        {
+                            lifeTime.Terminate();
+                            return;
+                        }        
+#endif
+                        await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
+                    }
+      
+                    lifeTime.Terminate();
+                }
+                
+            });
+
         public static ref TComponent AddComponentToEntity<TComponent>(this EcsWorld world, int entity)
             where TComponent : struct
         {
@@ -180,5 +210,8 @@ namespace UniGame.LeoEcs.Shared.Extensions
                     result.Add(entity);
             }
         }
+
+        public static ILifeTime GetLifeTime(this EcsWorld world) => _memorizeItem[world];
+
     }
 }
