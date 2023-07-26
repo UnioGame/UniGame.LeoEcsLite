@@ -5,6 +5,7 @@
     using Converter.Runtime;
     using Converter.Runtime.Abstract;
     using Converter.Runtime.Components;
+    using Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.ViewSystem.Components;
     using Leopotam.EcsLite;
     using Shared.Extensions;
     using UniGame.ViewSystem.Runtime;

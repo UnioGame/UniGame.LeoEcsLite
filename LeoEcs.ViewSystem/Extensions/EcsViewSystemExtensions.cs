@@ -2,12 +2,31 @@
 {
     using Components;
     using Game.Ecs.UI.EndGameScreens.Systems;
+    using LeoEcsLite.LeoEcs.ViewSystem.Systems;
     using Leopotam.EcsLite;
     using UniGame.ViewSystem.Runtime;
     using UniModules.UniGame.UiSystem.Runtime;
 
     public static class EcsViewSystemExtensions
     {
+        
+        public static EcsSystems ShowQueuedOn<TEvent, TView1, TView2>(
+            this EcsSystems systems,
+            ViewType layoutType = ViewType.Window)
+            where TEvent : struct
+            where TView1 : IView
+            where TView2 : IView
+        {
+            var viewData = new EcsViewData()
+            {
+                LayoutType = layoutType,
+                StayWorld = false,
+            };
+            
+            systems.Add(new ShowQueuedViewOnSystem<TEvent,TView1,TView2>(viewData));
+            return systems;
+        }
+        
         /// <summary>
         /// Show view and mark entity forbidden for same view
         /// </summary>

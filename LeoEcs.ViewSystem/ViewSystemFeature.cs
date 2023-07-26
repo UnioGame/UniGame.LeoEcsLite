@@ -7,6 +7,8 @@ namespace UniGame.LeoEcs.ViewSystem
     using UniGame.Context.Runtime.Extension;
     using UniGame.Core.Runtime;
     using Components;
+    using Game.Ecs.UI.EndGameScreens.Systems;
+    using LeoEcsLite.LeoEcs.ViewSystem.Systems;
     using Systems;
     using UniGame.ViewSystem.Runtime;
     using UniGame.LeoEcs.Bootstrap.Runtime.Config;
@@ -29,6 +31,9 @@ namespace UniGame.LeoEcs.ViewSystem
             ecsSystems.Add(new CloseViewSystem());
             ecsSystems.Add(new ViewServiceInitSystem(viewSystem));
             ecsSystems.Add(new CloseAllViewsSystem(viewSystem));
+
+            //show view queued one by one
+            ecsSystems.Add(new ShowViewsQueuedSystem());
             
             //container systems
             ecsSystems.Add(new CreateViewInContainerSystem());
@@ -44,6 +49,8 @@ namespace UniGame.LeoEcs.ViewSystem
             ecsSystems.Add(new CreateViewSystem(context,viewSystem,_ecsViewTools));
             ecsSystems.Add(new InitializeViewsSystem(_ecsViewTools));
             ecsSystems.Add(new InitializeModelOfViewsSystem());
+            //initialize view id component when view initialized
+            ecsSystems.Add(new InitializeViewIdComponentSystem());
             ecsSystems.Add(new RemoveUpdateRequest());
             
             ecsSystems.DelHere<CreateViewRequest>();

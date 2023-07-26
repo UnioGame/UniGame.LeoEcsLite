@@ -154,6 +154,15 @@ namespace UniGame.LeoEcs.Shared.Extensions
             ref var component = ref pool.Has(entity) ? ref pool.Get(entity) : ref pool.Add(entity);
             return ref component;
         }
+        
+        public static bool AddRawComponent<TComponent>(this EcsWorld world, int entity, TComponent component)
+            where TComponent : struct
+        {
+            var pool = world.GetPoolByType(typeof(TComponent));
+            if (pool.Has(entity)) return false;
+            pool.AddRaw(entity,component);
+            return true;
+        }
 
         public static void FilterByComponent<T>(this EcsWorld world, IEnumerable<int> filter, List<int> result) where T : struct
         {

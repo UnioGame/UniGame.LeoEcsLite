@@ -130,7 +130,6 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             bool stayWorld = false)
         {
             var entity = world.NewEntity();
-            
             ref var component = ref world
                 .GetOrAddComponent<CreateViewRequest>(entity);
             
@@ -140,6 +139,43 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             component.LayoutType = layoutType;
             component.ViewName = viewName;
             component.StayWorld = stayWorld;
+        }
+        
+        public static void MakeViewRequest(
+            this EcsWorld world, 
+            CreateViewRequest request)
+        {
+            var entity = world.NewEntity();
+            ref var component = ref world
+                .GetOrAddComponent<CreateViewRequest>(entity);
+            
+            component.Parent = request.Parent;
+            component.Tag = request.Tag;
+            component.ViewId = request.ViewId;
+            component.LayoutType = request.LayoutType;
+            component.ViewName = request.ViewName;
+            component.StayWorld = request.StayWorld;
+        }
+        
+        public static CreateViewRequest CreateViewRequest(
+            string view,
+            ViewType layoutType = ViewType.None,
+            Transform parent = null,
+            string tag = null,
+            string viewName = null,
+            bool stayWorld = false)
+        {
+            var component = new CreateViewRequest
+            {
+                Parent = parent,
+                Tag = tag,
+                ViewId = view,
+                LayoutType = layoutType,
+                ViewName = viewName,
+                StayWorld = stayWorld
+            };
+
+            return component;
         }
         
     }
