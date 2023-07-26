@@ -38,7 +38,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         [Searchable]
         private List<IEcsSystem> _systems = new List<IEcsSystem>();
         
-        [Searchable]
+        [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
         [InlineEditor()]
         public List<BaseLeoEcsFeature> nestedFeatures = new List<BaseLeoEcsFeature>();
 
