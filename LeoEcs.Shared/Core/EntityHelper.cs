@@ -1,7 +1,6 @@
 ﻿namespace Game.Ecs.Core
 {
     using System.Runtime.CompilerServices;
-    using Code.GameTools.Runtime;
     using UnityEngine;
 
     public static class EntityHelper
