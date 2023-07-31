@@ -5,6 +5,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
     using Abstract;
     using Components;
     using Cysharp.Threading.Tasks;
+    using Editor;
     using Leopotam.EcsLite;
     using Shared.Extensions;
     using Sirenix.OdinInspector;
@@ -298,6 +299,15 @@ namespace UniGame.LeoEcs.Converter.Runtime
                         gizmosDrawer.DrawGizmos(gameObject);
                 }
             }
+        }
+
+        [BoxGroup("runtime info")] 
+        [EnableIf(nameof(IsPlayingAndReady))]
+        [GUIColor(1f,0.5f,0.1f)]
+        [Button(ButtonSizes.Large,Icon = SdfIconType.Book)]
+        public void ShowComponents()
+        {
+            EntityEditorCommands.OpenEntityInfo(ecsEntityId);
         }
 
 #endif
