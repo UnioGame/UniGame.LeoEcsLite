@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Reflection;
     using Leopotam.EcsLite;
+    using UniModules.UniCore.Runtime.ReflectionUtils;
     using UniModules.UniCore.Runtime.Utils;
 
     [Serializable]
@@ -37,9 +38,13 @@
             _initializeMethod ??= _aspectType.GetMethod(_initializeMethodName);
             _initializeMethod?.Invoke(value, _parameters);
 
-            foreach (var diInjection in injections)
-                diInjection.ApplyInjection(ecsSystems, field, target, injections);
-
+            var fields = fieldType.GetInstanceFields();
+            foreach (var fieldInfo in fields)
+            {
+                foreach (var diInjection in injections)
+                    diInjection.ApplyInjection(ecsSystems, fieldInfo, value, injections);
+            }
+            
             field.SetValue(target,value);
         }
     }
