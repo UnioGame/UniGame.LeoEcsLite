@@ -3,6 +3,8 @@ using Leopotam.EcsLite;
 
 namespace UniGame.LeoEcs.Shared.Components
 {
+    using UnityEngine.Serialization;
+
     /// <summary>
     /// link to owner entity, but don't destroy on owner destroy
     /// </summary>
@@ -21,7 +23,7 @@ namespace UniGame.LeoEcs.Shared.Components
     [Serializable]
     public struct LinkComponent
     {
-        public EcsPackedEntity Entity;
+        [FormerlySerializedAs("Entity")] public EcsPackedEntity Value;
     }
     
     [Serializable]

@@ -30,7 +30,7 @@
         protected override void OnApply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
         {
             ref var dataComponent = ref world.GetOrAddComponent<ViewOrderComponent>(entity);
-            dataComponent.Order = target.transform.GetSiblingIndex();
+            dataComponent.Value = target.transform.GetSiblingIndex();
         }
     }
 }
