@@ -8,6 +8,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
     using Leopotam.EcsLite;
     using Sirenix.OdinInspector;
     using Abstract;
+    using UniModules.UniCore.Runtime.Utils;
     using UnityEngine;
 
 #if UNITY_EDITOR
@@ -47,6 +48,32 @@ namespace UniGame.LeoEcs.Converter.Runtime
             world.ApplyEcsComponents(entity,converters,cancellationToken);
         }
 
+        public IComponentConverter GetOrAddConverter(Type converterType)
+        {
+            var converter = GetConverter(converterType);
+            if (converter != null) return converter;
+            
+            converter = converterType.CreateWithDefaultConstructor() as IComponentConverter;
+            var converterValue = new ComponentConverterValue();
+            converterValue.converter = converter;
+            converters.Add(converterValue);
+            return converter;
+        }
+        
+        public bool AddConverter(IComponentConverter converter, bool replace = false)
+        {
+            var sourceConverter = GetConverter(converter.GetType());
+            if (sourceConverter != null && replace == false) return false;
+
+            if (sourceConverter != null)
+                converters.RemoveAll(x => x.Value == sourceConverter);
+
+            var converterValue = new ComponentConverterValue();
+            converterValue.converter = converter;
+            converters.Add(converterValue);
+            return true;
+        }
+        
         public T GetOrAddConverter<T>() where T : class, IComponentConverter,new()
         {
             var converter = GetConverter<T>();

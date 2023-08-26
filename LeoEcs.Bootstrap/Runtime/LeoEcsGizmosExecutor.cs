@@ -20,6 +20,10 @@
         {
             _gizmosSystems?.Clear();
             Stop();
+#if UNITY_EDITOR
+            if (gameObject == null || Application.isPlaying == false)
+                return;
+#endif
             Destroy(gameObject);
         }
 

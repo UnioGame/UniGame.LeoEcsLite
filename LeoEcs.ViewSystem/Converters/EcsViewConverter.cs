@@ -75,7 +75,7 @@
             if (addChildOrderComponent)
             {
                 ref var childOrderComponent = ref world.GetOrAddComponent<ViewOrderComponent>(entity);
-                childOrderComponent.Order = target.transform.GetSiblingIndex();
+                childOrderComponent.Value = target.transform.GetSiblingIndex();
             }
 
             //follow entity lifetime  and close view if entity is dead

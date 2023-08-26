@@ -43,6 +43,10 @@ namespace UniGame.LeoEcs.Shared.Extensions
                 
             });
 
+#if ENABLE_IL2CPP
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
         public static ref TComponent AddComponentToEntity<TComponent>(this EcsWorld world, int entity)
             where TComponent : struct
         {
@@ -52,6 +56,21 @@ namespace UniGame.LeoEcs.Shared.Extensions
             return ref component;
         }
 
+#if ENABLE_IL2CPP
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static EcsPackedEntity PackedEntity(this int entity, EcsWorld world)
+        {
+            var packedEntity = world.PackEntity(entity);
+            return packedEntity;
+        }
+        
+#if ENABLE_IL2CPP
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
         public static bool AnyHas<TPool>(this EcsWorld world, List<int> entities)
             where TPool : struct
         {
@@ -65,6 +84,10 @@ namespace UniGame.LeoEcs.Shared.Extensions
             return false;
         }
 
+#if ENABLE_IL2CPP
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref TComponent GetComponent<TComponent>(this EcsWorld world, int entity)
             where TComponent : struct
@@ -73,6 +96,10 @@ namespace UniGame.LeoEcs.Shared.Extensions
             return ref pool.Get(entity);
         }
 
+#if ENABLE_IL2CPP
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
         public static IEnumerable<EcsPackedEntity> PackAll(this EcsWorld world, IEnumerable<int> entities)
         {
             foreach (var entity in entities)
@@ -81,6 +108,10 @@ namespace UniGame.LeoEcs.Shared.Extensions
             }
         }
         
+#if ENABLE_IL2CPP
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
         public static void PackAll(this EcsWorld world,List<EcsPackedEntity> container, IEnumerable<int> entities)
         {
             foreach (var entity in entities)
@@ -89,6 +120,10 @@ namespace UniGame.LeoEcs.Shared.Extensions
             }
         }
 
+#if ENABLE_IL2CPP
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
         public static bool UnpackAll(this EcsWorld world,List<int> result, List<EcsPackedEntity> packedEntities)
         {
             var unpackResult = true;
@@ -122,6 +157,10 @@ namespace UniGame.LeoEcs.Shared.Extensions
         }
         
 #if ENABLE_IL2CPP
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
+#if ENABLE_IL2CPP
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [Il2CppSetOption (Option.NullChecks, false)]
         [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
@@ -133,6 +172,10 @@ namespace UniGame.LeoEcs.Shared.Extensions
             pool.Del(entity);
         }
 
+#if ENABLE_IL2CPP
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
 #if ENABLE_IL2CPP
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [Il2CppSetOption (Option.NullChecks, false)]
@@ -173,6 +216,11 @@ namespace UniGame.LeoEcs.Shared.Extensions
             return ref component;
         }
         
+#if ENABLE_IL2CPP
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
         public static bool AddRawComponent<TComponent>(this EcsWorld world, int entity, TComponent component)
             where TComponent : struct
         {
@@ -182,6 +230,11 @@ namespace UniGame.LeoEcs.Shared.Extensions
             return true;
         }
 
+#if ENABLE_IL2CPP
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
         public static void FilterByComponent<T>(this EcsWorld world, IEnumerable<int> filter, List<int> result) where T : struct
         {
             var pool = world.GetPool<T>();
@@ -192,6 +245,11 @@ namespace UniGame.LeoEcs.Shared.Extensions
             }
         }
 
+#if ENABLE_IL2CPP
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
         public static void FilterByComponent<T, T2>(this EcsWorld world, IEnumerable<int> filter, List<int> result)
             where T : struct
             where T2 : struct
@@ -205,6 +263,11 @@ namespace UniGame.LeoEcs.Shared.Extensions
             }
         }
 
+#if ENABLE_IL2CPP
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
         public static void FilterByComponent<T, T2, T3>(this EcsWorld world, IEnumerable<int> filter, List<int> result)
             where T : struct
             where T2 : struct
@@ -220,6 +283,11 @@ namespace UniGame.LeoEcs.Shared.Extensions
             }
         }
 
+#if ENABLE_IL2CPP
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
         public static void FilterByComponent<T, T2, T3, T4>(this EcsWorld world, IEnumerable<int> filter, List<int> result)
             where T : struct
             where T2 : struct
@@ -238,6 +306,11 @@ namespace UniGame.LeoEcs.Shared.Extensions
             }
         }
 
+#if ENABLE_IL2CPP
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
         public static ILifeTime GetLifeTime(this EcsWorld world) => _memorizeItem[world];
 
     }
