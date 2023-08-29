@@ -4,6 +4,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
     using System.Collections.Generic;
     using Abstract;
     using Components;
+    using Core.Runtime;
     using Cysharp.Threading.Tasks;
     using Editor;
     using Leopotam.EcsLite;
@@ -13,14 +14,29 @@ namespace UniGame.LeoEcs.Converter.Runtime
     using UnityEngine;
     using UnityEngine.Serialization;
 
-    public class LeoEcsMonoConverter : MonoBehaviour, ILeoEcsMonoConverter
+    public class LeoEcsMonoConverter : MonoBehaviour, 
+        ILeoEcsMonoConverter,
+        IEcsEntity
     {
         #region inspector data
 
-        [SerializeField] public bool destroyEntityOnDisable = true;
-        [SerializeField] public bool createEntityOnEnabled = true;
-        [SerializeField] public bool createEntityOnStart = false;
-        [SerializeField] public bool destroyOnDestroy = false;
+        [FormerlySerializedAs("convertToParentEntity")]
+        [BoxGroup("converter settings")]
+        [Tooltip("try to get parent entity and add components to it")]
+        public bool attachToParentEntity = false;
+        
+        [BoxGroup("converter settings")]
+        [SerializeField] 
+        public bool destroyEntityOnDisable = true;
+        [BoxGroup("converter settings")]
+        [SerializeField] 
+        public bool createEntityOnEnabled = true;
+        [BoxGroup("converter settings")]
+        [SerializeField] 
+        public bool createEntityOnStart = false;
+        [BoxGroup("converter settings")]
+        [SerializeField] 
+        public bool destroyOnDestroy = false;
         
         [FormerlySerializedAs("_serializableConverters")]
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
@@ -71,6 +87,10 @@ namespace UniGame.LeoEcs.Converter.Runtime
         
         public EcsWorld World => _world;
 
+        public ILifeTime LifeTime => _entityLifeTime;
+
+        public int Entity => ecsEntityId;
+        
         #region public methods
 
         public void RegisterDynamicConverter(ILeoEcsComponentConverter converter)
@@ -106,52 +126,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
             converter(_entityId);
         }
 
-        #endregion
-
-        #region unity methods
-
-        // Start is called before the first frame update
-        private void Start()
-        {
-            if (!createEntityOnStart)
-                return;
-            CreateEntity();
-        }
-
-        private void OnEnable()
-        {
-            if (!createEntityOnEnabled)
-                return;
-            CreateEntity();
-        }
-
-        private void OnDisable()
-        {
-            if (!destroyEntityOnDisable)
-                return;
-            DestroyEntity();
-        }
-
-        private void OnDestroy()
-        {
-            if (!destroyOnDestroy)
-                return;
-            DestroyEntity();
-        }
-
-        private void Awake()
-        {
-            _originalName = name;
-            _entityLifeTime ??= new LifeTimeDefinition();
-            //get all converters
-            _converters ??= new List<ILeoEcsComponentConverter>();
-        }
-
-        #endregion
-
-        #region private methods
-
-        private async UniTask Convert()
+        public async UniTask Convert()
         {
             if(IsCreated) return;
             
@@ -172,16 +147,33 @@ namespace UniGame.LeoEcs.Converter.Runtime
                 return;
             }
 
-            ecsEntityId = world.NewEntity();
+            ecsEntityId = await GetTargetConvertEntity(world);
+            
+            if (ecsEntityId < 0)
+            {
+#if UNITY_EDITOR
+                Debug.LogError($"Target entity is invalid for {_originalName}",gameObject);
+#endif
+                state = EntityState.Destroyed;
+                return;
+            }
+            
             state = EntityState.Created;
+            
             _entityId = world.PackEntity(ecsEntityId);
+            _world = world;
             
             Convert(world,ecsEntityId);
+            
+            state = EntityState.Created;
         }
 
-        private void Convert(EcsWorld world, int ecsEntity)
+        public void Convert(EcsWorld world, int ecsEntity)
         {
-            _world = world;
+#if UNITY_EDITOR
+            gameObject.name = $"{_originalName}_ENT_{ecsEntityId}";
+#endif
+            
             _converters ??= new List<ILeoEcsComponentConverter>();
             _converters.Clear();
             
@@ -189,23 +181,10 @@ namespace UniGame.LeoEcs.Converter.Runtime
             
             _converters.AddRange(serializableConverters);
             
-            gameObject.CreateEcsEntityFromGameObject(
-                ecsEntity,
-                world,
-                _converters,
-                false,
-                _entityLifeTime.CancellationToken);
-
-            
-            state = EntityState.Created;
-
-#if UNITY_EDITOR
-            gameObject.name = $"{_originalName}_ENT_{ecsEntityId}";
-#endif
-            
-            world.ApplyEcsComponents(ecsEntityId, assetConverters, _entityLifeTime.CancellationToken);
-            world.ApplyEcsComponents(ecsEntityId, _dynamicComponentConverters, _entityLifeTime.CancellationToken);
-            world.ApplyEcsComponents(gameObject, ecsEntityId, _dynamicConverters, _entityLifeTime.CancellationToken);
+            world.ApplyEcsComponents(gameObject,ecsEntity, _converters, false, _entityLifeTime.CancellationToken);
+            world.ApplyEcsComponents(ecsEntity, assetConverters, _entityLifeTime.CancellationToken);
+            world.ApplyEcsComponents(ecsEntity, _dynamicComponentConverters, _entityLifeTime.CancellationToken);
+            world.ApplyEcsComponents(gameObject, ecsEntity, _dynamicConverters, _entityLifeTime.CancellationToken);
 
             foreach (var callback in _dynamicCallbacks)
                 callback(_entityId);
@@ -214,9 +193,35 @@ namespace UniGame.LeoEcs.Converter.Runtime
             _dynamicComponentConverters.Clear();
             _dynamicConverters.Clear();
 
-            world.GetOrAddComponent<ObjectConverterComponent>(ecsEntityId);
+            world.GetOrAddComponent<ObjectConverterComponent>(ecsEntity);
         }
+        
+        #endregion
+        
+        
+        #region private methods
 
+        private async UniTask<int> GetTargetConvertEntity(EcsWorld world)
+        {
+            if (!attachToParentEntity) return world.NewEntity();
+
+            var parent = transform.parent;
+            if (parent == null) return -1;
+            
+            var ecsParent = parent.GetComponentInParent<IEcsEntity>();
+            if (ecsParent == null) return world.NewEntity();
+            
+            if(ecsParent.Entity >= 0) return ecsParent.Entity;
+
+            var token = _entityLifeTime.CancellationToken;
+            var parentToken = ecsParent.LifeTime.CancellationToken;
+
+            while (ecsParent.Entity < 0 && !token.IsCancellationRequested && !parentToken.IsCancellationRequested)
+                await UniTask.Yield(PlayerLoopTiming.PostLateUpdate);
+
+            return ecsParent.Entity;
+        }
+        
         private void CreateEntity()
         {
             if (state == EntityState.Created)
@@ -280,6 +285,50 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         #endregion
 
+        
+#region unity methods
+
+        // Start is called before the first frame update
+        private void Start()
+        {
+            if (!createEntityOnStart)
+                return;
+            CreateEntity();
+        }
+
+        private void OnEnable()
+        {
+            if (!createEntityOnEnabled)
+                return;
+            CreateEntity();
+        }
+
+        private void OnDisable()
+        {
+            if (!destroyEntityOnDisable)
+                return;
+            DestroyEntity();
+        }
+
+        private void OnDestroy()
+        {
+            if (!destroyOnDestroy)
+                return;
+            DestroyEntity();
+            _entityLifeTime.Terminate();
+        }
+
+        private void Awake()
+        {
+            _originalName = name;
+            _entityLifeTime ??= new LifeTimeDefinition();
+            //get all converters
+            _converters ??= new List<ILeoEcsComponentConverter>();
+        }
+
+#endregion
+
+        
 #if UNITY_EDITOR
 
         private void OnDrawGizmos()
@@ -311,6 +360,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
         }
 
 #endif
+        
     }
 
     [Serializable]
@@ -320,4 +370,5 @@ namespace UniGame.LeoEcs.Converter.Runtime
         Created,
         Destroyed,
     }
+
 }

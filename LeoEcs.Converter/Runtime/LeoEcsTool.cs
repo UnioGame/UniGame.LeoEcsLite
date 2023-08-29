@@ -9,6 +9,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
     using Converters;
     using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
+    using UniGame.Runtime.ObjectPool.Extensions;
     using UnityEngine;
 
     public static class LeoEcsTool
@@ -54,7 +55,18 @@ namespace UniGame.LeoEcs.Converter.Runtime
         {
             ApplyEcsComponents(target,world, entityId, converterTasks, cancellationToken);
         }
-        
+
+        public static int ApplyEcsComponents(
+            this EcsWorld world,
+            GameObject target,
+            int entity,
+            IEnumerable<ILeoEcsComponentConverter> converterTasks,
+            bool spawnInstance,
+            CancellationToken cancellationToken = default)
+        {
+            return target.ConvertEntityFromGameObject(entity, world, converterTasks, spawnInstance, cancellationToken);
+        }
+
         public static void ApplyEcsComponents(
             this EcsWorld world, 
             int entityId, 
@@ -89,25 +101,25 @@ namespace UniGame.LeoEcs.Converter.Runtime
             }
         }
 
-        public static async UniTask<int> CreateEcsEntityFromGameObject(this GameObject target, IEnumerable<ILeoEcsMonoComponentConverter> converterTasks, bool spawnInstance,
+        public static async UniTask<int> ConvertEntityFromGameObject(this GameObject target, IEnumerable<ILeoEcsMonoComponentConverter> converterTasks, bool spawnInstance,
             CancellationToken cancellationToken = default)
         {
             var world = await WaitWorldReady(cancellationToken);
-            var entity = CreateEcsEntityFromGameObject(target, world, converterTasks, spawnInstance, cancellationToken);
+            var entity = ConvertEntityFromGameObject(target, world, converterTasks, spawnInstance, cancellationToken);
             return entity;
         }
 
-        public static int CreateEcsEntityFromGameObject(this GameObject target, 
+        public static int ConvertEntityFromGameObject(this GameObject target, 
             EcsWorld world, 
             IEnumerable<ILeoEcsComponentConverter> converterTasks, 
             bool spawnInstance,
             CancellationToken cancellationToken = default)
         {
             var entity = world.NewEntity();
-            return CreateEcsEntityFromGameObject(target, entity, world, converterTasks, spawnInstance, cancellationToken);
+            return ConvertEntityFromGameObject(target, entity, world, converterTasks, spawnInstance, cancellationToken);
         }
         
-        public static int CreateEcsEntityFromGameObject(
+        public static int ConvertEntityFromGameObject(
             this GameObject target, 
             int entity,
             EcsWorld world, 
@@ -115,7 +127,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
             bool spawnInstance,
             CancellationToken cancellationToken = default)
         {
-            target = spawnInstance ? Object.Instantiate(target) : target;
+            target = spawnInstance ? target.Spawn() : target;
 
             ApplyEcsComponents(target, world, entity, DefaultGameObjectConverters, cancellationToken);
             ApplyEcsComponents(target, world, entity, converterTasks, cancellationToken);
