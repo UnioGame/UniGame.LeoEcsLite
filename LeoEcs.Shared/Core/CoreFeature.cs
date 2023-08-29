@@ -14,7 +14,7 @@
     [CreateAssetMenu(menuName = "Game/Feature/Core Feature", fileName = "Core Feature")]
     public class CoreFeature : BaseLeoEcsFeature
     {
-        public override UniTask InitializeFeatureAsync(EcsSystems ecsSystems)
+        public override UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)
         { 
             ecsSystems.Add(new DisableColliderSystem());
             

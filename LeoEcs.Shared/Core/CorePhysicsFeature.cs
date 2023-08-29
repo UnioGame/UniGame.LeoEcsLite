@@ -9,7 +9,7 @@
     [UsedImplicitly]
     public sealed class CorePhysicsFeature : LeoEcsSystemAsyncFeature
     {
-        public override UniTask InitializeFeatureAsync(EcsSystems ecsSystems)
+        public override UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)
         {
             ecsSystems.Add(new UpdateGroundInfoSystem());
             

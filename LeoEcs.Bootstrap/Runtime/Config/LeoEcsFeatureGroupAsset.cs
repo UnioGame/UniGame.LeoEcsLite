@@ -35,7 +35,7 @@
 
         #endregion
         
-        public sealed override async UniTask InitializeFeatureAsync(EcsSystems ecsSystems)
+        public sealed override async UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)
         {
             await OnInitializeFeatureAsync(ecsSystems);
             await groupConfiguration.InitializeFeatureAsync(ecsSystems);
@@ -50,12 +50,12 @@
                    groupConfiguration.IsMatch(searchString);
         }
         
-        protected virtual UniTask OnInitializeFeatureAsync(EcsSystems ecsSystems)
+        protected virtual UniTask OnInitializeFeatureAsync(IEcsSystems ecsSystems)
         {
             return UniTask.CompletedTask;
         }
         
-        protected virtual UniTask OnPostInitializeFeatureAsync(EcsSystems ecsSystems)
+        protected virtual UniTask OnPostInitializeFeatureAsync(IEcsSystems ecsSystems)
         {
             return UniTask.CompletedTask;
         }

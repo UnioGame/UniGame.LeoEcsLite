@@ -10,8 +10,8 @@
     public static class EcsViewSystemExtensions
     {
         
-        public static EcsSystems ShowQueuedOn<TEvent, TView1, TView2>(
-            this EcsSystems systems,
+        public static IEcsSystems ShowQueuedOn<TEvent, TView1, TView2>(
+            this IEcsSystems systems,
             ViewType layoutType = ViewType.Window)
             where TEvent : struct
             where TView1 : IView
@@ -30,8 +30,8 @@
         /// <summary>
         /// Show view and mark entity forbidden for same view
         /// </summary>
-        public static EcsSystems ShowSingleOn<TEvent, TView>(
-            this EcsSystems systems,
+        public static IEcsSystems ShowSingleOn<TEvent, TView>(
+            this IEcsSystems systems,
             ViewType layoutType = ViewType.Window)
             where TEvent : struct
             where TView : IView
@@ -40,8 +40,8 @@
             return systems;
         } 
             
-        public static EcsSystems ShowOn<TView>(
-            this EcsSystems systems,
+        public static IEcsSystems ShowOn<TView>(
+            this IEcsSystems systems,
             EcsFilter filter,
             ViewType layoutType = ViewType.Window)
             where TView : IView
@@ -50,7 +50,7 @@
             return systems;
         }
         
-        public static EcsSystems CloseOn<TEvent,TView>(this EcsSystems systems)
+        public static IEcsSystems CloseOn<TEvent,TView>(this IEcsSystems systems)
             where TEvent : struct
             where TView : IViewModel
         {
@@ -59,7 +59,7 @@
             return systems;
         }
         
-        public static EcsSystems ShowInContainerOn<TEvent,TView>(this EcsSystems systems,bool useBusy = false,bool ownView = false)
+        public static IEcsSystems ShowInContainerOn<TEvent,TView>(this IEcsSystems systems,bool useBusy = false,bool ownView = false)
             where TEvent : struct
             where TView : IView
         {
@@ -77,8 +77,8 @@
             return systems;
         }
         
-        public static EcsSystems ShowOn<TEvent, TView>(
-            this EcsSystems systems,
+        public static IEcsSystems ShowOn<TEvent, TView>(
+            this IEcsSystems systems,
             ViewType layoutType = ViewType.Window)
             where TEvent : struct
             where TView : IView
@@ -88,8 +88,8 @@
         }
 
         
-        public static EcsSystems ShowOn<TComponent1,TComponent2, TView>(
-            this EcsSystems systems,
+        public static IEcsSystems ShowOn<TComponent1,TComponent2, TView>(
+            this IEcsSystems systems,
             ViewType layoutType = ViewType.Window)
             where TComponent1 : struct
             where TComponent2 : struct
@@ -99,8 +99,8 @@
             return systems;
         }
 
-        public static EcsSystems ShowOn<TView>(
-            this EcsSystems systems,
+        public static IEcsSystems ShowOn<TView>(
+            this IEcsSystems systems,
             EcsFilter filter,
             ViewRequestData viewData)
             where TView : IView
@@ -109,8 +109,8 @@
             return systems;
         }
         
-        public static EcsSystems ShowOn<TEvent, TView>(
-            this EcsSystems systems,
+        public static IEcsSystems ShowOn<TEvent, TView>(
+            this IEcsSystems systems,
             ViewRequestData viewData)
             where TEvent : struct
             where TView : IView
@@ -119,8 +119,8 @@
             return systems;
         }
         
-        public static EcsSystems ShowOn<TComponent1,TComponent2, TView>(
-            this EcsSystems systems,
+        public static IEcsSystems ShowOn<TComponent1,TComponent2, TView>(
+            this IEcsSystems systems,
             ViewRequestData viewData)
             where TComponent1 : struct
             where TComponent2 : struct

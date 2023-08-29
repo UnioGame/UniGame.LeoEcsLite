@@ -26,7 +26,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
 
         public virtual bool ShowFeatureInfo => true;
         
-        public abstract UniTask InitializeFeatureAsync(EcsSystems ecsSystems);
+        public abstract UniTask InitializeFeatureAsync(IEcsSystems ecsSystems);
 
         public virtual bool IsMatch(string searchString)
         {

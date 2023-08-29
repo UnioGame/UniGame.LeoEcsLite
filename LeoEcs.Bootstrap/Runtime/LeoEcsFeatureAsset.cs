@@ -25,7 +25,7 @@
 
         #endregion
 
-        public sealed override async UniTask InitializeFeatureAsync(EcsSystems ecsSystems)
+        public sealed override async UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)
         {
             if (!IsFeatureEnabled) return;
             
@@ -69,7 +69,7 @@
             return false;
         }
 
-        protected virtual UniTask OnInitializeFeatureAsync(EcsSystems ecsSystems)
+        protected virtual UniTask OnInitializeFeatureAsync(IEcsSystems ecsSystems)
         {
             return UniTask.CompletedTask;
         }
@@ -84,7 +84,7 @@
         [SerializeField] 
         public TFeature feature;
 
-        protected override async UniTask OnInitializeFeatureAsync(EcsSystems ecsSystems)
+        protected override async UniTask OnInitializeFeatureAsync(IEcsSystems ecsSystems)
         {
             await feature.InitializeFeatureAsync(ecsSystems);
 

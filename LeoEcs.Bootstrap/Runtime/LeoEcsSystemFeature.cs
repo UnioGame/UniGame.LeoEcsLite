@@ -19,7 +19,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
 
         public IReadOnlyList<IEcsSystem> Systems => _systems;
 
-        protected override UniTask OnInitializeFeatureAsync(EcsSystems ecsSystems)
+        protected override UniTask OnInitializeFeatureAsync(IEcsSystems ecsSystems)
         {
             foreach (var ecsSystem in _systems)
                 ecsSystems.Add(ecsSystem);

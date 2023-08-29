@@ -5,6 +5,6 @@
 
     public interface ILeoEcsInitializableFeature
     {
-        UniTask InitializeFeatureAsync(EcsSystems ecsSystems);
+        UniTask InitializeFeatureAsync(IEcsSystems ecsSystems);
     }
 }

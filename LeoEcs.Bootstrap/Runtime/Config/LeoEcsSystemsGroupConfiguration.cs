@@ -54,7 +54,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         public IReadOnlyList<IEcsSystem> EcsSystems => _systems;
         
         
-        public async UniTask InitializeFeatureAsync(EcsSystems ecsSystems)
+        public async UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)
         {
             if (!IsFeatureEnabled) return;
 
@@ -99,7 +99,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
             return false;
         }
 
-        protected virtual UniTask OnInitializeFeatureAsync(EcsSystems ecsSystems)
+        protected virtual UniTask OnInitializeFeatureAsync(IEcsSystems ecsSystems)
         {
             return UniTask.CompletedTask;
         }

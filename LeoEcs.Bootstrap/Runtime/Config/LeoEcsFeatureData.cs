@@ -78,7 +78,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
             return false;
         }
 
-        public UniTask InitializeFeatureAsync(EcsSystems ecsSystems)
+        public UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)
         {
             if(Feature == null) return UniTask.CompletedTask;
             return Feature.InitializeFeatureAsync(ecsSystems);

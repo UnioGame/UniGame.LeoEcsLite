@@ -19,7 +19,7 @@ namespace UniGame.LeoEcs.ViewSystem
     {
         private EcsViewTools _ecsViewTools;
         
-        protected override async UniTask OnPostInitializeFeatureAsync(EcsSystems ecsSystems)
+        protected override async UniTask OnPostInitializeFeatureAsync(IEcsSystems ecsSystems)
         {
             var context = ecsSystems.GetShared<IContext>();
             var viewSystem = await context.ReceiveFirstAsync<IGameViewSystem>();
