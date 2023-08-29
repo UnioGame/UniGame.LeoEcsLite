@@ -10,9 +10,11 @@ namespace UniGame.LeoEcs.Shared.Extensions
     using Unity.IL2CPP.CompilerServices;
     using UnityEngine;
 
+#if ENABLE_IL2CPP
     [Il2CppSetOption(Option.NullChecks, false)]
     [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
+#endif
     public static class EcsWorldExtensions
     {
         private static MemorizeItem<EcsWorld,ILifeTime> _memorizeItem = MemorizeTool
@@ -140,6 +142,8 @@ namespace UniGame.LeoEcs.Shared.Extensions
 
 #if ENABLE_IL2CPP
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
 #endif
         public static bool TryRemoveComponent<TComponent>(this EcsWorld world, int entity)
             where TComponent : struct
@@ -158,6 +162,8 @@ namespace UniGame.LeoEcs.Shared.Extensions
 #endif
 #if ENABLE_IL2CPP
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
 #endif
         public static void RemoveComponent<TComponent>(this EcsWorld world, int entity)
             where TComponent : struct
@@ -172,6 +178,8 @@ namespace UniGame.LeoEcs.Shared.Extensions
 #endif
 #if ENABLE_IL2CPP
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
 #endif
         public static bool HasComponent<TComponent>(this EcsWorld world, int entity)
             where TComponent : struct
@@ -180,7 +188,9 @@ namespace UniGame.LeoEcs.Shared.Extensions
             return pool.Has(entity);
         }
         
+        
 #if ENABLE_IL2CPP
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [Il2CppSetOption (Option.NullChecks, false)]
         [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
 #endif
@@ -194,10 +204,10 @@ namespace UniGame.LeoEcs.Shared.Extensions
         }
         
 #if ENABLE_IL2CPP
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [Il2CppSetOption (Option.NullChecks, false)]
         [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
 #endif
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref TComponent GetOrAddComponent<TComponent>(this EcsWorld world, int entity)
             where TComponent : struct
         {
@@ -207,6 +217,7 @@ namespace UniGame.LeoEcs.Shared.Extensions
         }
         
 #if ENABLE_IL2CPP
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [Il2CppSetOption (Option.NullChecks, false)]
         [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
 #endif
@@ -220,6 +231,7 @@ namespace UniGame.LeoEcs.Shared.Extensions
         }
 
 #if ENABLE_IL2CPP
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [Il2CppSetOption (Option.NullChecks, false)]
         [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
 #endif
@@ -234,6 +246,7 @@ namespace UniGame.LeoEcs.Shared.Extensions
         }
 
 #if ENABLE_IL2CPP
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [Il2CppSetOption (Option.NullChecks, false)]
         [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
 #endif
@@ -251,6 +264,7 @@ namespace UniGame.LeoEcs.Shared.Extensions
         }
 
 #if ENABLE_IL2CPP
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [Il2CppSetOption (Option.NullChecks, false)]
         [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
 #endif
@@ -270,6 +284,7 @@ namespace UniGame.LeoEcs.Shared.Extensions
         }
 
 #if ENABLE_IL2CPP
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [Il2CppSetOption (Option.NullChecks, false)]
         [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
 #endif
@@ -292,6 +307,7 @@ namespace UniGame.LeoEcs.Shared.Extensions
         }
 
 #if ENABLE_IL2CPP
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [Il2CppSetOption (Option.NullChecks, false)]
         [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
 #endif
