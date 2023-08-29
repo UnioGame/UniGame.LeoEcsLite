@@ -8,6 +8,11 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
     using Leopotam.EcsLite;
     using UniGame.Core.Runtime.ScriptableObjects;
     using Abstract;
+
+#if UNITY_EDITOR
+    using UnityEditor;
+    using UniModules.Editor;
+#endif
     
     public abstract class BaseLeoEcsFeature : LifetimeScriptableObject,ILeoEcsFeature
     {
@@ -20,7 +25,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
         public virtual string FeatureName => name;
 
         public virtual bool ShowFeatureInfo => true;
-
+        
         public abstract UniTask InitializeFeatureAsync(EcsSystems ecsSystems);
 
         public virtual bool IsMatch(string searchString)
@@ -41,5 +46,13 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
                    source.Contains(filter, StringComparison.OrdinalIgnoreCase);
         }
 
+        [Button]
+        private void Save()
+        {
+#if UNITY_EDITOR
+            this.SaveAsset();
+#endif
+        }
+        
     }
 }
