@@ -3,6 +3,7 @@
     using System.Threading;
     using Leopotam.EcsLite;
     using Shared.Components;
+    using Shared.Extensions;
     using UnityEngine;
 
     public sealed class AnimatorConverter : MonoLeoEcsConverter
@@ -14,7 +15,7 @@
         {
             var animatorPool = world.GetPool<AnimatorComponent>();
 
-            ref var animator = ref animatorPool.Add(entity);
+            ref var animator = ref animatorPool.GetOrAddComponent(entity);
             animator.Value = _animator;
         }
     }

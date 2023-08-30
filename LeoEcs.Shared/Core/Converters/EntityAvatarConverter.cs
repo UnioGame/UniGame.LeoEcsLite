@@ -4,6 +4,7 @@
     using Components;
     using Leopotam.EcsLite;
     using UniGame.LeoEcs.Converter.Runtime;
+    using UniGame.LeoEcs.Shared.Extensions;
     using UnityEngine;
 
     public sealed class EntityAvatarConverter : MonoLeoEcsConverter
@@ -28,7 +29,7 @@
         public override void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
         {
             var avatarPool = world.GetPool<EntityAvatarComponent>();
-            ref var avatar = ref avatarPool.Add(entity);
+            ref var avatar = ref avatarPool.GetOrAddComponent(entity);
 
             avatar.Bounds = _entityBounds;
             

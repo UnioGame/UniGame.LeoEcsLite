@@ -4,6 +4,7 @@
     using Components;
     using Leopotam.EcsLite;
     using UniGame.LeoEcs.Converter.Runtime;
+    using UniGame.LeoEcs.Shared.Extensions;
     using UnityEngine;
     using UnityEngine.Playables;
     
@@ -15,7 +16,7 @@
         public override void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
         {
             var playableDirectorPool = world.GetPool<PlayableDirectorComponent>();
-            ref var playableDirectorComponent = ref playableDirectorPool.Add(entity);
+            ref var playableDirectorComponent = ref playableDirectorPool.GetOrAddComponent(entity);
 
             playableDirectorComponent.Value = _playableDirector;
         }

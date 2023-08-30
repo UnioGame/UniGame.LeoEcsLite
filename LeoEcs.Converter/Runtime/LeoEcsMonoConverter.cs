@@ -25,17 +25,22 @@ namespace UniGame.LeoEcs.Converter.Runtime
         [Tooltip("try to get parent entity and add components to it")]
         public bool attachToParentEntity = false;
         
-        [BoxGroup("converter settings")]
-        [SerializeField] 
-        public bool destroyEntityOnDisable = true;
+        
         [BoxGroup("converter settings")]
         [SerializeField] 
         public bool createEntityOnEnabled = true;
         [BoxGroup("converter settings")]
         [SerializeField] 
         public bool createEntityOnStart = false;
+        
+        [Space]
         [BoxGroup("converter settings")]
         [SerializeField] 
+        [HideIf(nameof(attachToParentEntity))]
+        public bool destroyEntityOnDisable = true;
+        [BoxGroup("converter settings")]
+        [SerializeField] 
+        [HideIf(nameof(attachToParentEntity))]
         public bool destroyOnDestroy = false;
         
         [FormerlySerializedAs("_serializableConverters")]
@@ -305,16 +310,14 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         private void OnDisable()
         {
-            if (!destroyEntityOnDisable)
-                return;
+            if (attachToParentEntity || !destroyEntityOnDisable) return;
             DestroyEntity();
         }
 
         private void OnDestroy()
         {
-            if (!destroyOnDestroy)
-                return;
-            DestroyEntity();
+            if (!attachToParentEntity && destroyOnDestroy)
+                DestroyEntity();
             _entityLifeTime.Terminate();
         }
 
