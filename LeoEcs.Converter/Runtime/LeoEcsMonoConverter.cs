@@ -18,17 +18,17 @@ namespace UniGame.LeoEcs.Converter.Runtime
         ILeoEcsMonoConverter,
         IEcsEntity
     {
-        #region inspector data
+#region inspector data
 
         [FormerlySerializedAs("convertToParentEntity")]
         [BoxGroup("converter settings")]
         [Tooltip("try to get parent entity and add components to it")]
         public bool attachToParentEntity = false;
         
-        
         [BoxGroup("converter settings")]
         [SerializeField] 
         public bool createEntityOnEnabled = true;
+        
         [BoxGroup("converter settings")]
         [SerializeField] 
         public bool createEntityOnStart = false;
@@ -38,6 +38,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
         [SerializeField] 
         [HideIf(nameof(attachToParentEntity))]
         public bool destroyEntityOnDisable = true;
+        
         [BoxGroup("converter settings")]
         [SerializeField] 
         [HideIf(nameof(attachToParentEntity))]
@@ -65,9 +66,9 @@ namespace UniGame.LeoEcs.Converter.Runtime
         [ReadOnly] 
         public EntityState state = EntityState.Destroyed;
         
-        #endregion
+#endregion
 
-        #region private data
+#region private data
 
         private EcsPackedEntity _entityId;
         
@@ -152,29 +153,30 @@ namespace UniGame.LeoEcs.Converter.Runtime
                 return;
             }
 
-            ecsEntityId = await GetTargetConvertEntity(world);
+            var targetEntity = await GetTargetConvertEntity(world);
             
-            if (ecsEntityId < 0)
+            if (targetEntity < 0)
             {
 #if UNITY_EDITOR
                 Debug.LogError($"Target entity is invalid for {_originalName}",gameObject);
 #endif
                 state = EntityState.Destroyed;
+                ecsEntityId = targetEntity;
                 return;
             }
             
-            state = EntityState.Created;
-            
-            _entityId = world.PackEntity(ecsEntityId);
-            _world = world;
-            
-            Convert(world,ecsEntityId);
-            
+            Convert(world,targetEntity);
             state = EntityState.Created;
         }
 
         public void Convert(EcsWorld world, int ecsEntity)
         {
+            state = EntityState.Created;
+            ecsEntityId = ecsEntity;
+            
+            _entityId = world.PackEntity(ecsEntityId);
+            _world = world;
+            
 #if UNITY_EDITOR
             gameObject.name = $"{_originalName}_ENT_{ecsEntityId}";
 #endif
@@ -201,10 +203,9 @@ namespace UniGame.LeoEcs.Converter.Runtime
             world.GetOrAddComponent<ObjectConverterComponent>(ecsEntity);
         }
         
-        #endregion
+#endregion
         
-        
-        #region private methods
+#region private methods
 
         private async UniTask<int> GetTargetConvertEntity(EcsWorld world)
         {
@@ -288,8 +289,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
             _entityLifeTime.Release();
         }
 
-        #endregion
-
+#endregion
         
 #region unity methods
 
