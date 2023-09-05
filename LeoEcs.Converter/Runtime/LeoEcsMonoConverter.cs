@@ -164,8 +164,11 @@ namespace UniGame.LeoEcs.Converter.Runtime
                 ecsEntityId = targetEntity;
                 return;
             }
+
+            if (state == EntityState.Created) return;
             
             Convert(world,targetEntity);
+            
             state = EntityState.Created;
         }
 
@@ -236,7 +239,9 @@ namespace UniGame.LeoEcs.Converter.Runtime
             state = EntityState.Creating;
             _entityLifeTime.Release();
 
-            Convert().Forget();
+            Convert()
+                .AttachExternalCancellation(_entityLifeTime.CancellationToken)
+                .Forget();
         }
 
         [ShowIf(nameof(IsPlayingAndReady))]
@@ -247,7 +252,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
             Destroy(gameObject);
         }
 
-        private void DestroyEntity()
+        public void DestroyEntity()
         {
             DestroyEntity(_entityId);
         }
@@ -284,7 +289,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
             LeoEcsTool.DestroyEntity(targetEntity, _world);
                 
             ecsEntityId = -1;
-
+            
             _entityId = new EcsPackedEntity();
             _entityLifeTime.Release();
         }

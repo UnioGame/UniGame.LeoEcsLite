@@ -11,5 +11,10 @@
         void RegisterDynamicConverter(ILeoEcsComponentConverter converter);
         
         void RegisterDynamicConverter(IEcsComponentConverter converter);
+
+        void Convert(EcsWorld world, int ecsEntity);
+        
+        void DestroyEntity();
+
     }
 }
