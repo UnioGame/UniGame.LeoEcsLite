@@ -1,4 +1,4 @@
-﻿namespace Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.Shared.Components
+﻿namespace UniGame.LeoEcsLite.LeoEcs.Shared.Components
 {
     using System;
     using Leopotam.EcsLite;
