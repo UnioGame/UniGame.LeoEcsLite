@@ -15,11 +15,14 @@ namespace UniGame.LeoEcs.Converter.Runtime
         [SerializeField]
         private bool _isEnabled = true;
 
+        public string Name => GetType().Name;
+        
         public bool IsPlaying => Application.isPlaying;
         
         public virtual bool IsEnabled => _isEnabled;
         
         public abstract void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default);
 
+        
     }
 }

@@ -2,28 +2,23 @@ namespace UniGame.LeoEcs.Converter.Runtime
 {
     using System;
     using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
     using Abstract;
-    using Components;
     using Core.Runtime;
     using Cysharp.Threading.Tasks;
     using Editor;
     using Leopotam.EcsLite;
-    using Shared.Extensions;
     using Sirenix.OdinInspector;
     using UniModules.UniCore.Runtime.DataFlow;
     using UnityEngine;
     using UnityEngine.Serialization;
 
-    public class LeoEcsMonoConverter : MonoBehaviour, 
+    public class LeoEcsMonoConverter : 
+        MonoBehaviour, 
         ILeoEcsMonoConverter,
         IEcsEntity
     {
-#region inspector data
-
-        [FormerlySerializedAs("convertToParentEntity")]
-        [BoxGroup("converter settings")]
-        [Tooltip("try to get parent entity and add components to it")]
-        public bool attachToParentEntity = false;
+        #region inspector data
         
         [BoxGroup("converter settings")]
         [SerializeField] 
@@ -32,16 +27,14 @@ namespace UniGame.LeoEcs.Converter.Runtime
         [BoxGroup("converter settings")]
         [SerializeField] 
         public bool createEntityOnStart = false;
-        
+
         [Space]
         [BoxGroup("converter settings")]
         [SerializeField] 
-        [HideIf(nameof(attachToParentEntity))]
         public bool destroyEntityOnDisable = true;
         
         [BoxGroup("converter settings")]
         [SerializeField] 
-        [HideIf(nameof(attachToParentEntity))]
         public bool destroyOnDestroy = false;
         
         [FormerlySerializedAs("_serializableConverters")]
@@ -54,13 +47,16 @@ namespace UniGame.LeoEcs.Converter.Runtime
         [Space(8)] 
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)] 
         [InlineEditor()]
+        [ListDrawerSettings(ListElementLabelName = "@Name")]
         public List<LeoEcsConverterAsset> assetConverters = new List<LeoEcsConverterAsset>();
 
-        [Space] [ReadOnly] 
+        [FormerlySerializedAs("ecsEntityId")]
+        [Space]
+        [ReadOnly]
         [BoxGroup("runtime info")] 
         [ShowIf(nameof(IsRuntime))] 
         [SerializeField]
-        public int ecsEntityId = -1;
+        public int entity = -1;
 
         [BoxGroup("runtime info")] 
         [ReadOnly] 
@@ -70,22 +66,16 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
 #region private data
 
-        private EcsPackedEntity _entityId;
-        
-        private List<ILeoEcsComponentConverter> _converters = new List<ILeoEcsComponentConverter>();
-        private List<ILeoEcsComponentConverter> _dynamicConverters = new List<ILeoEcsComponentConverter>();
-        private List<IEcsComponentConverter> _dynamicComponentConverters = new List<IEcsComponentConverter>();
-        private List<Action<EcsPackedEntity>> _dynamicCallbacks = new List<Action<EcsPackedEntity>>();
-        private LifeTimeDefinition _entityLifeTime = new LifeTimeDefinition();
-
         private EcsWorld _world;
-        private string _originalName;
-
+        private EcsPackedEntity _entityId;
+        private List<ILeoEcsComponentConverter> _converters = new List<ILeoEcsComponentConverter>();
+        private LifeTimeDefinition _entityLifeTime = new LifeTimeDefinition();
+        
         #endregion
 
         public bool IsRuntime => Application.isPlaying;
 
-        public bool IsPlayingAndReady => IsRuntime && ecsEntityId >= 0;
+        public bool IsPlayingAndReady => IsRuntime && entity >= 0;
 
         public bool IsCreated => state == EntityState.Created;
 
@@ -95,43 +85,14 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         public ILifeTime LifeTime => _entityLifeTime;
 
-        public int Entity => ecsEntityId;
+        public int Entity => entity;
+
+        public IReadOnlyList<ILeoEcsComponentConverter> MonoConverters => UpdateMonoConverter();
+
+        public IReadOnlyList<IEcsComponentConverter> ComponentConverters => assetConverters;
         
         #region public methods
-
-        public void RegisterDynamicConverter(ILeoEcsComponentConverter converter)
-        {
-            if (ecsEntityId < 0)
-            {
-                _dynamicConverters.Add(converter);
-                return;
-            }
-
-            converter.Apply(gameObject, _world, ecsEntityId, _entityLifeTime.CancellationToken);
-        }
-
-        public void RegisterDynamicConverter(IEcsComponentConverter converter)
-        {
-            if (ecsEntityId < 0)
-            {
-                _dynamicComponentConverters.Add(converter);
-                return;
-            }
-
-            converter.Apply(_world, ecsEntityId, _entityLifeTime.CancellationToken);
-        }
-
-        public void RegisterDynamicCallback(Action<EcsPackedEntity> converter)
-        {
-            if (ecsEntityId < 0)
-            {
-                _dynamicCallbacks.Add(converter);
-                return;
-            }
-
-            converter(_entityId);
-        }
-
+        
         public async UniTask Convert()
         {
             if(IsCreated) return;
@@ -144,6 +105,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
             if (world.IsAlive() == false)
             {
                 state = EntityState.Destroyed;
+                entity = -1;
                 return;
             }
             
@@ -152,95 +114,53 @@ namespace UniGame.LeoEcs.Converter.Runtime
                 DestroyEntity();
                 return;
             }
-
-            var targetEntity = await GetTargetConvertEntity(world);
             
-            if (targetEntity < 0)
-            {
-#if UNITY_EDITOR
-                Debug.LogError($"Target entity is invalid for {_originalName}",gameObject);
-#endif
-                state = EntityState.Destroyed;
-                ecsEntityId = targetEntity;
-                return;
-            }
-
             if (state == EntityState.Created) return;
             
-            Convert(world,targetEntity);
+            var targetEntity = world.NewEntity();
             
-            state = EntityState.Created;
+            Convert(world, targetEntity);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ConnectEntity(EcsWorld world,int ecsEntity)
+        {
+            _world = world;
+            entity = ecsEntity;
+            state = EntityState.Created;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Convert(EcsWorld world, int ecsEntity)
         {
-            state = EntityState.Created;
-            ecsEntityId = ecsEntity;
-            
-            _entityId = world.PackEntity(ecsEntityId);
-            _world = world;
-            
-#if UNITY_EDITOR
-            gameObject.name = $"{_originalName}_ENT_{ecsEntityId}";
-#endif
-            
-            _converters ??= new List<ILeoEcsComponentConverter>();
-            _converters.Clear();
-            
-            GetComponents(_converters);
-            
-            _converters.AddRange(serializableConverters);
-            
-            world.ApplyEcsComponents(gameObject,ecsEntity, _converters, false, _entityLifeTime.CancellationToken);
-            world.ApplyEcsComponents(ecsEntity, assetConverters, _entityLifeTime.CancellationToken);
-            world.ApplyEcsComponents(ecsEntity, _dynamicComponentConverters, _entityLifeTime.CancellationToken);
-            world.ApplyEcsComponents(gameObject, ecsEntity, _dynamicConverters, _entityLifeTime.CancellationToken);
-
-            foreach (var callback in _dynamicCallbacks)
-                callback(_entityId);
-
-            _dynamicCallbacks.Clear();
-            _dynamicComponentConverters.Clear();
-            _dynamicConverters.Clear();
-
-            world.GetOrAddComponent<ObjectConverterComponent>(ecsEntity);
+            ConnectEntity(world,ecsEntity);
+            gameObject.ConvertGameObjectToEntity(world,ecsEntity);
         }
         
 #endregion
         
 #region private methods
 
-        private async UniTask<int> GetTargetConvertEntity(EcsWorld world)
+        private List<ILeoEcsComponentConverter> UpdateMonoConverter()
         {
-            if (!attachToParentEntity) return world.NewEntity();
-
-            var parent = transform.parent;
-            if (parent == null) return -1;
+            _converters ??= new List<ILeoEcsComponentConverter>();
+            _converters.Clear();
             
-            var ecsParent = parent.GetComponentInParent<IEcsEntity>();
-            if (ecsParent == null) return world.NewEntity();
+            GetComponents(_converters);
             
-            if(ecsParent.Entity >= 0) return ecsParent.Entity;
-
-            var token = _entityLifeTime.CancellationToken;
-            var parentToken = ecsParent.LifeTime.CancellationToken;
-
-            while (ecsParent.Entity < 0 && !token.IsCancellationRequested && !parentToken.IsCancellationRequested)
-                await UniTask.Yield(PlayerLoopTiming.PostLateUpdate);
-
-            return ecsParent.Entity;
+            _converters.AddRange(serializableConverters);
+            return _converters;
         }
+        
         
         private void CreateEntity()
         {
-            if (state == EntityState.Created)
-                return;
+            if (IsCreated) return;
 
             state = EntityState.Creating;
             _entityLifeTime.Release();
 
-            Convert()
-                .AttachExternalCancellation(_entityLifeTime.CancellationToken)
+            Convert().AttachExternalCancellation(_entityLifeTime.CancellationToken)
                 .Forget();
         }
 
@@ -263,7 +183,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
             state = EntityState.Destroyed;
             
             //if entity already created when destroy immediate
-            if (ecsEntityId < 0) return;
+            if (this.entity < 0) return;
             
             if (_world == null || _world.IsAlive() == false) return;
 
@@ -274,21 +194,20 @@ namespace UniGame.LeoEcs.Converter.Runtime
             foreach (var converter in _converters)
             {
                 if (converter is IConverterEntityDestroyHandler destroyHandler)
-                    destroyHandler.OnEntityDestroy(_world, ecsEntityId);
+                    destroyHandler.OnEntityDestroy(_world, this.entity);
             }
 
             //notify converters about destroy
             foreach (var converter in assetConverters)
             {
-                if (converter is not IConverterEntityDestroyHandler destroyHandler)
-                    continue;
-                destroyHandler.OnEntityDestroy(_world, ecsEntityId);
+                if (converter is not IConverterEntityDestroyHandler destroyHandler) continue;
+                destroyHandler.OnEntityDestroy(_world, this.entity);
             }
 
             //clean up converter entity data
             LeoEcsTool.DestroyEntity(targetEntity, _world);
                 
-            ecsEntityId = -1;
+            this.entity = -1;
             
             _entityId = new EcsPackedEntity();
             _entityLifeTime.Release();
@@ -315,27 +234,25 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         private void OnDisable()
         {
-            if (attachToParentEntity || !destroyEntityOnDisable) return;
+            if (!destroyEntityOnDisable) return;
             DestroyEntity();
         }
 
         private void OnDestroy()
         {
-            if (!attachToParentEntity && destroyOnDestroy)
+            if (destroyOnDestroy) 
                 DestroyEntity();
             _entityLifeTime.Terminate();
         }
 
         private void Awake()
         {
-            _originalName = name;
             _entityLifeTime ??= new LifeTimeDefinition();
             //get all converters
             _converters ??= new List<ILeoEcsComponentConverter>();
         }
 
 #endregion
-
         
 #if UNITY_EDITOR
 
@@ -364,7 +281,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
         [Button(ButtonSizes.Large,Icon = SdfIconType.Book)]
         public void ShowComponents()
         {
-            EntityEditorCommands.OpenEntityInfo(ecsEntityId);
+            EntityEditorCommands.OpenEntityInfo(entity);
         }
 
 #endif

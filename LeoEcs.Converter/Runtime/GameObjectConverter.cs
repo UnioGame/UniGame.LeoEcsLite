@@ -12,7 +12,7 @@
     
     [Serializable]
     public class GameObjectConverter 
-        : IComponentConverter,ILeoEcsMonoComponentConverter
+        : IComponentConverter, ILeoEcsMonoComponentConverter
     {
         public bool enabled = true;
         
@@ -21,6 +21,8 @@
         [InlineProperty]
         [SerializeReference]
         private List<ILeoEcsMonoComponentConverter> converters = new List<ILeoEcsMonoComponentConverter>();
+
+        public virtual string Name => GetType().Name;
         
         public bool IsEnabled => enabled;
         
@@ -61,5 +63,6 @@
             
             return false;
         }
+        
     }
 }

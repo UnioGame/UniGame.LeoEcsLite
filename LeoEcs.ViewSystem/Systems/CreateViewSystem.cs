@@ -88,7 +88,7 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
             var converter = viewObject.GetComponent<ILeoEcsMonoConverter>();
             if (converter == null) return;
             
-            converter.RegisterDynamicCallback(x => ConvertView(x,model,request));
+            //converter.RegisterDynamicCallback(x => ConvertView(x,model,request));
         }
 
         public void ConvertView(EcsPackedEntity viewPackedEntity,IViewModel model,CreateViewRequest request)
@@ -105,7 +105,7 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
             if (owner.Unpack(_world, out var ownerEntity)) 
             {
                 ref var ownerComponent = ref _ownerPool.GetOrAddComponent(viewEntity);
-                ownerComponent.Entity = owner;
+                ownerComponent.Value = owner;
             }
             
             if (parent != null)

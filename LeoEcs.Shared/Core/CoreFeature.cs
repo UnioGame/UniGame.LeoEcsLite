@@ -17,7 +17,6 @@
         public override UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)
         { 
             ecsSystems.Add(new DisableColliderSystem());
-            
             ecsSystems.Add(new ProcessDeadSimpleEntitiesSystem());
             ecsSystems.Add(new ProcessDeadTransformEntitiesSystem());
 

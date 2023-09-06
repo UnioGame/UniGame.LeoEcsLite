@@ -1,20 +1,31 @@
 ﻿namespace UniGame.LeoEcs.Converter.Runtime
 {
-    using System;
+    using System.Collections.Generic;
     using Abstract;
     using Leopotam.EcsLite;
 
-    public interface ILeoEcsMonoConverter
+    public interface ILeoEcsMonoConverter : IMonoConverterProvider,
+        IComponentConverterProvider,
+        IEcsEntity,
+        IConnectableToEntity
     {
-        void RegisterDynamicCallback(Action<EcsPackedEntity> converterAction);
-        
-        void RegisterDynamicConverter(ILeoEcsComponentConverter converter);
-        
-        void RegisterDynamicConverter(IEcsComponentConverter converter);
-
         void Convert(EcsWorld world, int ecsEntity);
-        
-        void DestroyEntity();
 
+        void DestroyEntity();
+    }
+
+    public interface IConnectableToEntity
+    {
+        void ConnectEntity(EcsWorld world, int ecsEntity);
+    }
+    
+    public interface IMonoConverterProvider
+    {
+        IReadOnlyList<ILeoEcsComponentConverter> MonoConverters { get; }
+    }
+
+    public interface IComponentConverterProvider
+    {
+        IReadOnlyList<IEcsComponentConverter> ComponentConverters { get; }
     }
 }

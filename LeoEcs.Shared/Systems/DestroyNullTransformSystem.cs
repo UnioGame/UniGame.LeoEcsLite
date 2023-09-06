@@ -33,7 +33,6 @@
                 .End();
 
             _transformPool = _world.GetPool<TransformComponent>();
-
         }
 
         public void Run(IEcsSystems systems)
@@ -44,7 +43,6 @@
                 var transform = transformComponent.Value;
 
                 if (transform != null) continue;
-
                 _world.DelEntity(transformEntity);
             }
         }

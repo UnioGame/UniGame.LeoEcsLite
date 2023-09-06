@@ -44,6 +44,8 @@
 
         public bool IsSerializableConverter => IsEmpty || converter!= null;
 
+        public string Name => Value?.GetType().Name;
+        
         public IComponentConverter Value => GetValue();
 
         public IComponentConverter GetValue()
@@ -68,6 +70,7 @@
         
         public void Apply(EcsWorld world, int entity, CancellationToken cancellationToken = default)
         {
+            if(Value.IsEnabled == false) return;
             Value.Apply(world,entity,cancellationToken);
         }
 

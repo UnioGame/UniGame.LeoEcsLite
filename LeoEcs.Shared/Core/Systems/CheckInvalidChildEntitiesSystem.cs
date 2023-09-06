@@ -23,7 +23,7 @@
             foreach (var entity in _filter)
             {
                 ref var ownerComponent = ref ownerPool.Get(entity);
-                if(ownerComponent.Entity.Unpack(_world, out _))
+                if(ownerComponent.Value.Unpack(_world, out _))
                     continue;
 
                 ownerDestroyedPool.Add(entity);

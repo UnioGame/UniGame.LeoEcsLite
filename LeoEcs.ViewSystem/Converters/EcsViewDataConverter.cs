@@ -16,6 +16,8 @@
         public bool addUpdateRequestOnCreate = true;
         public bool IsEnabled => true;
         
+        public string Name => GetType().Name;
+        
         public void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
         {
             ref var dataComponent = ref world.GetOrAddComponent<ViewDataComponent<TData>>(entity);

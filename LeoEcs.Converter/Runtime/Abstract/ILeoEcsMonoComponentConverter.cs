@@ -2,13 +2,11 @@ using Sirenix.OdinInspector;
 
 namespace UniGame.LeoEcs.Converter.Runtime.Abstract
 {
-    using System.Threading;
-    using Leopotam.EcsLite;
-    using UnityEngine;
-
-    public interface ILeoEcsMonoComponentConverter 
-        : ILeoEcsComponentConverter
-        ,ILeoEcsConverterStatus { }
+    public interface ILeoEcsMonoComponentConverter
+        : ILeoEcsComponentConverter, ILeoEcsConverterStatus
+    {
+        string Name { get; }
+    }
     
     public interface IComponentConverter : 
         IEcsComponentConverter,
@@ -16,15 +14,4 @@ namespace UniGame.LeoEcs.Converter.Runtime.Abstract
         ISearchFilterable
     {
     }
-    
-    public interface IEcsComponentConverter
-    {
-        void Apply(EcsWorld world, int entity, CancellationToken cancellationToken = default);
-    }
-
-    public interface ILeoEcsComponentConverter
-    {
-        void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default);
-    }
-    
 }

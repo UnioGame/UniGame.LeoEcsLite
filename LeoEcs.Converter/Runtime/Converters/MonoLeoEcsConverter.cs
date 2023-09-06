@@ -8,7 +8,9 @@
     using UnityEngine.Serialization;
 
     [RequireComponent(typeof(LeoEcsMonoConverter))]
-    public class MonoLeoEcsConverter<TConverter> : MonoBehaviour,ILeoEcsMonoComponentConverter
+    public class MonoLeoEcsConverter<TConverter> : MonoBehaviour,
+        ILeoEcsMonoComponentConverter,
+        IConverterEntityDestroyHandler
         where TConverter : ILeoEcsMonoComponentConverter
     {
         #region inspector
@@ -24,6 +26,8 @@
         public bool IsEnabled => converter.IsEnabled;
 
         public bool IsRuntime => Application.isPlaying;
+        
+        public string Name => converter == null ? "EMPTY" : converter.Name;
         
         #endregion
 
@@ -42,6 +46,12 @@
             Entity = world.PackEntity(entity);
             World = world;
         }
+        
+        public virtual void OnEntityDestroy(EcsWorld world, int entity)
+        {
+            if(converter is IConverterEntityDestroyHandler destroyHandler)
+                destroyHandler.OnEntityDestroy(world, entity);
+        }
 
         protected virtual void OnApply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
         {
@@ -53,5 +63,6 @@
             if (converter is ILeoEcsGizmosDrawer gizmosDrawer)
                 gizmosDrawer.DrawGizmos(gameObject);
         }
+        
     }
 }

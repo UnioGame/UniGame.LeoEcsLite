@@ -4,22 +4,29 @@ using UniGame.LeoEcs.Shared.Extensions;
 namespace UniGame.LeoEcs.Converter.Runtime
 {
     using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using Abstract;
+    using Components;
     using Converters;
     using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
+    using UniCore.Runtime.ProfilerTools;
     using UniGame.Runtime.ObjectPool.Extensions;
     using UnityEngine;
 
     public static class LeoEcsTool
     {
+        private static List<ILeoEcsComponentConverter> _converters = new List<ILeoEcsComponentConverter>();
+        private static List<IEcsComponentConverter> _componentConverters = new List<IEcsComponentConverter>();
+        
         /// <summary>
         /// base common converters for gameobjects
         /// </summary>
         public static List<ILeoEcsMonoComponentConverter> DefaultGameObjectConverters = new List<ILeoEcsMonoComponentConverter>()
         {
             new BaseGameObjectComponentConverter(),
+            new ParentEntityComponentConverter(),
         };
 
         public static void ApplyEcsComponents(
@@ -64,7 +71,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
             bool spawnInstance,
             CancellationToken cancellationToken = default)
         {
-            return target.ConvertEntityFromGameObject(entity, world, converterTasks, spawnInstance, cancellationToken);
+            return target.ConvertGameObjectToEntity(entity, world, converterTasks, spawnInstance, cancellationToken);
         }
 
         public static void ApplyEcsComponents(
@@ -101,25 +108,111 @@ namespace UniGame.LeoEcs.Converter.Runtime
             }
         }
 
-        public static async UniTask<int> ConvertEntityFromGameObject(this GameObject target, IEnumerable<ILeoEcsMonoComponentConverter> converterTasks, bool spawnInstance,
+        public static async UniTask<int> ConvertGameObjectToEntity(
+            this GameObject target, 
+            IEnumerable<ILeoEcsMonoComponentConverter> converterTasks, 
+            bool spawnInstance,
             CancellationToken cancellationToken = default)
         {
             var world = await WaitWorldReady(cancellationToken);
-            var entity = ConvertEntityFromGameObject(target, world, converterTasks, spawnInstance, cancellationToken);
+            var entity = ConvertGameObjectToEntity(target, world, converterTasks, spawnInstance, cancellationToken);
             return entity;
         }
+        
+        public static int GetParentEntity(this GameObject source)
+        {
+            var transform = source.transform;
+            var parent = transform.parent;
+            
+            if (parent == null) return -1;
 
-        public static int ConvertEntityFromGameObject(this GameObject target, 
+            var ecsParent = parent.GetComponentInParent<IEcsEntity>();
+            if(ecsParent == null) return -1;
+
+            return ecsParent.Entity;
+        }
+
+        public static GameObject ConvertGameObjectToEntity(this GameObject gameObject, EcsWorld world, int entity)
+        {
+#if UNITY_EDITOR
+            if (gameObject == null)
+            {
+                GameLog.LogError($"{gameObject} IS NULL: TRY TO CONVERT {gameObject} TO ENT {entity}",gameObject);
+                return gameObject;
+            }
+            
+            if (world.IsAlive() == false)
+            {
+                GameLog.LogError($"WORLD IS DEAD: TRY TO CONVERT {gameObject} TO ENT {entity}",gameObject);
+                return gameObject;
+            }
+            
+            var packedEntity = world.PackEntity(entity);
+            if (packedEntity.Unpack(world,out var aliveEntity) == false)
+            {
+                GameLog.LogError($"ENTITY {entity} IS DEAD: TRY TO CONVERT {gameObject} TO ENT {entity}",gameObject);
+                return gameObject;
+            }
+#endif
+
+#if UNITY_EDITOR
+            gameObject.name = $"{gameObject.name}_ENT_{entity}";
+#endif
+            var connectable = gameObject.GetComponent<IConnectableToEntity>();
+            connectable?.ConnectEntity(world, entity);
+            
+            _converters.Clear();
+            _componentConverters.Clear();
+
+            SelectMonoConverters(gameObject, _converters);
+            SelectMonoConverters(gameObject, _componentConverters);
+
+            ApplyEcsComponents(world,gameObject,entity, _converters, false);
+            ApplyEcsComponents(world,entity, _componentConverters);
+
+            _converters.Clear();
+            _componentConverters.Clear();
+
+            world.GetOrAddComponent<ObjectConverterComponent>(entity);
+
+            return gameObject;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SelectMonoConverters(GameObject gameObject,List<ILeoEcsComponentConverter> converters)
+        {
+            var monoProvider = gameObject.GetComponent<IMonoConverterProvider>();
+            if (monoProvider == null)
+                gameObject.GetComponents(converters);
+            else
+            {
+                converters.AddRange(monoProvider.MonoConverters);
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SelectMonoConverters(GameObject gameObject,List<IEcsComponentConverter> converters)
+        {
+            var monoProvider = gameObject.GetComponent<IComponentConverterProvider>();
+            if (monoProvider == null)
+                gameObject.GetComponents(converters);
+            else
+            {
+                converters.AddRange(monoProvider.ComponentConverters);
+            }
+        }
+        
+        public static int ConvertGameObjectToEntity(this GameObject target, 
             EcsWorld world, 
             IEnumerable<ILeoEcsComponentConverter> converterTasks, 
             bool spawnInstance,
             CancellationToken cancellationToken = default)
         {
             var entity = world.NewEntity();
-            return ConvertEntityFromGameObject(target, entity, world, converterTasks, spawnInstance, cancellationToken);
+            return ConvertGameObjectToEntity(target, entity, world, converterTasks, spawnInstance, cancellationToken);
         }
         
-        public static int ConvertEntityFromGameObject(
+        public static int ConvertGameObjectToEntity(
             this GameObject target, 
             int entity,
             EcsWorld world, 

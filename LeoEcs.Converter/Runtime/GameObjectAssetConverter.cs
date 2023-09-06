@@ -13,6 +13,8 @@ namespace UniGame.LeoEcs.Converter.Runtime
         [HideLabel]
         [InlineProperty]
         public GameObjectConverter converter = new GameObjectConverter();
+
+        public string Name => GetType().Name;
         
         public bool IsEnabled => converter.IsEnabled;
         

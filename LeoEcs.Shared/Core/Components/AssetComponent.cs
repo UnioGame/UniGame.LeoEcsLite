@@ -1,11 +1,10 @@
 ﻿namespace Game.Ecs.Core.Components
 {
     using System;
-    using Leopotam.EcsLite;
-    using UnityEngine.Serialization;
+    using Object = UnityEngine.Object;
 
     /// <summary>
-    /// owner entity
+    /// link to asset
     /// </summary>
 #if ENABLE_IL2CPP
     using Unity.IL2CPP.CompilerServices;
@@ -15,11 +14,8 @@
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 #endif
     [Serializable]
-    public struct OwnerComponent
+    public struct AssetComponent
     {
-#if ODIN_INSPECTOR
-        [FormerlySerializedAs("Entity")] [Sirenix.OdinInspector.OnInspectorGUI]
-#endif
-        public EcsPackedEntity Value;
+        public Object Value;
     }
 }

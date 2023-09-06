@@ -1,11 +1,9 @@
-﻿namespace Game.Ecs.Core.Components
+﻿namespace Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.Shared.Components
 {
     using System;
-    using Leopotam.EcsLite;
-    using UnityEngine.Serialization;
 
     /// <summary>
-    /// owner entity
+    /// empty component to prevent to entity destroy
     /// </summary>
 #if ENABLE_IL2CPP
     using Unity.IL2CPP.CompilerServices;
@@ -15,11 +13,8 @@
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 #endif
     [Serializable]
-    public struct OwnerComponent
+    public struct EmptyComponent
     {
-#if ODIN_INSPECTOR
-        [FormerlySerializedAs("Entity")] [Sirenix.OdinInspector.OnInspectorGUI]
-#endif
-        public EcsPackedEntity Value;
+        
     }
 }

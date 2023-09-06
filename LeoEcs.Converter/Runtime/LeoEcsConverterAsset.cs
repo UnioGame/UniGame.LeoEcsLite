@@ -16,9 +16,11 @@ namespace UniGame.LeoEcs.Converter.Runtime
 #endif
     
     [CreateAssetMenu(menuName = "UniGame/LeoEcs/Converter/Ecs Converter")]
-    public class LeoEcsConverterAsset : ScriptableObject,IComponentConverter,
+    public class LeoEcsConverterAsset : ScriptableObject,
+        IComponentConverter,
         ILeoEcsGizmosDrawer, 
-        IEcsConverterProvider
+        IEcsConverterProvider,
+        IConverterEntityDestroyHandler
     {
         [BoxGroup("settings")]
         public bool enabled = true;
@@ -32,6 +34,10 @@ namespace UniGame.LeoEcs.Converter.Runtime
         public List<ComponentConverterValue> converters = new List<ComponentConverterValue>();
 
         public bool IsEnabled => enabled;
+
+        public string Name => this.GetType().Name;
+
+        public IEnumerable<IEcsComponentConverter> Converters => converters;
         
         public void Apply(EcsWorld world, int entity, CancellationToken cancellationToken = default)
         {
@@ -58,6 +64,15 @@ namespace UniGame.LeoEcs.Converter.Runtime
             converterValue.converter = converter;
             converters.Add(converterValue);
             return converter;
+        }
+        
+        public void OnEntityDestroy(EcsWorld world, int entity)
+        {
+            foreach (var converter in converters)
+            {
+                if(converter.Value is IConverterEntityDestroyHandler destroyHandler)
+                    destroyHandler.OnEntityDestroy(world, entity);
+            }
         }
         
         public bool AddConverter(IComponentConverter converter, bool replace = false)
