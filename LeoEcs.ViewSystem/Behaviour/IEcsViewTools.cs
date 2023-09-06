@@ -12,6 +12,6 @@
             EcsWorld world,EcsPackedEntity packedEntity,
             IView view,Type viewType);
 
-        void AddViewModelData(EcsWorld world,EcsPackedEntity packedEntity,IViewModel model);
+        void AddViewModelData(EcsWorld world,ref EcsPackedEntity packedEntity,IViewModel model);
     }
 }

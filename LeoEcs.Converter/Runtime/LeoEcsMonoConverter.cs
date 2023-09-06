@@ -143,6 +143,8 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         private List<ILeoEcsComponentConverter> UpdateMonoConverter()
         {
+            if(_converters.Count > 0) return _converters;
+            
             _converters ??= new List<ILeoEcsComponentConverter>();
             _converters.Clear();
             

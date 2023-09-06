@@ -1,18 +1,13 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
-using Leopotam.EcsLite;
-using UniGame.LeoEcs.ViewSystem.Components;
-using UniGame.LeoEcs.ViewSystem.Converters;
-using UniGame.ViewSystem.Runtime;
-using UniModules.UniGame.UiSystem.Runtime;
-using Unity.IL2CPP.CompilerServices;
-
-namespace UniGame.LeoEcs.ViewSystem.Systems
+﻿namespace UniGame.LeoEcs.ViewSystem.Systems
 {
-    using System.Threading;
+    using System;
+    using Cysharp.Threading.Tasks;
+    using Leopotam.EcsLite;
+    using UniGame.LeoEcs.ViewSystem.Components;
+    using UniGame.ViewSystem.Runtime;
+    using UniModules.UniGame.UiSystem.Runtime;
     using Behavriour;
     using Converter.Runtime;
-    using Converter.Runtime.Abstract;
     using Core.Runtime;
     using Game.Ecs.Core.Components;
     using Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.ViewSystem.Components;
@@ -85,22 +80,21 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
             var viewObject = view.GameObject;
             if (viewObject == null) return;
 
-            var converter = viewObject.GetComponent<ILeoEcsMonoConverter>();
-            if (converter == null) return;
+            var viewEntity = _world.NewEntity();
+            viewObject.ConvertGameObjectToEntity(_world, viewEntity);
+            viewObject.SetActive(true);
             
-            //converter.RegisterDynamicCallback(x => ConvertView(x,model,request));
+            ConvertView(_world,viewEntity, model, ref request);
         }
 
-        public void ConvertView(EcsPackedEntity viewPackedEntity,IViewModel model,CreateViewRequest request)
+        public void ConvertView(EcsWorld world,int viewEntity,IViewModel model,ref CreateViewRequest request)
         {
-            if (!viewPackedEntity.Unpack(_world, out var viewEntity))
-                return;
-
+            var viewPackedEntity = world.PackEntity(viewEntity);
             var owner = request.Owner;
             var parent = request.Parent;
             
             _world.GetOrAddComponent<ViewInitializedComponent>(viewEntity);
-            _viewTools.AddViewModelData(_world,viewPackedEntity,model);
+            _viewTools.AddViewModelData(_world,ref viewPackedEntity,model);
 
             if (owner.Unpack(_world, out var ownerEntity)) 
             {

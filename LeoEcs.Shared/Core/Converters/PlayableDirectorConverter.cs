@@ -10,7 +10,7 @@
     using UnityEngine.Playables;
 
     [Serializable]
-    public sealed class PlayableDirectorConverter : LeoEcsConverter
+    public sealed class PlayableDirectorConverter : LeoEcsConverter,IConverterEntityDestroyHandler
     {
         [SerializeField]
         public PlayableDirector playableDirector;
@@ -20,6 +20,11 @@
             var playableDirectorPool = world.GetPool<PlayableDirectorComponent>();
             ref var playableDirectorComponent = ref playableDirectorPool.GetOrAddComponent(entity);
             playableDirectorComponent.Value = playableDirector;
+        }
+        
+        public void OnEntityDestroy(EcsWorld world, int entity)
+        {
+            world.TryRemoveComponent<PlayableDirectorComponent>(entity);
         }
     }
 }

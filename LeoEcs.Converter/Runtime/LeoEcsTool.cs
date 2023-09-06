@@ -12,14 +12,13 @@ namespace UniGame.LeoEcs.Converter.Runtime
     using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
     using UniCore.Runtime.ProfilerTools;
+    using UniGame.Runtime.ObjectPool;
     using UniGame.Runtime.ObjectPool.Extensions;
     using UnityEngine;
+    using UnityEngine.Pool;
 
     public static class LeoEcsTool
     {
-        private static List<ILeoEcsComponentConverter> _converters = new List<ILeoEcsComponentConverter>();
-        private static List<IEcsComponentConverter> _componentConverters = new List<IEcsComponentConverter>();
-        
         /// <summary>
         /// base common converters for gameobjects
         /// </summary>
@@ -41,7 +40,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
                 Debug.LogError($"ECS CONVERTER: GameObject {target} is NULL | ENTITY {entityId}");
 #endif
             foreach (var converter in converterTasks)
-            {
+            {   
 #if UNITY_EDITOR
                 if (converter == null)
                     Debug.LogError($"ECS CONVERTER: Converter == null FOR GameObject {target} is NULL | ENTITY {entityId}",target);
@@ -160,18 +159,22 @@ namespace UniGame.LeoEcs.Converter.Runtime
 #endif
             var connectable = gameObject.GetComponent<IConnectableToEntity>();
             connectable?.ConnectEntity(world, entity);
-            
-            _converters.Clear();
-            _componentConverters.Clear();
 
-            SelectMonoConverters(gameObject, _converters);
-            SelectMonoConverters(gameObject, _componentConverters);
+            var converters = ListPool<ILeoEcsComponentConverter>.Get();
+            var componentConverters = ListPool<IEcsComponentConverter>.Get();
+            converters.Clear();
+            componentConverters.Clear();
 
-            ApplyEcsComponents(world,gameObject,entity, _converters, false);
-            ApplyEcsComponents(world,entity, _componentConverters);
+            SelectMonoConverters(gameObject, converters);
+            SelectMonoConverters(gameObject, componentConverters);
 
-            _converters.Clear();
-            _componentConverters.Clear();
+            ApplyEcsComponents(world,gameObject,entity, converters, false);
+            ApplyEcsComponents(world,entity, componentConverters);
+
+            converters.Clear();
+            componentConverters.Clear();
+            ListPool<ILeoEcsComponentConverter>.Release(converters);
+            ListPool<IEcsComponentConverter>.Release(componentConverters);
 
             world.GetOrAddComponent<ObjectConverterComponent>(entity);
 

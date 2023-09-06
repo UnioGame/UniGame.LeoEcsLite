@@ -34,14 +34,14 @@
             var modelType = _viewSystem.ModelTypeMap.GetViewModelType(viewType);
             var model = await _viewSystem.CreateViewModel(_context, modelType);
             
-            AddViewModelData(world, packedEntity, model);
+            AddViewModelData(world,ref packedEntity, model);
             
             await _viewSystem
                 .InitializeView(view, model)
                 .AttachExternalCancellation(_lifeTime.CancellationToken);
         }
 
-        public void AddViewModelData(EcsWorld world,EcsPackedEntity packedEntity,IViewModel model)
+        public void AddViewModelData(EcsWorld world,ref EcsPackedEntity packedEntity,IViewModel model)
         {
             if (!packedEntity.Unpack(world, out var entity)) return;
 

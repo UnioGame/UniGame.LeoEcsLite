@@ -31,6 +31,8 @@
         [SerializeReference]
         [ListDrawerSettings(ListElementLabelName = "@Name",DefaultExpandedState = false)]
         public List<ILeoEcsMonoComponentConverter> converters = new List<ILeoEcsMonoComponentConverter>();
+
+        private int _parentEntity = -1;
         
         public override void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
         {
@@ -45,23 +47,28 @@
                 return;
             }
 
+            _parentEntity = parentEntity;
+            
             foreach (var converter in converters)
-                converter.Apply(target,world, parentEntity, cancellationToken);
+                converter.Apply(target,world, _parentEntity, cancellationToken);
 
             foreach (var converter in configurations)
-                converter.Apply(world, parentEntity, cancellationToken);
+                converter.Apply(world, _parentEntity, cancellationToken);
         }
 
         public void OnEntityDestroy(EcsWorld world, int entity)
         {
+            var packedParent = world.PackEntity(_parentEntity);
+            if(!packedParent.Unpack(world,out var parentEntity)) return;
+            
             foreach (var converter in converters)
             {
                 if (converter is IConverterEntityDestroyHandler destroyHandler)
-                    destroyHandler.OnEntityDestroy(world, entity);
+                    destroyHandler.OnEntityDestroy(world, parentEntity);
             }
 
             foreach (var converter in configurations)
-                converter.OnEntityDestroy(world,entity);
+                converter.OnEntityDestroy(world,parentEntity);
         }
     }
 }

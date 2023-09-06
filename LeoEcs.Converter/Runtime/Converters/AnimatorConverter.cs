@@ -8,7 +8,7 @@
     using UnityEngine;
 
     [Serializable]
-    public sealed class AnimatorConverter : LeoEcsConverter
+    public sealed class AnimatorConverter : LeoEcsConverter,IConverterEntityDestroyHandler
     {
         [SerializeField]
         public Animator animator;
@@ -19,6 +19,11 @@
 
             ref var animatorComponent = ref animatorPool.GetOrAddComponent(entity);
             animatorComponent.Value = animator;
+        }
+
+        public void OnEntityDestroy(EcsWorld world, int entity)
+        {
+            world.TryRemoveComponent<AnimatorComponent>(entity);
         }
     }
 }
