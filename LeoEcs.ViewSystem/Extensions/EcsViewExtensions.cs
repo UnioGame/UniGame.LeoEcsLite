@@ -44,8 +44,7 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
         {
             return world.ViewFilter<TModel>().End();
         }
-
-
+        
         public static void MakeViewRequest(
             this EcsWorld world,
             Type viewType,
@@ -55,7 +54,24 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             string viewName = null,
             bool stayWorld = false)
         {
-            MakeViewRequest(world, viewType.Name, layoutType, parent, tag, viewName, stayWorld);
+            var target = new EcsPackedEntity();
+            MakeViewRequest(world, viewType.Name,ref target,ref target, layoutType, 
+                parent, tag, viewName, stayWorld);
+        }
+        
+        public static void MakeViewRequest(
+            this EcsWorld world,
+            Type viewType,
+            ref  EcsPackedEntity targetEntity,
+            ref EcsPackedEntity ownerEntity,
+            ViewType layoutType = ViewType.None,
+            Transform parent = null,
+            string tag = null,
+            string viewName = null,
+            bool stayWorld = false)
+        {
+            MakeViewRequest(world, viewType.Name,ref targetEntity,ref ownerEntity, layoutType, 
+                parent, tag, viewName, stayWorld);
         }
         
         public static void MakeViewInContainerRequest<TView>(
@@ -120,9 +136,12 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             MakeViewRequest(world,viewType.Name, layoutType);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void MakeViewRequest(
             this EcsWorld world, 
             string view,
+            ref EcsPackedEntity target,
+            ref EcsPackedEntity owner,
             ViewType layoutType = ViewType.None,
             Transform parent = null,
             string tag = null,
@@ -139,22 +158,15 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             component.LayoutType = layoutType;
             component.ViewName = viewName;
             component.StayWorld = stayWorld;
+            component.Target = target;
+            component.Owner = owner;
         }
         
-        public static void MakeViewRequest(
-            this EcsWorld world, 
-            CreateViewRequest request)
+        public static void MakeViewRequest(this EcsWorld world,ref CreateViewRequest request)
         {
             var entity = world.NewEntity();
-            ref var component = ref world
-                .GetOrAddComponent<CreateViewRequest>(entity);
-            
-            component.Parent = request.Parent;
-            component.Tag = request.Tag;
-            component.ViewId = request.ViewId;
-            component.LayoutType = request.LayoutType;
-            component.ViewName = request.ViewName;
-            component.StayWorld = request.StayWorld;
+            ref var component = ref world.GetOrAddComponent<CreateViewRequest>(entity);
+            component.Apply(ref request);
         }
         
         public static CreateViewRequest CreateViewRequest(

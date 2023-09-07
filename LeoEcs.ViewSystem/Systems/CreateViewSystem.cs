@@ -25,7 +25,6 @@
     public class CreateViewSystem : IEcsRunSystem,IEcsInitSystem
     {
         private readonly IGameViewSystem _viewSystem;
-        private readonly IEcsViewTools _viewTools;
         private readonly IContext _context;
         
         public EcsFilter _createFilter;
@@ -35,11 +34,10 @@
         private EcsPool<OwnerComponent> _ownerPool;
         private EcsPool<ViewParentComponent> _parentPool;
 
-        public CreateViewSystem(IContext context,IGameViewSystem viewSystem,IEcsViewTools viewTools)
+        public CreateViewSystem(IContext context,IGameViewSystem viewSystem)
         {
             _context = context;
             _viewSystem = viewSystem;
-            _viewTools = viewTools;
         }
         
         public void Init(IEcsSystems systems)
@@ -80,33 +78,40 @@
                     .OpenOverlay(model,request.ViewId,request.Tag,request.ViewName),
             };
 
-            var entity = await UpdateViewEntity(view);
+            var entity = await UpdateViewEntity(view,request);
+            
             if(entity < 0) return;
             
             UpdateViewEntityComponent(entity, model, request);
         }
 
-        private async UniTask<int> UpdateViewEntity(IView view)
+        private async UniTask<int> UpdateViewEntity(IView view,CreateViewRequest request)
         {
-            var viewEntity = -1;
+            var viewEntity = -1; 
             var viewObject = view.GameObject;
             if (viewObject == null) return viewEntity;
 
+            if(request.Target.Unpack(_world,out var targetEntity))
+                viewEntity = targetEntity;
+            
             var converter = viewObject.GetComponent<ILeoEcsMonoConverter>();
-            if (converter != null)
+            if (converter != null && viewEntity < 0)
             {
                 if (converter.Entity > 0) return converter.Entity;
-
-                if (converter.AutoCreate)
-                {   
-                    await UniTask.WaitWhile(() => converter.Entity < 0);
-                    return converter.Entity;
-                }
-                return viewEntity;
+                if (!converter.AutoCreate) return viewEntity;
+                
+                await UniTask.WaitWhile(() => converter.Entity < 0);
+                viewEntity = converter.Entity;
             }
-
-            viewEntity = _world.NewEntity();
-            viewObject.ConvertGameObjectToEntity(_world, viewEntity);
+            else
+            {
+                viewEntity = viewEntity < 0 ? _world.NewEntity() : viewEntity;
+                viewObject.ConvertGameObjectToEntity(_world, viewEntity);
+            }
+            
+            if(request.Owner.Unpack(_world,out var ownerEntity))
+                _ownerPool.GetOrAddComponent(viewEntity).Value = request.Owner;
+            
             return viewEntity;
         }
 
