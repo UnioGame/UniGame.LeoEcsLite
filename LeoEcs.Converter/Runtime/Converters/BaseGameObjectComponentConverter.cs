@@ -4,6 +4,7 @@ namespace UniGame.LeoEcs.Converter.Runtime.Converters
 {
     using System;
     using System.Threading;
+    using LeoEcsLite.LeoEcs.Shared.Components;
     using Leopotam.EcsLite;
     using Shared.Components;
     using UnityEngine;
@@ -15,9 +16,11 @@ namespace UniGame.LeoEcs.Converter.Runtime.Converters
         {
             ref var transformComponent = ref world.GetOrAddComponent<TransformComponent>(entity);
             ref var gameObjectComponent = ref world.GetOrAddComponent<GameObjectComponent>(entity);
+            ref var objectComponent = ref world.GetOrAddComponent<UnityObjectComponent>(entity);
 
             transformComponent.Value = target.transform;
-            gameObjectComponent.GameObject = target;
+            gameObjectComponent.Value = target;
+            objectComponent.Value = target;
         }
     }
 }

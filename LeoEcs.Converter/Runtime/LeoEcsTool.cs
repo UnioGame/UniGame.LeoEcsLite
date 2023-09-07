@@ -84,7 +84,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
             if (world.HasComponent<GameObjectComponent>(entityId))
             {
                 ref var gameObjectComponent = ref world.GetComponent<GameObjectComponent>(entityId);
-                gameObject = gameObjectComponent.GameObject;
+                gameObject = gameObjectComponent.Value;
             }
 #endif
             foreach (var converter in converterTasks)

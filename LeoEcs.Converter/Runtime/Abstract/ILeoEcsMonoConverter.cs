@@ -9,6 +9,8 @@
         IEcsEntity,
         IConnectableToEntity
     {
+        bool AutoCreate { get; }
+        
         void Convert(EcsWorld world, int ecsEntity);
 
         void DestroyEntity();

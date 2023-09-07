@@ -20,7 +20,8 @@
         
         public void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
         {
-            ref var dataComponent = ref world.GetOrAddComponent<ViewDataComponent<TData>>(entity);
+            ref var dataComponent = ref world
+                .GetOrAddComponent<ViewDataComponent<TData>>(entity);
             if (addUpdateRequestOnCreate)
                 world.AddComponent<UpdateViewRequest<TData>>(entity);
         }

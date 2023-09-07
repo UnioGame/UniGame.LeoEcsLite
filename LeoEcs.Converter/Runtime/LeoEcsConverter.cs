@@ -29,9 +29,9 @@
 
             ref var gameObjectComponent = ref world.GetComponent<GameObjectComponent>(entity);
 
-            if (gameObjectComponent.GameObject == null) return;
+            if (gameObjectComponent.Value == null) return;
             
-            Apply(gameObjectComponent.GameObject,world,entity,cancellationToken);
+            Apply(gameObjectComponent.Value,world,entity,cancellationToken);
         }
         
         public virtual bool IsMatch(string searchString)

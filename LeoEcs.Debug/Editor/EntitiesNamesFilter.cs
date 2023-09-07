@@ -54,7 +54,7 @@
 
                 if (component is GameObjectComponent gameObjectComponent)
                 {
-                    var gameObject = gameObjectComponent.GameObject;
+                    var gameObject = gameObjectComponent.Value;
                     if (gameObject != null)
                     {
                         name = gameObject.name;

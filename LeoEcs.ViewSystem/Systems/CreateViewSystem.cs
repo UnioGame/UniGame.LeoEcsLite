@@ -1,12 +1,14 @@
 ﻿namespace UniGame.LeoEcs.ViewSystem.Systems
 {
     using System;
+    using System.Runtime.CompilerServices;
     using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
-    using UniGame.LeoEcs.ViewSystem.Components;
+    using Components;
     using UniGame.ViewSystem.Runtime;
     using UniModules.UniGame.UiSystem.Runtime;
     using Behavriour;
+    using Bootstrap.Runtime.Attributes;
     using Converter.Runtime;
     using Core.Runtime;
     using Game.Ecs.Core.Components;
@@ -19,6 +21,7 @@
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 #endif
     [Serializable]
+    [ECSDI]
     public class CreateViewSystem : IEcsRunSystem,IEcsInitSystem
     {
         private readonly IGameViewSystem _viewSystem;
@@ -77,25 +80,45 @@
                     .OpenOverlay(model,request.ViewId,request.Tag,request.ViewName),
             };
 
-            var viewObject = view.GameObject;
-            if (viewObject == null) return;
-
-            var viewEntity = _world.NewEntity();
-            viewObject.ConvertGameObjectToEntity(_world, viewEntity);
-            viewObject.SetActive(true);
+            var entity = await UpdateViewEntity(view);
+            if(entity < 0) return;
             
-            ConvertView(_world,viewEntity, model, ref request);
+            UpdateViewEntityComponent(entity, model, request);
         }
 
-        public void ConvertView(EcsWorld world,int viewEntity,IViewModel model,ref CreateViewRequest request)
+        private async UniTask<int> UpdateViewEntity(IView view)
         {
-            var viewPackedEntity = world.PackEntity(viewEntity);
-            var owner = request.Owner;
-            var parent = request.Parent;
-            
-            _world.GetOrAddComponent<ViewInitializedComponent>(viewEntity);
-            _viewTools.AddViewModelData(_world,ref viewPackedEntity,model);
+            var viewEntity = -1;
+            var viewObject = view.GameObject;
+            if (viewObject == null) return viewEntity;
 
+            var converter = viewObject.GetComponent<ILeoEcsMonoConverter>();
+            if (converter != null)
+            {
+                if (converter.Entity > 0) return converter.Entity;
+
+                if (converter.AutoCreate)
+                {   
+                    await UniTask.WaitWhile(() => converter.Entity < 0);
+                    return converter.Entity;
+                }
+                return viewEntity;
+            }
+
+            viewEntity = _world.NewEntity();
+            viewObject.ConvertGameObjectToEntity(_world, viewEntity);
+            return viewEntity;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void UpdateViewEntityComponent(int viewEntity,IViewModel model,CreateViewRequest request)
+        {
+            ref var modelComponent = ref _world.GetOrAddComponent<ViewModelComponent>(viewEntity);
+            modelComponent.Model = model;
+
+            ref var owner = ref request.Owner;
+            ref var parent = ref request.Parent;
+            
             if (owner.Unpack(_world, out var ownerEntity)) 
             {
                 ref var ownerComponent = ref _ownerPool.GetOrAddComponent(viewEntity);
@@ -108,5 +131,6 @@
                 parentComponent.Value = parent;
             }
         }
+
     }
 }

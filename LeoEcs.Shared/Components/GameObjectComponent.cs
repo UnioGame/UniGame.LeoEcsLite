@@ -2,6 +2,7 @@
 {
     using System;
     using UnityEngine;
+    using UnityEngine.Serialization;
 
     /// <summary>
     /// Component wot GameObject info 
@@ -9,6 +10,6 @@
     [Serializable]
     public struct GameObjectComponent
     {
-        public GameObject GameObject;
+        [FormerlySerializedAs("GameObject")] public GameObject Value;
     }
 }

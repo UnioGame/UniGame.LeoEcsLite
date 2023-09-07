@@ -27,7 +27,7 @@
                 {
                     if (view.id != entity) continue;
                     ref var gameObjectComponent = ref _gameObjectPool.Get(entity);
-                    var gameObject = gameObjectComponent.GameObject;
+                    var gameObject = gameObjectComponent.Value;
                     if(gameObject == null) continue;
                     
                     view.gameObject = gameObject;
@@ -45,7 +45,7 @@
             if (!_gameObjectPool.Has(entityId)) return;
                 
             ref var gameObjectComponent = ref _gameObjectPool.Get(entity);
-            var gameObject = gameObjectComponent.GameObject;
+            var gameObject = gameObjectComponent.Value;
 
             if (gameObject == null) return;
                     

@@ -58,28 +58,26 @@ namespace UniGame.LeoEcs.Converter.Runtime
         [SerializeField]
         public int entity = -1;
 
-        [BoxGroup("runtime info")] 
-        [ReadOnly] 
-        public EntityState state = EntityState.Destroyed;
-        
 #endregion
 
 #region private data
 
+        private EntityState _state = EntityState.Destroyed;
+        private EcsPackedEntity _packedEntity;
         private EcsWorld _world;
-        private EcsPackedEntity _entityId;
         private List<ILeoEcsComponentConverter> _converters = new List<ILeoEcsComponentConverter>();
         private LifeTimeDefinition _entityLifeTime = new LifeTimeDefinition();
+        private int _generation;
         
-        #endregion
+#endregion
 
         public bool IsRuntime => Application.isPlaying;
 
         public bool IsPlayingAndReady => IsRuntime && entity >= 0;
 
-        public bool IsCreated => state == EntityState.Created;
+        public bool IsCreated => _state == EntityState.Created;
 
-        public EcsPackedEntity EntityId => _entityId;
+        public EcsPackedEntity EntityId => _packedEntity;
         
         public EcsWorld World => _world;
 
@@ -87,6 +85,8 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         public int Entity => entity;
 
+        public bool AutoCreate => createEntityOnEnabled || createEntityOnStart;
+        
         public IReadOnlyList<ILeoEcsComponentConverter> MonoConverters => UpdateMonoConverter();
 
         public IReadOnlyList<IEcsComponentConverter> ComponentConverters => assetConverters;
@@ -95,30 +95,28 @@ namespace UniGame.LeoEcs.Converter.Runtime
         
         public async UniTask Convert()
         {
-            if(IsCreated) return;
+            _generation++; 
+            var generation = _generation;
+
+            await UniTask.Yield(PlayerLoopTiming.PostLateUpdate);
+            await UniTask.Yield(PlayerLoopTiming.PostLateUpdate);
             
+            if(_state != EntityState.Creating) return;
+
             var world = LeoEcsConvertersData.World ?? 
                         await gameObject.WaitWorldReady(_entityLifeTime.CancellationToken);
 
-            if (this == null) return;
-            
-            if (world.IsAlive() == false)
-            {
-                state = EntityState.Destroyed;
-                entity = -1;
-                return;
-            }
-            
-            if (state == EntityState.Destroyed)
+            if (world.IsAlive() == false)   
             {
                 DestroyEntity();
                 return;
             }
             
-            if (state == EntityState.Created) return;
+            if(this == null ||
+               _state != EntityState.Creating || 
+               generation != _generation) return;
             
             var targetEntity = world.NewEntity();
-            
             Convert(world, targetEntity);
         }
 
@@ -126,10 +124,12 @@ namespace UniGame.LeoEcs.Converter.Runtime
         public void ConnectEntity(EcsWorld world,int ecsEntity)
         {
             _world = world;
+            _packedEntity = world.PackEntity(ecsEntity);
+            
             entity = ecsEntity;
-            state = EntityState.Created;
+            _state = EntityState.Created;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Convert(EcsWorld world, int ecsEntity)
         {
@@ -153,13 +153,12 @@ namespace UniGame.LeoEcs.Converter.Runtime
             _converters.AddRange(serializableConverters);
             return _converters;
         }
-        
-        
+
         private void CreateEntity()
         {
-            if (IsCreated) return;
+            if (_state != EntityState.Destroyed) return;
 
-            state = EntityState.Creating;
+            _state = EntityState.Creating;
             _entityLifeTime.Release();
 
             Convert().AttachExternalCancellation(_entityLifeTime.CancellationToken)
@@ -176,42 +175,44 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         public void DestroyEntity()
         {
-            DestroyEntity(_entityId);
-        }
-
-        private void DestroyEntity(EcsPackedEntity entity)
-        {
+            _state = EntityState.Destroyed;
+            var releasedEntity = entity;
+            
+            if (_world == null || _world.IsAlive() == false) return;
+            if (entity < 0) return;
+            
+            entity = -1;
+            _packedEntity = default;
+            
             //mark state as destroyed
-            state = EntityState.Destroyed;
+            
+            
             
             //if entity already created when destroy immediate
-            if (this.entity < 0) return;
+            
             
             if (_world == null || _world.IsAlive() == false) return;
 
-            if (!entity.Unpack(_world, out var targetEntity))
+            if (!_packedEntity.Unpack(_world, out var targetEntity))
                 return;
             
             //notify converters about destroy
             foreach (var converter in _converters)
             {
                 if (converter is IConverterEntityDestroyHandler destroyHandler)
-                    destroyHandler.OnEntityDestroy(_world, this.entity);
+                    destroyHandler.OnEntityDestroy(_world, releasedEntity);
             }
 
             //notify converters about destroy
             foreach (var converter in assetConverters)
             {
                 if (converter is not IConverterEntityDestroyHandler destroyHandler) continue;
-                destroyHandler.OnEntityDestroy(_world, this.entity);
+                destroyHandler.OnEntityDestroy(_world, releasedEntity);
             }
 
             //clean up converter entity data
-            LeoEcsTool.DestroyEntity(targetEntity, _world);
-                
-            this.entity = -1;
+            LeoEcsTool.DestroyEntity(releasedEntity, _world);
             
-            _entityId = new EcsPackedEntity();
             _entityLifeTime.Release();
         }
 
@@ -222,28 +223,27 @@ namespace UniGame.LeoEcs.Converter.Runtime
         // Start is called before the first frame update
         private void Start()
         {
-            if (!createEntityOnStart)
-                return;
+            if (!createEntityOnStart) return;
             CreateEntity();
         }
 
         private void OnEnable()
         {
-            if (!createEntityOnEnabled)
-                return;
+            if (!createEntityOnEnabled) return;
+            var frame = Time.frameCount;
             CreateEntity();
         }
 
         private void OnDisable()
         {
             if (!destroyEntityOnDisable) return;
+            var frame = Time.frameCount;
             DestroyEntity();
         }
 
         private void OnDestroy()
         {
-            if (destroyOnDestroy) 
-                DestroyEntity();
+            if (destroyOnDestroy) DestroyEntity();
             _entityLifeTime.Terminate();
         }
 
