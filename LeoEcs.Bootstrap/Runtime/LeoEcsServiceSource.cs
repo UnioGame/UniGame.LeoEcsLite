@@ -54,7 +54,6 @@
 
             var config = Instantiate(ecsConfiguration);
             _updateMapData = Instantiate(updatesMap);
-            
             _runtimeConfiguration = config;
 
             var plugins = _updateMapData
@@ -71,10 +70,9 @@
                 this, 
                 plugins,
                 true,featureTimeout);
-
+            
             //start ecs service update
             await ecsService.InitializeAsync();
-            
             ecsService.Execute();
             ecsService.SetDefaultWorld(world);
 
@@ -83,7 +81,7 @@
 #if UNITY_EDITOR
             LifeTime.LogOnRelease($"SERVICE: LeoEcs Service COMPLETE : {assetName}",Color.yellow);
 #endif
-            
+            context.LifeTime.AddDispose(ecsService);
             return ecsService;
         }
         

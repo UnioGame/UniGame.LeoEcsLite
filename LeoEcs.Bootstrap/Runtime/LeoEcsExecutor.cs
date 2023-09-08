@@ -5,6 +5,7 @@
     using Abstract;
     using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
+    using Shared.Extensions;
     using UnityEngine;
     using UnityEngine.Profiling;
 
@@ -13,7 +14,6 @@
     {
         private List<IEcsSystems> _systems = new List<IEcsSystems>();
         private EcsWorld _world;
-
         private LeoEcsPlayerUpdateType _loopTiming = LeoEcsPlayerUpdateType.Update;
         private PlayerLoopTiming _updateTiming = PlayerLoopTiming.Update;
 
@@ -29,15 +29,17 @@
 
         public void Execute(EcsWorld world)
         {
+            if (!CanExecute()) return;
+
             _world = world;
-
-            if (!CanExecute())
-                return;
-
             _isActive = true;
             _updateTiming = _loopTiming.ConvertToPlayerLoopTiming();
-
-            ExecuteAsync().Forget();
+            
+            var worldLifeTime = _world.GetLifeTime();
+            
+            ExecuteAsync()
+                .AttachExternalCancellation(worldLifeTime.CancellationToken)
+                .Forget();
         }
 
         public void Add(IEcsSystems systems)
@@ -58,7 +60,9 @@
 
         private bool CanExecute()
         {
-            var isDisabled = _isDisposed || _isActive || _loopTiming == LeoEcsPlayerUpdateType.None;
+            var isDisabled = _isDisposed ||
+                             _isActive ||
+                             _loopTiming == LeoEcsPlayerUpdateType.None;
             var canExecute = !isDisabled;
 
             return canExecute;
@@ -69,9 +73,7 @@
             while (_world.IsAlive() && Application.isPlaying && _isActive)
             {
                 foreach (var system in _systems)
-                {
                     system.Run();
-                }
 
                 //wait next interval
                 await UniTask.Yield(_updateTiming);

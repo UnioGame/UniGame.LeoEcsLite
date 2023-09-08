@@ -11,21 +11,23 @@
     public class EcsDiPostInitialize : IEcsPostInitializeAction
     {
         private Type _diAttributeType = typeof(ECSDIAttribute);
-
         private List<IEcsDiInjection> _injections = null;
 
-        public void Apply(IEcsSystems ecsSystems,IEcsSystem system)
+        public EcsDiPostInitialize()
         {
-            var world = ecsSystems.GetWorld();
-            if (world == null) return;
-
             _injections = new List<IEcsDiInjection>()
             {
                 new EcsDiWorldInjection(),
                 new EcsDiPoolInjection(),
                 new EcsDiAspectInjection(),
             };
-  
+        }
+        
+        public void Apply(IEcsSystems ecsSystems,IEcsSystem system)
+        {
+            var world = ecsSystems.GetWorld();
+            if (world == null) return;
+            
             var systemType = system.GetType();
             var isDiSystem = systemType.HasAttribute<ECSDIAttribute>();
             var fields = systemType.GetInstanceFields();

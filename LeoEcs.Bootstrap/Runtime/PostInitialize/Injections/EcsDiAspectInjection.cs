@@ -16,7 +16,9 @@
         private MethodInfo _initializeMethod;
         private object[] _parameters = new[] { (object)0 };
         
-        public void ApplyInjection(IEcsSystems ecsSystems, FieldInfo field, object target, 
+        public void ApplyInjection(
+            IEcsSystems ecsSystems, 
+            FieldInfo field, object target, 
             IReadOnlyList<IEcsDiInjection> injections)
         {
             var fieldType = field.FieldType;

@@ -11,7 +11,8 @@
         private MethodInfo _poolMethod;
         private Type _poolType = typeof(EcsPool<>);
         
-        public void ApplyInjection(IEcsSystems ecsSystems,FieldInfo field,object target, 
+        public void ApplyInjection(IEcsSystems ecsSystems,
+            FieldInfo field,object target, 
             IReadOnlyList<IEcsDiInjection> injections)
         {
             var world = ecsSystems.GetWorld();

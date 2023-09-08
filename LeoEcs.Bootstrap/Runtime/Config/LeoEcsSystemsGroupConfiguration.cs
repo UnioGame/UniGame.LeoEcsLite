@@ -9,6 +9,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
     using Sirenix.OdinInspector;
     using UnityEngine;
     using UnityEngine.Serialization;
+    using Object = UnityEngine.Object;
 
     [Serializable]
     public class LeoEcsSystemsGroupConfiguration : ILeoEcsSystemsGroup
@@ -60,8 +61,9 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 
             foreach (var featureAsset in nestedFeatures)
             {
-                if(!featureAsset.IsFeatureEnabled) continue; 
-                await featureAsset.InitializeFeatureAsync(ecsSystems);
+                if(!featureAsset.IsFeatureEnabled) continue;
+                var featureInstance = Object.Instantiate(featureAsset);
+                await featureInstance.InitializeFeatureAsync(ecsSystems);
             }
 
             foreach (var ecsFeature in serializableFeatures)

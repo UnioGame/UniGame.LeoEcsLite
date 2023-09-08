@@ -12,9 +12,6 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 
         public LeoEcsPlayerUpdateType UpdateType => updateType;
         
-        public ILeoEcsExecutor Create()
-        {
-            return new LeoEcsExecutor(updateType);
-        }
+        public ILeoEcsExecutor Create() => new LeoEcsExecutor(updateType);
     }
 }

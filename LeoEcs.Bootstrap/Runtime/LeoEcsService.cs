@@ -27,18 +27,16 @@
         private EcsWorld _world;
         private bool _isInitialized;
 
-        private List<IEcsSystem> _startupSystems = new List<IEcsSystem>()
+        private List<IEcsSystem> _startupSystems = 
+            new List<IEcsSystem>()
         {
             new InstantDestroySystem(),
-            //new DestroyNullTransformSystem(),
         };
         
-        private List<IEcsSystem> _lateSystems = new List<IEcsSystem>()
-        {
-            //new DestroyNullTransformSystem(),
-        };
-        
-        private List<IEcsPostInitializeAction> _postInitializeActions = new List<IEcsPostInitializeAction>()
+        private List<IEcsSystem> _lateSystems = new List<IEcsSystem>() {};
+
+        private List<IEcsPostInitializeAction> _postInitializeActions = 
+            new List<IEcsPostInitializeAction>() 
         {
             new EcsDiPostInitialize(),
         };
@@ -65,7 +63,7 @@
             _plugins = plugins;
             _ownThisWorld = ownThisWorld;
             _featureTimeout = featureTimeout;
-
+            
             LifeTime.AddCleanUpAction(CleanUp);
         }
         
@@ -89,8 +87,7 @@
 
         public void Execute()
         {
-            if (!_isInitialized)
-                return;
+            if (!_isInitialized) return;
 
             foreach (var (updateType, systems) in _systemsMap)
             {

@@ -6,7 +6,6 @@
 
     public interface IEcsDiInjection
     {
-        void ApplyInjection(IEcsSystems ecsSystems, FieldInfo field, object target, 
-            IReadOnlyList<IEcsDiInjection> injections);
+        void ApplyInjection(IEcsSystems ecsSystems, FieldInfo field, object target, IReadOnlyList<IEcsDiInjection> injections);
     }
 }

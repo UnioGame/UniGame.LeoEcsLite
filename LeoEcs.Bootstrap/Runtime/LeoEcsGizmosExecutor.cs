@@ -1,6 +1,5 @@
 ﻿namespace UniGame.LeoEcs.Bootstrap.Runtime
 {
-    using System;
     using System.Collections.Generic;
     using Abstract;
     using Leopotam.EcsLite;
@@ -21,8 +20,7 @@
             _gizmosSystems?.Clear();
             Stop();
 #if UNITY_EDITOR
-            if (gameObject == null || Application.isPlaying == false)
-                return;
+            if (this == null || Application.isPlaying == false || gameObject == null) return;
 #endif
             Destroy(gameObject);
         }
@@ -40,11 +38,9 @@
 #if !UNITY_EDITOR
             return; 
 #endif
-            if (_systems.Contains(ecsSystems))
-                return;
-
-            _systems.Add(ecsSystems);
+            if (_systems.Contains(ecsSystems)) return;
             
+            _systems.Add(ecsSystems);
             _allSystems = ecsSystems.GetAllSystems();
             
             foreach (var system in _allSystems)
@@ -62,20 +58,16 @@
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            if (!this) return;
-            
-            var isActive = _world!=null && 
+            var isActive = this != null &&
+                           _world!=null && 
                            _world.IsAlive() && 
                            Application.isPlaying && 
                            _isActive;
             
-            if (!isActive)
-                return;
+            if (!isActive) return;
             
             foreach (var systemValue in _gizmosSystems)
-            {
                 systemValue.Key.RunGizmosSystem(systemValue.Value);
-            }
         }
 #endif
 
