@@ -131,26 +131,26 @@ namespace UniGame.LeoEcs.Converter.Runtime
             return ecsParent.Entity;
         }
 
-        public static GameObject ConvertGameObjectToEntity(this GameObject gameObject, EcsWorld world, int entity)
+        public static int ConvertGameObjectToEntity(this GameObject gameObject, EcsWorld world, int entity)
         {
 #if UNITY_EDITOR
             if (gameObject == null)
             {
                 GameLog.LogError($"{gameObject} IS NULL: TRY TO CONVERT {gameObject} TO ENT {entity}",gameObject);
-                return gameObject;
+                return entity;
             }
             
             if (world.IsAlive() == false)
             {
                 GameLog.LogError($"WORLD IS DEAD: TRY TO CONVERT {gameObject} TO ENT {entity}",gameObject);
-                return gameObject;
+                return entity;
             }
             
             var packedEntity = world.PackEntity(entity);
             if (packedEntity.Unpack(world,out var aliveEntity) == false)
             {
                 GameLog.LogError($"ENTITY {entity} IS DEAD: TRY TO CONVERT {gameObject} TO ENT {entity}",gameObject);
-                return gameObject;
+                return entity;
             }
 #endif
 
@@ -178,7 +178,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
             world.GetOrAddComponent<ObjectConverterComponent>(entity);
 
-            return gameObject;
+            return entity;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

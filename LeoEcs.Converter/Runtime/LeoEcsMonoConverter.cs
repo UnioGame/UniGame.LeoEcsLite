@@ -1,4 +1,4 @@
-namespace UniGame.LeoEcs.Converter.Runtime
+    namespace UniGame.LeoEcs.Converter.Runtime
 {
     using System;
     using System.Collections.Generic;
@@ -175,44 +175,36 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         public void DestroyEntity()
         {
-            _state = EntityState.Destroyed;
-            var releasedEntity = entity;
-            
+            DestroyEcsEntity();
+            SetDestroyedState();
+        }
+
+        private void DestroyEcsEntity()
+        {
             if (_world == null || _world.IsAlive() == false) return;
             if (entity < 0) return;
-            
-            entity = -1;
-            _packedEntity = default;
-            
-            //mark state as destroyed
-            
-            
-            
-            //if entity already created when destroy immediate
-            
-            
-            if (_world == null || _world.IsAlive() == false) return;
-
-            if (!_packedEntity.Unpack(_world, out var targetEntity))
-                return;
+            if (!_packedEntity.Unpack(_world, out var targetEntity)) return;
             
             //notify converters about destroy
             foreach (var converter in _converters)
             {
                 if (converter is IConverterEntityDestroyHandler destroyHandler)
-                    destroyHandler.OnEntityDestroy(_world, releasedEntity);
+                    destroyHandler.OnEntityDestroy(_world, targetEntity);
             }
-
             //notify converters about destroy
             foreach (var converter in assetConverters)
             {
                 if (converter is not IConverterEntityDestroyHandler destroyHandler) continue;
-                destroyHandler.OnEntityDestroy(_world, releasedEntity);
+                destroyHandler.OnEntityDestroy(_world, targetEntity);
             }
+            _world.DelEntity(targetEntity);
+        }
 
-            //clean up converter entity data
-            LeoEcsTool.DestroyEntity(releasedEntity, _world);
-            
+        private void SetDestroyedState()
+        {
+            entity = -1;
+            _state = EntityState.Destroyed;
+            _packedEntity = default;
             _entityLifeTime.Release();
         }
 

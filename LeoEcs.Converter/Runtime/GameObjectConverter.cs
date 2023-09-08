@@ -5,15 +5,21 @@
     using System.Threading;
     using Leopotam.EcsLite;
     using Sirenix.OdinInspector;
-    using UniGame.LeoEcs.Converter.Runtime.Abstract;
+    using Abstract;
     using UniGame.LeoEcs.Shared.Components;
     using UniGame.LeoEcs.Shared.Extensions;
     using UnityEngine;
+    
+#if UNITY_EDITOR
+    using UniModules.Editor;
+#endif
     
     [Serializable]
     public class GameObjectConverter 
         : IComponentConverter, ILeoEcsMonoComponentConverter
     {
+        [InlineButton(nameof(OpenScript),SdfIconType.Folder2Open)]
+        [GUIColor("GetButtonColor")]
         public bool enabled = true;
         
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
@@ -62,6 +68,23 @@
                 return true;
             
             return false;
+        }
+
+        public void OpenScript()
+        {
+#if UNITY_EDITOR
+            this.GetType().OpenScript();
+#endif
+        }
+        
+        private Color GetButtonColor()
+        {
+#if UNITY_EDITOR
+            return enabled ? 
+                new Color(0.2f, 1f, 0.2f) : 
+                new Color(1, 0.6f, 0.4f);
+#endif
+            return Color.green;
         }
         
     }

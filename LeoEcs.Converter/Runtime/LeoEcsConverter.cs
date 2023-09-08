@@ -9,10 +9,16 @@
     using Sirenix.OdinInspector;
     using UnityEngine;
 
+#if UNITY_EDITOR
+    using UniModules.Editor;
+#endif
+    
     [Serializable]
     public abstract class LeoEcsConverter : ILeoEcsMonoComponentConverter,IComponentConverter
     {
         [SerializeField]
+        [InlineButton(nameof(OpenScript),SdfIconType.Folder2Open)]
+        [GUIColor("GetButtonColor")]
         private bool _isEnabled = true;
 
         public virtual bool IsEnabled => _isEnabled;
@@ -44,6 +50,22 @@
             return false;
         }
 
+        public void OpenScript()
+        {
+#if UNITY_EDITOR
+            this.GetType().OpenScript();
+#endif
+        }
+        
+        private Color GetButtonColor()
+        {
+#if UNITY_EDITOR
+            return _isEnabled ? 
+                new Color(0.2f, 1f, 0.2f) : 
+                new Color(1, 0.6f, 0.4f);
+#endif
+            return Color.green;
+        }
 
     }
 }
