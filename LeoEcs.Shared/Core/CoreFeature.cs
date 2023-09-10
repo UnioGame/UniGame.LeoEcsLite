@@ -8,7 +8,7 @@
     using Leopotam.EcsLite;
     using Leopotam.EcsLite.ExtendedSystems;
     using UniGame.LeoEcs.Bootstrap.Runtime;
-    using UniGame.LeoEcs.Bootstrap.Runtime.Config;
+    using UniGame.LeoEcs.Shared.Components;
     using UnityEngine;
 
     [CreateAssetMenu(menuName = "Game/Feature/Core Feature", fileName = "Core Feature")]

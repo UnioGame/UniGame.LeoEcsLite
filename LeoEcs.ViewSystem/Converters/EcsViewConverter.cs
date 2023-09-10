@@ -9,6 +9,7 @@
     using Leopotam.EcsLite;
     using Shared.Extensions;
     using UniGame.ViewSystem.Runtime;
+    using UniModules.UniGame.UISystem.Runtime;
     using UnityEngine;
 
     [RequireComponent(typeof(LeoEcsMonoConverter))]
@@ -68,7 +69,8 @@
             
             ref var viewComponent = ref world.GetOrAddComponent<ViewComponent>(entity);
             ref var viewStatusComponent = ref world.GetOrAddComponent<ViewStatusComponent>(entity);
-
+            viewStatusComponent.Status = ViewStatus.None;
+            
             viewComponent.View = _view;
             viewComponent.Type = _view.GetType();
 

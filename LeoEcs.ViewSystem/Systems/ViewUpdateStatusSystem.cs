@@ -3,9 +3,18 @@ using UniGame.LeoEcs.ViewSystem.Components;
 namespace UniGame.LeoEcs.ViewSystem.Systems
 {
     using System;
+    using Bootstrap.Runtime.Attributes;
     using Leopotam.EcsLite;
     
+#if ENABLE_IL2CPP
+    using Unity.IL2CPP.CompilerServices;
+
+    [Il2CppSetOption(Option.NullChecks, false)]
+    [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+    [Il2CppSetOption(Option.DivideByZeroChecks, false)]
+#endif
     [Serializable]
+    [ECSDI]
     public class ViewUpdateStatusSystem : IEcsInitSystem,IEcsRunSystem
     {
         private EcsFilter _viewFilter;

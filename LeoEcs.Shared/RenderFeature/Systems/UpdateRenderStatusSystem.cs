@@ -1,8 +1,7 @@
-﻿namespace Game.Ecs.Core.Systems
+﻿namespace UniGame.LeoEcs.Shared.Components
 {
     using System;
     using Leopotam.EcsLite;
-    using Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.Shared.Components;
     using UniGame.LeoEcs.Shared.Extensions;
 
     /// <summary>
@@ -20,18 +19,18 @@
     {
         private EcsWorld _world;
         private EcsFilter _filter;
-        private EcsPool<RenderComponent> _renderPool;
-        private EcsPool<RenderEnabledComponent> _renderEnabledPool;
-        private EcsPool<RenderVisibleComponent> _renderVisiblePool;
+        private EcsPool<RendererComponent> _renderPool;
+        private EcsPool<RendererEnabledComponent> _renderEnabledPool;
+        private EcsPool<RendererVisibleComponent> _renderVisiblePool;
 
         public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
-            _filter = _world.Filter<RenderComponent>().End();
+            _filter = _world.Filter<RendererComponent>().End();
 
-            _renderPool = _world.GetPool<RenderComponent>();
-            _renderEnabledPool = _world.GetPool<RenderEnabledComponent>();
-            _renderVisiblePool = _world.GetPool<RenderVisibleComponent>();
+            _renderPool = _world.GetPool<RendererComponent>();
+            _renderEnabledPool = _world.GetPool<RendererEnabledComponent>();
+            _renderVisiblePool = _world.GetPool<RendererVisibleComponent>();
         }
 
         public void Run(IEcsSystems systems)

@@ -1,9 +1,10 @@
-﻿namespace Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.Shared.Components
+﻿namespace UniGame.LeoEcs.Shared.Components
 {
     using System;
+    using UnityEngine;
 
     /// <summary>
-    /// render target fillter
+    /// render component
     /// </summary>
 #if ENABLE_IL2CPP
     using Unity.IL2CPP.CompilerServices;
@@ -13,8 +14,8 @@
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 #endif
     [Serializable]
-    public struct RenderForComponent<TTarget>
+    public struct RendererComponent
     {
-        
+        public Renderer Value;
     }
 }

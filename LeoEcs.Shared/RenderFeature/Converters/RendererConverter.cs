@@ -1,13 +1,13 @@
-﻿namespace Game.Ecs.Core.Converters
+﻿namespace UniGame.LeoEcs.Shared.Components
 {
     using System;
     using System.Threading;
     using Leopotam.EcsLite;
-    using Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.Shared.Components;
     using UniGame.LeoEcs.Converter.Runtime;
-    using UniGame.LeoEcs.Shared.Extensions;
+    using Extensions;
     using Unity.IL2CPP.CompilerServices;
     using UnityEngine;
+    using UnityEngine.UI;
 
     /// <summary>
     /// renderer converter
@@ -16,25 +16,27 @@
     [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
     [Serializable]
-    public class RenderConverter : GameObjectConverter
+    public class RendererConverter : GameObjectConverter
     {
+        public Renderer renderer;
+        
         protected override void OnApply(GameObject target,
             EcsWorld world, 
             int entity,
             CancellationToken cancellationToken = default)
         {
-            var render = target.GetComponent<Renderer>();
+            var render = renderer != null ? renderer : target.GetComponent<Renderer>();
             if(render == null) return;
 
-            ref var renderComponent = ref world.GetOrAddComponent<RenderComponent>(entity);
-            ref var visibleComponent = ref world.GetOrAddComponent<RenderVisibleComponent>(entity);
+            ref var renderComponent = ref world.GetOrAddComponent<RendererComponent>(entity);
+            ref var visibleComponent = ref world.GetOrAddComponent<RendererVisibleComponent>(entity);
 
             renderComponent.Value = render;
             visibleComponent.Value = render.isVisible;
 
             if (render.enabled)
             {
-                ref var activeComponent = ref world.GetOrAddComponent<RenderEnabledComponent>(entity);
+                ref var activeComponent = ref world.GetOrAddComponent<RendererEnabledComponent>(entity);
             }
         }
 

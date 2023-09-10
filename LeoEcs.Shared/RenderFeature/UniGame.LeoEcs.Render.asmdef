@@ -1,5 +1,5 @@
 {
-    "name": "UniGame.LeoEcs.Shared.Core",
+    "name": "UniGame.LeoEcs.Render",
     "rootNamespace": "",
     "references": [
         "GUID:e59bf9fc7d5a44b18a819a92edd46163",
@@ -13,8 +13,7 @@
         "GUID:9e24947de15b9834991c9d8411ea37cf",
         "GUID:84651a3751eca9349aac36a66bba901b",
         "GUID:94b76ab488496fe4ba2e594d6c583770",
-        "GUID:5425374c3d8fb1b45b1a3879382ddd3e",
-        "GUID:fb5e9119db6872543bb32aef50eafa40"
+        "GUID:5425374c3d8fb1b45b1a3879382ddd3e"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

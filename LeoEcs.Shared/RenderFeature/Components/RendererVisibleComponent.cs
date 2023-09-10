@@ -1,4 +1,4 @@
-﻿namespace Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.Shared.Components
+﻿namespace UniGame.LeoEcs.Shared.Components
 {
     using System;
 
@@ -13,7 +13,7 @@
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 #endif
     [Serializable]
-    public struct RenderVisibleComponent
+    public struct RendererVisibleComponent
     {
         public bool Value;
     }

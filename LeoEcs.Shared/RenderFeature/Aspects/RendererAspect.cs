@@ -1,15 +1,14 @@
-﻿namespace Game.Ecs.Core.Aspects
+﻿namespace UniGame.LeoEcs.Shared.Components
 {
     using System;
     using Leopotam.EcsLite;
-    using Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.Shared.Components;
     using UniGame.LeoEcsLite.LeoEcs.Bootstrap.Runtime.Abstract;
 
     [Serializable]
     public class RendererAspect : EcsAspect
     {
-        public EcsPool<RenderComponent> Render;
-        public EcsPool<RenderEnabledComponent> Enabled;
-        public EcsPool<RenderVisibleComponent> Visible;
+        public EcsPool<RendererComponent> Render;
+        public EcsPool<RendererEnabledComponent> Enabled;
+        public EcsPool<RendererVisibleComponent> Visible;
     }
 }
