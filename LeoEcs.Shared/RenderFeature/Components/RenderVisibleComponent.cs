@@ -13,7 +13,7 @@
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 #endif
     [Serializable]
-    public struct VisibleRenderComponent
+    public struct RenderVisibleComponent
     {
         public bool Value;
     }

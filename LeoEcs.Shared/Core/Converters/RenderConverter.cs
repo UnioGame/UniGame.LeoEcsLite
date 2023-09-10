@@ -27,7 +27,7 @@
             if(render == null) return;
 
             ref var renderComponent = ref world.GetOrAddComponent<RenderComponent>(entity);
-            ref var visibleComponent = ref world.GetOrAddComponent<VisibleRenderComponent>(entity);
+            ref var visibleComponent = ref world.GetOrAddComponent<RenderVisibleComponent>(entity);
 
             renderComponent.Value = render;
             visibleComponent.Value = render.isVisible;

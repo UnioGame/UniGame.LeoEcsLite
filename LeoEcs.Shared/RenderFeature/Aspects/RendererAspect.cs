@@ -10,6 +10,6 @@
     {
         public EcsPool<RenderComponent> Render;
         public EcsPool<RenderEnabledComponent> Enabled;
-        public EcsPool<VisibleRenderComponent> Visible;
+        public EcsPool<RenderVisibleComponent> Visible;
     }
 }
