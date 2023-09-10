@@ -15,7 +15,9 @@
     public class CoreFeature : BaseLeoEcsFeature
     {
         public override UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)
-        { 
+        {
+            ecsSystems.Add(new UpdateRenderStatusSystem());
+            
             ecsSystems.Add(new DisableColliderSystem());
             ecsSystems.Add(new ProcessDeadSimpleEntitiesSystem());
             ecsSystems.Add(new ProcessDeadTransformEntitiesSystem());
