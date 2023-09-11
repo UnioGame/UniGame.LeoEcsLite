@@ -1,10 +1,11 @@
-﻿namespace UniGame.LeoEcs.Converter.Runtime.Converters
+﻿namespace Game.Ecs.Core.Converters
 {
     using System;
     using System.Threading;
     using Leopotam.EcsLite;
-    using Shared.Components;
-    using Shared.Extensions;
+    using UniGame.LeoEcs.Converter.Runtime;
+    using UniGame.LeoEcs.Shared.Components;
+    using UniGame.LeoEcs.Shared.Extensions;
     using UnityEngine;
 
     [Serializable]
@@ -16,7 +17,6 @@
         public override void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
         {
             var animatorPool = world.GetPool<AnimatorComponent>();
-
             ref var animatorComponent = ref animatorPool.GetOrAddComponent(entity);
             animatorComponent.Value = animator;
         }
