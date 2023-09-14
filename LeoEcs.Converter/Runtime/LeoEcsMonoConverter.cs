@@ -73,6 +73,8 @@
 
         public bool IsRuntime => Application.isPlaying;
 
+        public bool IsAutoGenerating => createEntityOnEnabled || createEntityOnStart;
+
         public bool IsPlayingAndReady => IsRuntime && entity >= 0;
 
         public bool IsCreated => _state == EntityState.Created;
