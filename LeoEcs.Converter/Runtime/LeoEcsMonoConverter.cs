@@ -262,11 +262,19 @@
 
             foreach (var converter in assetConverters)
             {
+                if(converter == null) continue;
+                
                 var converters = converter.converters;
                 foreach (var converterValue in converters)
                 {
-                    if (converterValue.Value is ILeoEcsGizmosDrawer gizmosDrawer)
-                        gizmosDrawer.DrawGizmos(gameObject);
+                    switch (converterValue.Value)
+                    {
+                        case null:
+                            continue;
+                        case ILeoEcsGizmosDrawer gizmosDrawer:
+                            gizmosDrawer.DrawGizmos(gameObject);
+                            break;
+                    }
                 }
             }
         }

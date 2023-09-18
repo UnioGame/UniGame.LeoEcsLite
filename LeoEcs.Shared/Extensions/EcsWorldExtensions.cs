@@ -199,7 +199,6 @@ namespace UniGame.LeoEcs.Shared.Extensions
         {
             var pool = world.GetPool<TComponent>();
             ref var component = ref pool.Add(entity);
-            
             return ref component;
         }
         
