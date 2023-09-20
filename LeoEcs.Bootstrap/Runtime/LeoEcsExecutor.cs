@@ -35,7 +35,7 @@
             _isActive = true;
             _updateTiming = _loopTiming.ConvertToPlayerLoopTiming();
             
-            var worldLifeTime = _world.GetLifeTime();
+            var worldLifeTime = _world.GetWorldLifeTime();
             
             ExecuteAsync()
                 .AttachExternalCancellation(worldLifeTime.CancellationToken)

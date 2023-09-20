@@ -68,7 +68,7 @@
                 
                 if (component is NameComponent nameComponent)
                 {
-                    name = nameComponent.Name;
+                    name = nameComponent.Value;
                     if (name.Contains(filter, StringComparison.OrdinalIgnoreCase))
                     {
                         found = true;

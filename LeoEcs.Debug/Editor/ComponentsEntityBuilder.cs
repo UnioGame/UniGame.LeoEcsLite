@@ -32,7 +32,7 @@
             if (_namePool.Has(entity))
             {
                 ref var nameComponent = ref _namePool.Get(entity);
-                view.name = nameComponent.Name;
+                view.name = nameComponent.Value;
             }
             
             var componentsCount = _world.GetComponentsCount(entity);
