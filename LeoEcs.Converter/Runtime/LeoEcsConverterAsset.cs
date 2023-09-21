@@ -28,7 +28,6 @@ namespace UniGame.LeoEcs.Converter.Runtime
         [BoxGroup("settings")]
         public bool useConverters = false;
         
-        [InlineProperty()]
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
         [ShowIf(nameof(useConverters))]
         public List<ComponentConverterValue> converters = new List<ComponentConverterValue>();
