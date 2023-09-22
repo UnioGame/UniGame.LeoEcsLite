@@ -10,8 +10,8 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
     {
         [Space(8)]
         [SerializeField]
-        [InlineProperty]
         //[Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
+        [ListDrawerSettings(ListElementLabelName = "updateType")]
         public List<LeoEcsConfigGroup> ecsUpdateGroups = new List<LeoEcsConfigGroup>();
         
         public IReadOnlyList<LeoEcsConfigGroup> FeatureGroups => ecsUpdateGroups;
