@@ -18,10 +18,11 @@
         {
             ecsSystems.Add(new UpdateRenderStatusSystem());
             
+            ecsSystems.Add(new ProcessDestroySilentSystem());
             ecsSystems.Add(new DisableColliderSystem());
             ecsSystems.Add(new ProcessDeadSimpleEntitiesSystem());
             ecsSystems.Add(new ProcessDeadTransformEntitiesSystem());
-
+            
             ecsSystems.Add(new DestroyInvalidChildEntitiesSystem());
             ecsSystems.DelHere<OwnerDestroyedEvent>();
             
