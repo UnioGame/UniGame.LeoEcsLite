@@ -16,19 +16,21 @@
     {
         public override UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)
         {
+            ecsSystems.Add(new ProcessDestroySilentSystem());
+            
             ecsSystems.Add(new UpdateRenderStatusSystem());
             
-            ecsSystems.Add(new ProcessDestroySilentSystem());
             ecsSystems.Add(new DisableColliderSystem());
             ecsSystems.Add(new ProcessDeadSimpleEntitiesSystem());
             ecsSystems.Add(new ProcessDeadTransformEntitiesSystem());
             
             ecsSystems.Add(new DestroyInvalidChildEntitiesSystem());
+            ecsSystems.Add(new ForceValidateDeadChildEntitiesSystem());
             ecsSystems.DelHere<OwnerDestroyedEvent>();
             
             ecsSystems.Add(new CheckInvalidChildEntitiesSystem());
-
             ecsSystems.Add(new ProcessDespawnSystem());
+            
             
             ecsSystems.DelHere<DeadEvent>();
             ecsSystems.DelHere<DisabledEvent>();
@@ -38,6 +40,9 @@
             ecsSystems.Add(new ProcessKillRequestSystem());
             
             ecsSystems.DelHere<KillRequest>();
+            ecsSystems.DelHere<ValidateDeadChildEntitiesRequest>();
+            
+            ecsSystems.Add(new ProcessDestroySilentSystem());
             
             return UniTask.CompletedTask;
         }
