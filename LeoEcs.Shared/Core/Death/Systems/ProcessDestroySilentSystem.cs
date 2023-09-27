@@ -34,12 +34,6 @@
             _world = systems.GetWorld();
 
             _requestFilter = _world.Filter<DestroySelfRequest>().End();
-
-            _transformPool = _world.GetPool<TransformComponent>();
-            _gameObjectPool = _world.GetPool<GameObjectComponent>();
-
-            _pooledPool = _world.GetPool<PoolingComponent>();
-            _destroyRequestPool = _world.GetPool<DestroySelfRequest>();
         }
 
         public void Run(IEcsSystems systems)
@@ -47,6 +41,7 @@
             foreach (var entity in _requestFilter)
             {
                 var packedEntity = _world.PackEntity(entity);
+                
                 if(!packedEntity.Unpack(_world,out var _)) continue;
                 
                 ref var request = ref _destroyRequestPool.Get(entity);
@@ -55,7 +50,7 @@
                 
                 GameObject gameObject = null;
 
-                var usePooling = _pooledPool.Has(entity) && request.ForceDestroy == false;
+                var usePooling = false && _pooledPool.Has(entity) && request.ForceDestroy == false;
                 
                 if (isGameObject)
                 {
@@ -69,9 +64,11 @@
                     gameObject = transform?.gameObject;
                 }
                 
-                _world.DelEntity(entity);
-
-                if (gameObject == null) continue;
+                if (gameObject == null)
+                {
+                    _world.DelEntity(entity);
+                    continue;
+                }
 
                 if (usePooling)
                 {
@@ -79,6 +76,8 @@
                     continue;
                 }
                 
+                _world.DelEntity(entity);
+                gameObject.SetActive(false);
                 Object.Destroy(gameObject);
             }
         }
