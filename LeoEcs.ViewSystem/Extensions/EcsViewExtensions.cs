@@ -10,6 +10,7 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
 {
     using System.Runtime.CompilerServices;
     using UniGame.ViewSystem.Runtime;
+    using UniModules.UniCore.Runtime.Utils;
 
     public static class EcsViewExtensions
     {
@@ -119,6 +120,14 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             string viewId,
             ViewType layoutType)
         {
+            MakeViewRequest(world, viewId, layoutType.ToStringFromCache());
+        }
+        
+        public static void MakeViewRequest(
+            this EcsWorld world, 
+            string viewId,
+            string layoutType)
+        {
             var entity = world.NewEntity();
             
             ref var component = ref world
@@ -148,6 +157,22 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             string viewName = null,
             bool stayWorld = false)
         {
+            var layout = layoutType == ViewType.None ? string.Empty : layoutType.ToStringFromCache();
+            MakeViewRequest(world,view,ref target,ref owner, layout, parent, tag, viewName, stayWorld);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void MakeViewRequest(
+            this EcsWorld world, 
+            string view,
+            ref EcsPackedEntity target,
+            ref EcsPackedEntity owner,
+            string layoutType,
+            Transform parent = null,
+            string tag = null,
+            string viewName = null,
+            bool stayWorld = false)
+        {
             var entity = world.NewEntity();
             ref var component = ref world
                 .GetOrAddComponent<CreateViewRequest>(entity);
@@ -172,6 +197,18 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
         public static CreateViewRequest CreateViewRequest(
             string view,
             ViewType layoutType = ViewType.None,
+            Transform parent = null,
+            string tag = null,
+            string viewName = null,
+            bool stayWorld = false)
+        {
+            var layout = layoutType == ViewType.None ? string.Empty : layoutType.ToStringFromCache();
+            return CreateViewRequest(view, layout, parent, tag, viewName, stayWorld);
+        }
+        
+        public static CreateViewRequest CreateViewRequest(
+            string view,
+            string layoutType,
             Transform parent = null,
             string tag = null,
             string viewName = null,

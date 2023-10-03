@@ -1,5 +1,4 @@
 using Leopotam.EcsLite;
-using UniModules.UniGame.UiSystem.Runtime;
 using Transform = UnityEngine.Transform;
 
 namespace UniGame.LeoEcs.ViewSystem.Components
@@ -12,7 +11,7 @@ namespace UniGame.LeoEcs.ViewSystem.Components
     public struct CreateViewRequest : IEcsAutoReset<CreateViewRequest>, IApplyableComponent<CreateViewRequest>
     {
         public string ViewId;
-        public ViewType LayoutType;
+        public string LayoutType;
         public string Tag;
         public Transform Parent;
         public string ViewName;
@@ -26,7 +25,7 @@ namespace UniGame.LeoEcs.ViewSystem.Components
         {
             c.Tag = string.Empty;
             c.Parent = null;
-            c.LayoutType = ViewType.None;
+            c.LayoutType = string.Empty;
             c.Target = default;
             c.Owner = default;
             c.ViewId = string.Empty;

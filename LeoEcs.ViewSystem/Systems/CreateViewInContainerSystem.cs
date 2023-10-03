@@ -83,7 +83,7 @@
                     createViewRequest.Owner = request.Owner;
                     createViewRequest.StayWorld = request.StayWorld;
                     createViewRequest.Parent = transformComponent.Value;
-                    createViewRequest.LayoutType = ViewType.None;
+                    createViewRequest.LayoutType =string.Empty;
               
                     //mark container as busy
                     _busyContainerPool.GetOrAddComponent<ViewContainerBusyComponent>(containerEntity);

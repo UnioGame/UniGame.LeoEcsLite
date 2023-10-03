@@ -5,6 +5,7 @@
     using LeoEcsLite.LeoEcs.ViewSystem.Systems;
     using Leopotam.EcsLite;
     using UniGame.ViewSystem.Runtime;
+    using UniModules.UniCore.Runtime.Utils;
     using UniModules.UniGame.UiSystem.Runtime;
 
     public static class EcsViewSystemExtensions
@@ -36,7 +37,7 @@
             where TEvent : struct
             where TView : IView
         {
-            systems.Add(new ShowSingleLayoutViewWhen<TEvent, TView>(layoutType));
+            systems.Add(new ShowSingleLayoutViewWhen<TEvent, TView>(layoutType.ToStringFromCache()));
             return systems;
         } 
             
@@ -46,7 +47,7 @@
             ViewType layoutType = ViewType.Window)
             where TView : IView
         {
-            systems.Add(new ShowLayoutViewWhenSystem<TView>(filter,layoutType));
+            systems.Add(new ShowLayoutViewWhenSystem<TView>(filter,layoutType.ToStringFromCache()));
             return systems;
         }
         
@@ -83,7 +84,7 @@
             where TEvent : struct
             where TView : IView
         {
-            systems.Add(new ShowLayoutViewWhenSystem<TEvent, TView>(layoutType));
+            systems.Add(new ShowLayoutViewWhenSystem<TEvent, TView>(layoutType.ToStringFromCache()));
             return systems;
         }
 

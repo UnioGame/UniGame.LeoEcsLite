@@ -8,13 +8,15 @@ namespace UniGame.LeoEcs.ViewSystem
     using UniGame.Core.Runtime;
     using Components;
     using Game.Ecs.UI.EndGameScreens.Systems;
+    using Layouts.Components;
+    using Layouts.Systems;
     using LeoEcsLite.LeoEcs.ViewSystem.Systems;
     using Systems;
     using UniGame.ViewSystem.Runtime;
     using UniGame.LeoEcs.Bootstrap.Runtime.Config;
     using UnityEngine;
     
-    [CreateAssetMenu(menuName = "UniGame/LeoEcs/Feature/Views Feature", fileName = nameof(ViewSystemFeature))]
+    [CreateAssetMenu(menuName = "UniGame/LeoEcs/View System/Views Feature", fileName = nameof(ViewSystemFeature))]
     public class ViewSystemFeature : LeoEcsFeatureGroupAsset
     {
         private EcsViewTools _ecsViewTools;
@@ -26,6 +28,10 @@ namespace UniGame.LeoEcs.ViewSystem
             
             _ecsViewTools = new EcsViewTools(context, viewSystem);
 
+            //layouts
+            ecsSystems.Add(new RegisterNewViewLayoutSystem(viewSystem));
+            ecsSystems.DelHere<RegisterViewLayoutSelfRequest>();
+            
             //if view entity is dead and 
             ecsSystems.Add(new CloseViewByDeadEntitySystem());
             ecsSystems.Add(new CloseViewSystem());

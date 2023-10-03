@@ -10,9 +10,13 @@
     using Bootstrap.Runtime.Attributes;
     using Converter.Runtime;
     using Core.Runtime;
+    using fbg;
     using Game.Ecs.Core.Components;
     using Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.ViewSystem.Components;
     using Shared.Extensions;
+    using UiSystem.Runtime;
+    using UniModules.UniCore.Runtime.Utils;
+    using Debug = UnityEngine.Debug;
 
 #if ENABLE_IL2CPP
     using Unity.IL2CPP.CompilerServices;
@@ -64,19 +68,31 @@
         public async UniTask CreateViewByRequest(CreateViewRequest request)
         {
             var viewType = request.ViewId;
+            var layoutId = request.LayoutType;
             var modelType = _viewSystem.ModelTypeMap.GetViewModelType(viewType);
             var model = await _viewSystem.CreateViewModel(_context, modelType);
             
-            var view = request.LayoutType switch
+            var requestLayout = layoutId;
+
+            if (string.IsNullOrEmpty(layoutId) || 
+                GameViewSystem.NoneType.Equals(layoutId, StringComparison.OrdinalIgnoreCase))
+                requestLayout = string.Empty;
+
+            if (!string.IsNullOrEmpty(requestLayout) && 
+                !_viewSystem.HasLayout(requestLayout))
             {
-                ViewType.None => await _viewSystem
+#if UNITY_EDITOR
+                Debug.LogError($"Try to create view {viewType} with layout {layoutId} but layout not found");
+#endif
+                return;
+            }
+            
+            var view = requestLayout switch
+            {
+                "" => await _viewSystem
                     .Create(model,request.ViewId,request.Tag,request.Parent,request.ViewName,request.StayWorld),
-                ViewType.Screen => await _viewSystem
-                    .OpenScreen(model,request.ViewId,request.Tag,request.ViewName),
-                ViewType.Window => await _viewSystem
-                    .OpenWindow(model,request.ViewId,request.Tag,request.ViewName),
-                ViewType.Overlay => await _viewSystem
-                    .OpenOverlay(model,request.ViewId,request.Tag,request.ViewName),
+                _ => await _viewSystem
+                    .OpenView(model,request.ViewId,requestLayout,request.Tag,request.ViewName),
             };
 
             var entity = await UpdateViewEntity(view,request);

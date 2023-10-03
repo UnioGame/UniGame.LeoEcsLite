@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Leopotam.EcsLite;
+    using UniModules.UniCore.Runtime.Utils;
     using UniModules.UniGame.UiSystem.Runtime;
     using UnityEngine.Serialization;
 
@@ -10,12 +11,12 @@
     public struct CreateLayoutViewRequest : IEcsAutoReset<CreateLayoutViewRequest>
     {
         public string View;
-        public ViewType LayoutType;
+        public string LayoutType;
 
         public void AutoReset(ref CreateLayoutViewRequest c)
         {
             c.View = string.Empty;
-            c.LayoutType = ViewType.Window;
+            c.LayoutType = ViewType.Window.ToStringFromCache();
         }
     }
 }

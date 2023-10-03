@@ -5,6 +5,7 @@
     using UniGame.LeoEcs.Shared.Extensions;
     using UniGame.LeoEcs.ViewSystem.Components;
     using UniGame.ViewSystem.Runtime;
+    using UniModules.UniCore.Runtime.Utils;
     using UniModules.UniGame.UISystem.Runtime.WindowStackControllers.Abstract;
     using Unity.IL2CPP.CompilerServices;
     using ViewType = UniModules.UniGame.UiSystem.Runtime.ViewType;
@@ -22,12 +23,12 @@
         where TEvent : struct
         where TView : IView
     {
-        private ViewType _viewLayoutType;
+        private string _viewLayoutType;
         
         private EcsWorld _world;
         private EcsFilter _eventFilter;
 
-        public ShowSingleLayoutViewWhen(ViewType viewLayoutType = ViewType.Window)
+        public ShowSingleLayoutViewWhen(string viewLayoutType)
         {
             _viewLayoutType = viewLayoutType;
         }
@@ -67,12 +68,12 @@
         where TEvent : struct
         where TView : IView
     {
-        private ViewType _viewLayoutType;
+        private string _viewLayoutType;
         
         private EcsWorld _world;
         private EcsFilter _eventFilter;
 
-        public ShowLayoutViewWhenSystem(ViewType viewLayoutType = ViewType.Window)
+        public ShowLayoutViewWhenSystem(string viewLayoutType)
         {
             _viewLayoutType = viewLayoutType;
         }
@@ -108,12 +109,11 @@
     public class ShowLayoutViewWhenSystem<TView> : IEcsInitSystem, IEcsRunSystem
         where TView : IView
     {
-        private ViewType _viewLayoutType;
-        
+        private string _viewLayoutType;
         private EcsWorld _world;
         private EcsFilter _eventFilter;
 
-        public ShowLayoutViewWhenSystem(EcsFilter eventFilter,ViewType viewLayoutType = ViewType.Window)
+        public ShowLayoutViewWhenSystem(EcsFilter eventFilter,string viewLayoutType)
         {
             _eventFilter = eventFilter;
             _viewLayoutType = viewLayoutType;
@@ -178,7 +178,7 @@
                 ref var requestComponent = ref _world.AddComponent<CreateLayoutViewRequest>(requestEntity);
 
                 requestComponent.View = typeof(TView).Name;
-                requestComponent.LayoutType = _viewLayoutType;
+                requestComponent.LayoutType = _viewLayoutType.ToStringFromCache();
             }
         }
     }
