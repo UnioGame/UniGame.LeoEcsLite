@@ -6,6 +6,6 @@
     [Serializable]
     public struct NameComponent
     {
-        [FormerlySerializedAs("Name")] public string Value;
+        public string Value;
     }
 }
