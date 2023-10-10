@@ -5,7 +5,7 @@
 
     public static class EcsPoolExtensions
     {
-        public static bool TryAdd<T>(this EcsPool<T> pool, EcsPackedEntity packedEntity) where T : struct
+        public static bool TryAdd<T>(this EcsPool<T> pool,ref EcsPackedEntity packedEntity) where T : struct
         {
             var world = pool.GetWorld();
             if (!packedEntity.Unpack(world, out var entity) || pool.Has(entity))
