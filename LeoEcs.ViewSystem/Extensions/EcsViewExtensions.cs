@@ -40,6 +40,14 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TModel GetViewModel<TModel>(this EcsWorld world, int entity) 
+            where TModel : class
+        {
+            ref var viewModelComponent = ref world.GetComponent<ViewModelComponent>(entity);
+            return viewModelComponent.Model as TModel;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static EcsFilter CreateViewFilter<TModel>(this EcsWorld world)
             where TModel : IViewModel
         {
