@@ -84,7 +84,8 @@
             if (followEntityLifeTime)
             {
                 var lifeTimeEntity = world.NewEntity();
-                ref var lifeTimeComponent = ref world.AddComponent<ViewEntityLifeTimeComponent>(lifeTimeEntity);
+                ref var lifeTimeComponent = ref world
+                    .AddComponent<ViewEntityLifeTimeComponent>(lifeTimeEntity);
                 lifeTimeComponent.View = _view;
                 lifeTimeComponent.Value = _viewPackedEntity;
             }

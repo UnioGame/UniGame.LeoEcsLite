@@ -46,7 +46,8 @@
                 if(!view.IsTerminated && view.Status.Value != ViewStatus.Closed)
                     view.Close();
     
-                _lifeTimePool.Del(entity);
+                if(_lifeTimePool.Has(entity))
+                    _lifeTimePool.Del(entity);
             }
         }
     }

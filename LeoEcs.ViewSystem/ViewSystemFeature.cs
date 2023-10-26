@@ -7,7 +7,6 @@ namespace UniGame.LeoEcs.ViewSystem
     using UniGame.Context.Runtime.Extension;
     using UniGame.Core.Runtime;
     using Components;
-    using Game.Ecs.UI.EndGameScreens.Systems;
     using Layouts.Components;
     using Layouts.Systems;
     using LeoEcsLite.LeoEcs.ViewSystem.Systems;
