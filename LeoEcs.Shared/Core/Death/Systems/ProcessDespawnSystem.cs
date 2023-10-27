@@ -39,13 +39,6 @@
             _eventFilter = _world
                 .Filter<KillEvent>()
                 .End();
-
-            _transformPool = _world.GetPool<TransformComponent>();
-            _gameObjectPool = _world.GetPool<GameObjectComponent>();
-            _deadEventPool = _world.GetPool<DeadEvent>();
-
-            _pooledPool = _world.GetPool<PoolingComponent>();
-            _dontKillPool = _world.GetPool<DontKillComponent>();
         }
 
         public void Run(IEcsSystems systems)
