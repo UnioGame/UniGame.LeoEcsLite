@@ -3,6 +3,7 @@ using UniGame.LeoEcs.Shared.Extensions;
 
 namespace UniGame.LeoEcs.Converter.Runtime
 {
+    using System;
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
     using System.Threading;
@@ -16,6 +17,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
     using UniGame.Runtime.ObjectPool.Extensions;
     using UnityEngine;
     using UnityEngine.Pool;
+    using Object = UnityEngine.Object;
 
     public static class LeoEcsTool
     {
@@ -155,7 +157,10 @@ namespace UniGame.LeoEcs.Converter.Runtime
 #endif
 
 #if UNITY_EDITOR
-            gameObject.name = $"{gameObject.name}_ENT_{entity}";
+            var gameObjectName = gameObject.name;
+            var entityIndex = gameObjectName.IndexOf("_ENT_",StringComparison.OrdinalIgnoreCase);
+            gameObjectName = entityIndex >= 0 ? gameObjectName.Remove(entityIndex) : gameObjectName;
+            gameObject.name = $"{gameObjectName}_ENT_{entity}";
 #endif
             var connectable = gameObject.GetComponent<IConnectableToEntity>();
             connectable?.ConnectEntity(world, entity);
