@@ -43,6 +43,15 @@
             avatar.Feet = feetRoot;
             avatar.Hand = handRoot;
             avatar.Weapon = weaponRoot;
+            
+            avatar.All = new[]
+            {
+                headRoot,
+                bodyRoot,
+                feetRoot,
+                handRoot,
+                weaponRoot
+            };
         }
     }
 }
