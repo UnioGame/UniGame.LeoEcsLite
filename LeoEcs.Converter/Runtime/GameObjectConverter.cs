@@ -21,13 +21,7 @@
         [InlineButton(nameof(OpenScript),SdfIconType.Folder2Open)]
         [GUIColor("GetButtonColor")]
         public bool enabled = true;
-        
-        [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
-        [Space(8)]
-        [InlineProperty]
-        [SerializeReference]
-        private List<ILeoEcsMonoComponentConverter> converters = new List<ILeoEcsMonoComponentConverter>();
-
+ 
         public virtual string Name => GetType().Name;
         
         public bool IsEnabled => enabled;
@@ -51,8 +45,6 @@
         public void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
         {
             OnApply(target, world, entity, cancellationToken);
-            foreach (var componentConverter in converters)
-                componentConverter.Apply(target,world,entity,cancellationToken);
         }
 
         protected virtual void OnApply(GameObject target, EcsWorld world, int entity,
