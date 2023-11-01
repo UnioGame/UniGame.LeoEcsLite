@@ -39,6 +39,15 @@
             avatar.Hand = _handRoot;
 
             avatar.Weapon = _weaponRoot;
+            
+            avatar.All = new[]
+            {
+                _headRoot,
+                _bodyRoot,
+                _feetRoot,
+                _handRoot,
+                _weaponRoot
+            };
         }
 
         private void OnDrawGizmos()
