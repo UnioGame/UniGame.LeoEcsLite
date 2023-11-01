@@ -79,10 +79,10 @@
 
         public bool IsCreated => _state == EntityState.Created;
 
-        public EcsPackedEntity EntityId => _packedEntity;
-        
         public EcsWorld World => _world;
 
+        public EcsPackedEntity PackedEntity => _packedEntity;
+        
         public ILifeTime LifeTime => _entityLifeTime;
 
         public int Entity => entity;

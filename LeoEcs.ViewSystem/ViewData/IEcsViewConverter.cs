@@ -8,7 +8,6 @@
         IConverterEntityDestroyHandler
     {
         bool IsEnabled { get; }
-        bool IsEntityAlive { get; }
         EcsWorld World { get; }
         EcsPackedEntity PackedEntity { get; }
         int Entity { get; }

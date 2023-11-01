@@ -8,6 +8,7 @@
     using Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.ViewSystem.Components;
     using Leopotam.EcsLite;
     using Shared.Extensions;
+    using Sirenix.OdinInspector;
     using UniGame.ViewSystem.Runtime;
     using UniModules.UniGame.UISystem.Runtime;
     using UnityEngine;
@@ -17,7 +18,8 @@
     {
         #region inspector
 
-        public int entityId;
+        [ReadOnly]
+        public int entity;
 
         public bool followEntityLifeTime = false;
         public bool addChildOrderComponent = false;
@@ -26,7 +28,6 @@
         
         #region private fields
 
-        private bool _isEntityAlive;
         private EcsWorld _ecsWorld;
         private EcsPackedEntity _viewPackedEntity;
         private IView _view;
@@ -35,10 +36,9 @@
         
         #region public properties
         
-        public bool IsEntityAlive => _isEntityAlive;
         public EcsWorld World => _ecsWorld;
         public EcsPackedEntity PackedEntity => _viewPackedEntity;
-        public int Entity => entityId;
+        public int Entity => entity;
         
         #endregion
         
@@ -47,17 +47,17 @@
         /// <summary>
         /// entity destroyed
         /// </summary>
-        public void OnEntityDestroy(EcsWorld world, int entity)
+        public void OnEntityDestroy(EcsWorld world, int targetEntity)
         {
-            _isEntityAlive = false;
             _ecsWorld = null;
             
-            entityId = -1;
+            entity = -1;
         }
         
-        public sealed override void Apply(GameObject target, EcsWorld world, int entity, 
-            CancellationToken cancellationToken = default)
+        public sealed override void Apply(GameObject target, EcsWorld world, int targetEntity, CancellationToken cancellationToken = default)
         {
+            entity = targetEntity;
+            
             _view = GetComponent<IView>();
             
             if (!isActiveAndEnabled && _view == null) return;
@@ -65,12 +65,10 @@
             _ecsWorld = world;
             _viewPackedEntity = world.PackEntity(entity);
             
-            entityId = entity;
-            
             ref var viewComponent = ref world.GetOrAddComponent<ViewComponent>(entity);
             ref var viewStatusComponent = ref world.GetOrAddComponent<ViewStatusComponent>(entity);
-            viewStatusComponent.Status = ViewStatus.None;
             
+            viewStatusComponent.Status = ViewStatus.None;
             viewComponent.View = _view;
             viewComponent.Type = _view.GetType();
 
@@ -84,13 +82,10 @@
             if (followEntityLifeTime)
             {
                 var lifeTimeEntity = world.NewEntity();
-                ref var lifeTimeComponent = ref world
-                    .AddComponent<ViewEntityLifeTimeComponent>(lifeTimeEntity);
+                ref var lifeTimeComponent = ref world.AddComponent<ViewEntityLifeTimeComponent>(lifeTimeEntity);
                 lifeTimeComponent.View = _view;
                 lifeTimeComponent.Value = _viewPackedEntity;
             }
-            
-            _isEntityAlive = true;
         }
 
         #endregion

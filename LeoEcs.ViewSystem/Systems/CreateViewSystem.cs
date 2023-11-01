@@ -93,8 +93,10 @@
             };
 
             var entity = await UpdateViewEntity(view,request);
+
+            var packedEntity = _world.PackEntity(entity);
             
-            if(entity < 0) return;
+            if(entity<0 || !packedEntity.Unpack(_world,out var viewEntity)) return;
             
             UpdateViewEntityComponent(entity, model, request);
         }

@@ -47,7 +47,7 @@
                 {
                     var ecsConverter = parent.gameObject.GetComponent<LeoEcsMonoConverter>();
                     if (ecsConverter != null && ecsConverter.IsPlayingAndReady)
-                        requestComponent.Owner = ecsConverter.EntityId;
+                        requestComponent.Owner = ecsConverter.PackedEntity;
                 }
 
                 requestComponent.Parent = parent;
@@ -98,7 +98,7 @@
                 {
                     var ecsConverter = parent.gameObject.GetComponent<LeoEcsMonoConverter>();
                     if (ecsConverter != null && ecsConverter.IsPlayingAndReady)
-                        requestComponent.Owner = ecsConverter.EntityId;
+                        requestComponent.Owner = ecsConverter.PackedEntity;
                 }
 
                 requestComponent.Parent = parent;
@@ -152,7 +152,7 @@
                 {
                     var ecsConverter = parent.gameObject.GetComponent<LeoEcsMonoConverter>();
                     if (ecsConverter != null && ecsConverter.IsPlayingAndReady)
-                        requestComponent.Owner = ecsConverter.EntityId;
+                        requestComponent.Owner = ecsConverter.PackedEntity;
                 }
 
                 requestComponent.Parent = parent;
