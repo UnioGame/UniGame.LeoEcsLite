@@ -4,9 +4,11 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using Abstract;
     using Leopotam.EcsLite;
     using Sirenix.OdinInspector;
+    using UniCore.Runtime.ProfilerTools;
     using UnityEngine;
     using UnityEngine.Serialization;
     using Object = UnityEngine.Object;
@@ -59,20 +61,53 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         {
             if (!IsFeatureEnabled) return;
 
+#if DEBUG
+            var timer = Stopwatch.StartNew();   
+            timer.Restart();
+#endif
+            
             foreach (var featureAsset in nestedFeatures)
             {
                 if(!featureAsset.IsFeatureEnabled) continue;
                 var featureInstance = Object.Instantiate(featureAsset);
+#if DEBUG  
+                timer.Restart();
+#endif
+                
                 await featureInstance.InitializeFeatureAsync(ecsSystems);
+
+#if DEBUG
+                var elapsed = timer.ElapsedMilliseconds;
+                timer.Stop();
+                GameLog.LogRuntime($"ECS FEATURE SOURCE: LOAD TIME {featureInstance.FeatureName} | {featureInstance.GetType().Name} = {elapsed} ms");
+#endif
             }
 
             foreach (var ecsFeature in serializableFeatures)
             {
                 if(!ecsFeature.IsFeatureEnabled) continue; 
+#if DEBUG  
+                timer.Restart();
+#endif
                 await ecsFeature.InitializeFeatureAsync(ecsSystems);
+#if DEBUG
+                var elapsed = timer.ElapsedMilliseconds;
+                timer.Stop();
+                GameLog.LogRuntime($"ECS FEATURE SOURCE: LOAD TIME {ecsFeature.FeatureName} | {ecsFeature.GetType().Name} = {elapsed} ms");
+#endif
             }
 
+#if DEBUG  
+            timer.Restart();
+#endif
+            
             await OnInitializeFeatureAsync(ecsSystems);
+
+#if DEBUG
+            var elapsedTime = timer.ElapsedMilliseconds;
+            timer.Stop();
+            GameLog.LogRuntime($"ECS FEATURE SOURCE: LOAD TIME SELF {FeatureName} | {this.GetType().Name} = {elapsedTime} ms");
+#endif
         }
         
         public virtual bool IsMatch(string searchString)

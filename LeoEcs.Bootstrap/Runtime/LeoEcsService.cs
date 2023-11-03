@@ -3,6 +3,7 @@
     using UniGame.Core.Runtime;
     using UniGame.UniNodes.GameFlow.Runtime;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using Abstract;
     using Converter.Runtime;
     using Core.Runtime.Extension;
@@ -10,6 +11,7 @@
     using LeoEcsLite.LeoEcs.Bootstrap.Runtime.Systems;
     using Leopotam.EcsLite;
     using PostInitialize;
+    using UniCore.Runtime.ProfilerTools;
     using UniModules.UniCore.Runtime.DataFlow;
     using Object = UnityEngine.Object;
 
@@ -172,46 +174,65 @@
             foreach (var startupSystem in _startupSystems)
                 ecsSystems.Add(startupSystem);
 
-            foreach (var feature in runnerFeatures)
-            {
-                if (!feature.IsFeatureEnabled) continue;
-                
-                if (feature is ILeoEcsInitializableFeature initializeFeature)
-                {
-                    var featureLifeTime = new LifeTimeDefinition();
-                    await initializeFeature.InitializeFeatureAsync(ecsSystems)
-                        .AttachTimeoutLogAsync(GetErrorMessage(initializeFeature),_featureTimeout,featureLifeTime.CancellationToken);
-                    featureLifeTime.Terminate();
-                }
-                
-                if(feature is not ILeoEcsSystemsGroup groupFeature)
-                    continue;
+            var asyncFeatures = runnerFeatures
+                .Select(x => InitializeFeatureAsync(ecsSystems, x));
 
-                foreach (var system in groupFeature.EcsSystems)
-                {
-                    var leoEcsSystem = system;
-
-                    //create instance of SO systems
-                    if (leoEcsSystem is Object systemAsset)
-                    {
-                        systemAsset = Object.Instantiate(systemAsset);
-                        leoEcsSystem = systemAsset as IEcsSystem;
-                    }
-
-                    if (leoEcsSystem is ILeoEcsInitializableFeature initFeature)
-                    {
-                        var featureLifeTime = new LifeTimeDefinition();
-                        await initFeature.InitializeFeatureAsync(ecsSystems)
-                            .AttachTimeoutLogAsync(GetErrorMessage(initFeature),_featureTimeout,featureLifeTime.CancellationToken);
-                        featureLifeTime.Terminate();
-                    }
-
-                    ecsSystems.Add(leoEcsSystem);
-                }
-            }
-
+            await UniTask.WhenAll(asyncFeatures);
+            
             foreach (var startupSystem in _lateSystems)
                 ecsSystems.Add(startupSystem);
+        }
+
+        public async UniTask InitializeFeatureAsync(IEcsSystems ecsSystems,ILeoEcsFeature feature)
+        {
+            if (!feature.IsFeatureEnabled) return;
+                
+#if DEBUG
+            var timer = Stopwatch.StartNew();   
+            timer.Restart();
+#endif
+            
+            if (feature is ILeoEcsInitializableFeature initializeFeature)
+            {
+                var featureLifeTime = new LifeTimeDefinition();
+                    
+                await initializeFeature
+                    .InitializeFeatureAsync(ecsSystems)
+                    .AttachTimeoutLogAsync(GetErrorMessage(initializeFeature),_featureTimeout,featureLifeTime.CancellationToken);
+                    
+                featureLifeTime.Terminate();
+            }
+            
+#if DEBUG
+            var elapsed = timer.ElapsedMilliseconds;
+            timer.Stop();
+            GameLog.LogRuntime($"ECS FEATURE SOURCE: LOAD TIME {feature.FeatureName} | {feature.GetType().Name} = {elapsed} ms");
+#endif
+                
+            if(feature is not ILeoEcsSystemsGroup groupFeature)
+                return;
+
+            foreach (var system in groupFeature.EcsSystems)
+            {
+                var leoEcsSystem = system;
+
+                //create instance of SO systems
+                if (leoEcsSystem is Object systemAsset)
+                {
+                    systemAsset = Object.Instantiate(systemAsset);
+                    leoEcsSystem = systemAsset as IEcsSystem;
+                }
+
+                if (leoEcsSystem is ILeoEcsInitializableFeature initFeature)
+                {
+                    var featureLifeTime = new LifeTimeDefinition();
+                    await initFeature.InitializeFeatureAsync(ecsSystems)
+                        .AttachTimeoutLogAsync(GetErrorMessage(initFeature),_featureTimeout,featureLifeTime.CancellationToken);
+                    featureLifeTime.Terminate();
+                }
+
+                ecsSystems.Add(leoEcsSystem);
+            }
         }
 
         private string GetErrorMessage(ILeoEcsInitializableFeature feature)

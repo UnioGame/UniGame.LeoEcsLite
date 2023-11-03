@@ -2,9 +2,11 @@
 {
     using Cysharp.Threading.Tasks;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using Abstract;
     using Leopotam.EcsLite;
     using Sirenix.OdinInspector;
+    using UniCore.Runtime.ProfilerTools;
     using UnityEngine;
 
     [CreateAssetMenu(menuName = "UniGame/LeoEcs/Feature/ECS Feature", fileName = "ECS Feature")]
@@ -37,9 +39,22 @@
         
         public sealed override async UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)
         {
+#if DEBUG
+            var timer = Stopwatch.StartNew();   
+            timer.Restart();
+#endif
             await OnInitializeFeatureAsync(ecsSystems);
+#if DEBUG
+            var elapsed = timer.ElapsedMilliseconds;
+            timer.Stop();
+            GameLog.LogRuntime($"ECS FEATURE SOURCE: SELF LOAD TIME {FeatureName} | {GetType().Name} = {elapsed} ms");
+#endif
             await groupConfiguration.InitializeFeatureAsync(ecsSystems);
             await OnPostInitializeFeatureAsync(ecsSystems);
+            
+#if DEBUG
+            GameLog.LogRuntime($"\n");
+#endif
         }
 
         public override bool IsMatch(string searchString)
