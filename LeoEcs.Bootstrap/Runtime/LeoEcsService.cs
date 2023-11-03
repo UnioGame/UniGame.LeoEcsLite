@@ -4,7 +4,9 @@
     using UniGame.UniNodes.GameFlow.Runtime;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using Abstract;
+    using Config;
     using Converter.Runtime;
     using Core.Runtime.Extension;
     using Cysharp.Threading.Tasks;
@@ -139,16 +141,19 @@
         
         private async UniTask InitializeEcsService(EcsWorld world)
         {
+            var groups = _config.FeatureGroups
+                .Select(x => CreateEcsGroupAsync(x,world));
+
+            await UniTask.WhenAll(groups);
+        }
+
+        private async UniTask CreateEcsGroupAsync(LeoEcsConfigGroup updateGroup, EcsWorld world)
+        {
             var features = new List<ILeoEcsFeature>();
-            
-            foreach (var updateGroup in _config.FeatureGroups)
-            {
-                features.Clear();
-                foreach (var feature in updateGroup.features)
-                    features.Add(feature.Feature);
+            foreach (var feature in updateGroup.features)
+                features.Add(feature.Feature);
                 
-                await CreateEcsGroupRunner(updateGroup.updateType, world, features);
-            }
+            await CreateEcsGroupRunner(updateGroup.updateType, world, features);
         }
 
         private void ApplyPlugins(EcsWorld world)
