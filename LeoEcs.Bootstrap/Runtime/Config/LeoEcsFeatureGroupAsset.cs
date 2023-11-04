@@ -47,7 +47,7 @@
 #if DEBUG
             var elapsed = timer.ElapsedMilliseconds;
             timer.Stop();
-            GameLog.LogRuntime($"ECS FEATURE SOURCE: SELF LOAD TIME {FeatureName} | {GetType().Name} = {elapsed} ms");
+            GameLog.LogRuntime($"\tECS FEATURE SOURCE: SELF LOAD TIME {FeatureName} | {GetType().Name} = {elapsed} ms");
 #endif
             await groupConfiguration.InitializeFeatureAsync(ecsSystems);
             await OnPostInitializeFeatureAsync(ecsSystems);

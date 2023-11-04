@@ -39,15 +39,15 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 #endif
         [SerializeReference]
         [Searchable]
-        private List<IEcsSystem> _systems = new List<IEcsSystem>();
+        private List<IEcsSystem> _systems = new();
         
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
         [InlineEditor()]
-        public List<BaseLeoEcsFeature> nestedFeatures = new List<BaseLeoEcsFeature>();
+        public List<BaseLeoEcsFeature> nestedFeatures = new();
 
         [Searchable]
         [SerializeReference]
-        public List<ILeoEcsFeature> serializableFeatures = new List<ILeoEcsFeature>();
+        public List<ILeoEcsFeature> serializableFeatures = new();
 
         
         public string FeatureName => name;
@@ -79,7 +79,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 #if DEBUG
                 var elapsed = timer.ElapsedMilliseconds;
                 timer.Stop();
-                GameLog.LogRuntime($"ECS FEATURE SOURCE: LOAD TIME {featureInstance.FeatureName} | {featureInstance.GetType().Name} = {elapsed} ms");
+                GameLog.LogRuntime($"\tECS SUB FEATURE SOURCE: LOAD TIME {featureInstance.FeatureName} | {featureInstance.GetType().Name} = {elapsed} ms");
 #endif
             }
 
