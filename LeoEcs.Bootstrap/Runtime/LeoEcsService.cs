@@ -22,25 +22,23 @@
         private ILeoEcsSystemsConfig _config;
         private IEcsExecutorFactory _ecsExecutorFactory;
         private IEnumerable<ISystemsPlugin> _plugins;
-        private bool _ownThisWorld;
-        private float _featureTimeout;
         private Dictionary<string, EcsSystems> _systemsMap;
         private Dictionary<string, ILeoEcsExecutor> _systemsExecutors;
         private IContext _context;
 
         private EcsWorld _world;
         private bool _isInitialized;
+        private bool _ownThisWorld;
+        private float _featureTimeout;
 
-        private List<IEcsSystem> _startupSystems = 
-            new List<IEcsSystem>()
+        private List<IEcsSystem> _startupSystems = new()
         {
             new InstantDestroySystem(),
         };
         
-        private List<IEcsSystem> _lateSystems = new List<IEcsSystem>() {};
+        private List<IEcsSystem> _lateSystems = new() {};
 
-        private List<IEcsPostInitializeAction> _postInitializeActions = 
-            new List<IEcsPostInitializeAction>() 
+        private List<IEcsPostInitializeAction> _postInitializeActions = new() 
         {
             new EcsDiPostInitialize(),
         };
@@ -143,6 +141,7 @@
         {
             var elapsed = timer.ElapsedMilliseconds;
             timer.Restart();
+            if(stop) timer.Stop();
             GameLog.LogRuntime($"ECS FEATURE SOURCE: LOAD {message} TIME = {elapsed} ms");
         }
 
@@ -225,7 +224,7 @@
             }
             
 #if DEBUG
-            LogServiceTime($"{feature.FeatureName} | {feature.GetType().Name}", timer);
+            LogServiceTime($"{feature.FeatureName} | {feature.GetType().Name}", timer,false);
 #endif
                 
             if(feature is not ILeoEcsSystemsGroup groupFeature)
@@ -241,13 +240,22 @@
                     systemAsset = Object.Instantiate(systemAsset);
                     leoEcsSystem = systemAsset as IEcsSystem;
                 }
-
+                
+                var featureLifeTime = new LifeTimeDefinition();
                 if (leoEcsSystem is ILeoEcsInitializableFeature initFeature)
                 {
-                    var featureLifeTime = new LifeTimeDefinition();
-                    await initFeature.InitializeFeatureAsync(ecsSystems)
+#if DEBUG
+                    timer.Restart();
+#endif
+                    await initFeature
+                        .InitializeFeatureAsync(ecsSystems)
                         .AttachTimeoutLogAsync(GetErrorMessage(initFeature),_featureTimeout,featureLifeTime.CancellationToken);
-                    featureLifeTime.Terminate();
+                    
+#if DEBUG
+                    LogServiceTime($"\tSUB FEATURE {feature.GetType().Name}", timer);
+#endif
+                    
+                    featureLifeTime.Release();
                 }
 
                 ecsSystems.Add(leoEcsSystem);
