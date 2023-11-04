@@ -19,15 +19,15 @@
 
     public class LeoEcsService : GameService,ILeoEcsService
     {
-        private readonly ILeoEcsSystemsConfig _config;
-        private readonly IEcsExecutorFactory _ecsExecutorFactory;
-        private readonly IEnumerable<ISystemsPlugin> _plugins;
-        private readonly bool _ownThisWorld;
-        private readonly float _featureTimeout;
-        private readonly Dictionary<string, EcsSystems> _systemsMap;
-        private readonly Dictionary<string, ILeoEcsExecutor> _systemsExecutors;
-        private readonly IContext _context;
-        
+        private ILeoEcsSystemsConfig _config;
+        private IEcsExecutorFactory _ecsExecutorFactory;
+        private IEnumerable<ISystemsPlugin> _plugins;
+        private bool _ownThisWorld;
+        private float _featureTimeout;
+        private Dictionary<string, EcsSystems> _systemsMap;
+        private Dictionary<string, ILeoEcsExecutor> _systemsExecutors;
+        private IContext _context;
+
         private EcsWorld _world;
         private bool _isInitialized;
 
@@ -78,6 +78,10 @@
         
         public override async UniTask InitializeAsync()
         {
+#if DEBUG
+            var stopwatch = Stopwatch.StartNew();
+            stopwatch.Start();
+#endif
             await InitializeEcsService(_world);
 
             _isInitialized = true;
@@ -87,6 +91,10 @@
                 systems.Init();
                 ApplyPostInitialize(systems);
             }
+            
+#if DEBUG
+            LogServiceTime("InitializeAsync",stopwatch);
+#endif
         }
 
         public void Execute()
@@ -128,6 +136,14 @@
             if (_ownThisWorld)
                 _world?.Destroy();
             _world = null;
+        }
+        
+        [Conditional("DEBUG")]
+        private void LogServiceTime(string message, Stopwatch timer,bool stop = true)
+        {
+            var elapsed = timer.ElapsedMilliseconds;
+            timer.Restart();
+            GameLog.LogRuntime($"ECS FEATURE SOURCE: LOAD {message} TIME = {elapsed} ms");
         }
 
         private void ApplyPostInitialize(IEcsSystems ecsSystems)
@@ -209,9 +225,7 @@
             }
             
 #if DEBUG
-            var elapsed = timer.ElapsedMilliseconds;
-            timer.Stop();
-            GameLog.LogRuntime($"ECS FEATURE SOURCE: LOAD TIME {feature.FeatureName} | {feature.GetType().Name} = {elapsed} ms");
+            LogServiceTime($"{feature.FeatureName} | {feature.GetType().Name}", timer);
 #endif
                 
             if(feature is not ILeoEcsSystemsGroup groupFeature)

@@ -14,7 +14,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
     using UniModules.Editor;
 #endif
     
-    public abstract class BaseLeoEcsFeature : LifetimeScriptableObject,ILeoEcsFeature
+    public abstract class BaseLeoEcsFeature : ScriptableObject,ILeoEcsFeature
     {
         [ShowIf(nameof(ShowFeatureInfo))]
         [SerializeField]
