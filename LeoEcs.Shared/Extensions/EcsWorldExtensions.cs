@@ -312,5 +312,12 @@ namespace UniGame.LeoEcs.Shared.Extensions
 #endif
         public static ILifeTime GetWorldLifeTime(this EcsWorld world) => _memorizeItem[world];
 
+#if ENABLE_IL2CPP
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
+        public static ILifeTime GetLifeTime(this EcsWorld world) => _memorizeItem[world];
+        
     }
 }
