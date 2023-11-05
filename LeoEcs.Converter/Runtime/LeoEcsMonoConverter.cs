@@ -106,7 +106,7 @@
             if(_state != EntityState.Creating) return;
 
             var world = LeoEcsConvertersData.World ?? 
-                        await gameObject.WaitWorldReady(_entityLifeTime.CancellationToken);
+                        await gameObject.WaitWorldReady(_entityLifeTime.Token);
 
             if (world.IsAlive() == false)   
             {
@@ -163,7 +163,7 @@
             _state = EntityState.Creating;
             _entityLifeTime.Release();
 
-            Convert().AttachExternalCancellation(_entityLifeTime.CancellationToken)
+            Convert().AttachExternalCancellation(_entityLifeTime.Token)
                 .Forget();
         }
 

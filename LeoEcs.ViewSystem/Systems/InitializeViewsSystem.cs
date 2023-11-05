@@ -65,7 +65,7 @@
                 }
                 
                 _viewTools.AddModelComponentAsync(_world, packedEntity, view, viewType)
-                    .AttachExternalCancellation(_viewTools.LifeTime.CancellationToken)
+                    .AttachExternalCancellation(_viewTools.LifeTime.Token)
                     .Forget();
             }
         }

@@ -38,7 +38,7 @@
             var worldLifeTime = _world.GetWorldLifeTime();
             
             ExecuteAsync()
-                .AttachExternalCancellation(worldLifeTime.CancellationToken)
+                .AttachExternalCancellation(worldLifeTime.Token)
                 .Forget();
         }
 

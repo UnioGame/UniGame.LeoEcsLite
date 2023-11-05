@@ -218,7 +218,7 @@
                     
                 await initializeFeature
                     .InitializeFeatureAsync(ecsSystems)
-                    .AttachTimeoutLogAsync(GetErrorMessage(initializeFeature),_featureTimeout,featureLifeTime.CancellationToken);
+                    .AttachTimeoutLogAsync(GetErrorMessage(initializeFeature),_featureTimeout,featureLifeTime.Token);
                     
                 featureLifeTime.Terminate();
             }
@@ -249,7 +249,7 @@
 #endif
                     await initFeature
                         .InitializeFeatureAsync(ecsSystems)
-                        .AttachTimeoutLogAsync(GetErrorMessage(initFeature),_featureTimeout,featureLifeTime.CancellationToken);
+                        .AttachTimeoutLogAsync(GetErrorMessage(initFeature),_featureTimeout,featureLifeTime.Token);
                     
 #if DEBUG
                     LogServiceTime($"\tSUB FEATURE {feature.GetType().Name}", timer);

@@ -38,7 +38,7 @@
             
             await _viewSystem
                 .InitializeView(view, model)
-                .AttachExternalCancellation(_lifeTime.CancellationToken);
+                .AttachExternalCancellation(_lifeTime.Token);
         }
 
         public void AddViewModelData(EcsWorld world,ref EcsPackedEntity packedEntity,IViewModel model)
