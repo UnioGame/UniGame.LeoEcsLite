@@ -53,10 +53,10 @@
             _view = target.GetComponent<IUiView<TData>>();
             if (_view == null) return;
 
+            entity = targetEntity;
+            
             _world = world;
             _viewPackedEntity = world.PackEntity(entity);
-
-            entity = targetEntity;
             
             ref var dataComponent = ref world.GetOrAddComponent<ViewDataComponent<TData>>(entity);
             ref var viewComponent = ref world.GetOrAddComponent<ViewComponent>(entity);
