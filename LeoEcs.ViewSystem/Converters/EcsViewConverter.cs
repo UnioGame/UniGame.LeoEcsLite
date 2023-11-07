@@ -5,7 +5,6 @@
     using Converter.Runtime;
     using Converter.Runtime.Abstract;
     using Converter.Runtime.Components;
-    using Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.ViewSystem.Components;
     using Leopotam.EcsLite;
     using Shared.Extensions;
     using Sirenix.OdinInspector;
@@ -14,7 +13,9 @@
     using UnityEngine;
 
     [RequireComponent(typeof(LeoEcsMonoConverter))]
-    public class EcsViewConverter : MonoLeoEcsConverter, IEcsViewConverter,ILeoEcsComponentConverter
+    public class EcsViewConverter : MonoLeoEcsConverter, 
+        IEcsViewConverter,
+        ILeoEcsComponentConverter
     {
         #region inspector
 

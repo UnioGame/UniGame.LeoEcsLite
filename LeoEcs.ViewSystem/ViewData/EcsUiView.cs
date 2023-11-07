@@ -9,9 +9,10 @@
     using UnityEngine;
 
     [RequireComponent(typeof(LeoEcsMonoConverter))]
-    [RequireComponent(typeof(EcsViewConverter))]
     public abstract class EcsUiView<TViewModel> : View<TViewModel>,
-        ILeoEcsComponentConverter,IEcsView
+        ILeoEcsComponentConverter,
+        IConverterEntityDestroyHandler,
+        IEcsView
         where TViewModel : class, IViewModel
     {
         private EcsViewDataConverter<TViewModel> _dataConverter = new EcsViewDataConverter<TViewModel>();
@@ -24,6 +25,16 @@
             OnApply(world,entity);
         }
         
+        public void OnEntityDestroy(EcsWorld world, int entity)
+        {
+            _dataConverter.OnEntityDestroy(world, entity);
+
+            EntityDestroy(world, entity);
+        }
+
+        protected virtual void EntityDestroy(EcsWorld world, int entity){}
+        
         protected virtual void OnApply(EcsWorld world, int entity){}
+
     }
 }
