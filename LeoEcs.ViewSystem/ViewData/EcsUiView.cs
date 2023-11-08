@@ -4,6 +4,7 @@
     using Converter.Runtime;
     using Converter.Runtime.Abstract;
     using Leopotam.EcsLite;
+    using Sirenix.OdinInspector;
     using UiSystem.Runtime;
     using UniGame.ViewSystem.Runtime;
     using UnityEngine;
@@ -15,11 +16,18 @@
         IEcsView
         where TViewModel : class, IViewModel
     {
-        private EcsViewDataConverter<TViewModel> _dataConverter = new EcsViewDataConverter<TViewModel>();
+        [PropertySpace(8)]
+        [FoldoutGroup("ecs settings")]
+        [InlineProperty]
+        [HideLabel]
+        public EcsViewSettings settings = new();
+        
+        private EcsViewDataConverter<TViewModel> _dataConverter = new();
         
         public void Apply(GameObject target, EcsWorld world, 
             int entity, CancellationToken cancellationToken = default)
         {
+            _dataConverter.SetUp(settings);
             _dataConverter.Apply(target,world,entity,cancellationToken);
             
             OnApply(world,entity);

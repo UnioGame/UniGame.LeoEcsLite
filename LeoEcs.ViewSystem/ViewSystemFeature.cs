@@ -51,6 +51,7 @@ namespace UniGame.LeoEcs.ViewSystem
 
             //update view status systems
             ecsSystems.Add(new ViewUpdateStatusSystem());
+            ecsSystems.Add(new UpdateViewOrderSystem());
             ecsSystems.Add(new CreateViewSystem(context,viewSystem));
             ecsSystems.Add(new MarkViewAsInitializedSystem());
             

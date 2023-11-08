@@ -22,11 +22,7 @@
         where TData : class, IViewModel
     {
         [TitleGroup("settings")]
-        public bool followEntityLifeTime = false;
-        [TitleGroup("settings")]
-        public bool addChildOrderComponent = false;
-        [TitleGroup("settings")]
-        public bool addUpdateRequestOnCreate = true;
+        public EcsViewSettings settings = new EcsViewSettings();
         
         [TitleGroup("runtime")]
         public int entity;
@@ -44,6 +40,11 @@
         
         public string Name => GetType().Name;
 
+        public void SetUp(EcsViewSettings overrideSettings)
+        {
+            settings = overrideSettings;
+        }
+        
         public void Apply(GameObject target, EcsWorld world, int targetEntity, CancellationToken cancellationToken = default)
         {
             //reset lifetime
@@ -73,31 +74,35 @@
             if (_view.Model != null)
                 OnViewModelChanged(_view.Model);
             
-            if (addChildOrderComponent)
+            if (settings.addChildOrderComponent)
             {
                 ref var childOrderComponent = ref world.GetOrAddComponent<ViewOrderComponent>(entity);
                 childOrderComponent.Value = target.transform.GetSiblingIndex();
             }
 
             //follow entity lifetime  and close view if entity is dead
-            if (followEntityLifeTime)
+            if (settings.followEntityLifeTime)
             {
                 var lifeTimeEntity = world.NewEntity();
                 ref var lifeTimeComponent = ref world.AddComponent<ViewEntityLifeTimeComponent>(lifeTimeEntity);
                 lifeTimeComponent.View = _view;
                 lifeTimeComponent.Value = _viewPackedEntity;
             }
-            
-            if (addUpdateRequestOnCreate) world.AddComponent<UpdateViewRequest<TData>>(entity);
         }
         
         private void OnViewModelChanged(IViewModel model)
         {
             if(!_viewPackedEntity.Unpack(_world,out var viewEntity))
                 return;
+
+            if (settings.addUpdateRequestOnCreate)
+            {
+                _world.GetOrAddComponent<UpdateViewRequest>(entity);
+            }
             
             ref var modelComponent = ref _world
                 .GetOrAddComponent<ViewModelComponent>(viewEntity);
+            
             modelComponent.Model = model;
         }
 
@@ -108,16 +113,6 @@
             _entityLifeTime?.Release();
             _world = null;
             _viewPackedEntity = default;
-        }
-    }
-    
-    [Serializable]
-    public class ViewOrderConverter : GameObjectConverter
-    {
-        protected override void OnApply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
-        {
-            ref var dataComponent = ref world.GetOrAddComponent<ViewOrderComponent>(entity);
-            dataComponent.Value = target.transform.GetSiblingIndex();
         }
     }
 }

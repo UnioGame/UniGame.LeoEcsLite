@@ -1,12 +1,13 @@
-using UniGame.LeoEcs.ViewSystem.Components;
-
-namespace UniGame.LeoEcs.ViewSystem.Systems
+﻿namespace UniGame.LeoEcs.ViewSystem.Systems
 {
     using System;
     using Aspects;
     using Bootstrap.Runtime.Attributes;
+    using Components;
+    using Converter.Runtime.Components;
     using Leopotam.EcsLite;
-    
+    using Shared.Components;
+    using UnityEngine;
 #if ENABLE_IL2CPP
     using Unity.IL2CPP.CompilerServices;
 
@@ -16,7 +17,7 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
 #endif
     [Serializable]
     [ECSDI]
-    public class ViewUpdateStatusSystem : IEcsInitSystem,IEcsRunSystem
+    public class UpdateViewOrderSystem : IEcsInitSystem,IEcsRunSystem
     {
         private ViewAspect _viewAspect;
         private EcsFilter _viewFilter;
@@ -25,9 +26,11 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
         public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
+            
             _viewFilter = _world
                 .Filter<ViewComponent>()
-                .Inc<ViewStatusComponent>()
+                .Inc<TransformComponent>()
+                .Inc<ViewOrderComponent>()
                 .End();
         }
 
@@ -35,12 +38,13 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
         {
             foreach (var entity in _viewFilter)
             {
-                ref var viewComponent = ref _viewAspect.View.Get(entity);
-                ref var viewStatusComponent = ref _viewAspect.Status.Get(entity);
+                ref var orderComponent = ref _viewAspect.Order.Get(entity);
+                ref var transformComponent = ref _viewAspect.Transform.Get(entity);
 
-                var view = viewComponent.View;
-                viewStatusComponent.Status = view.Status.Value;
+                var transform = transformComponent.Value;
+                var order = transform.GetSiblingIndex();
+                orderComponent.Value = order;
             }
         }
     }
-    }
+}
