@@ -122,7 +122,7 @@
             else
             {
                 viewEntity = viewEntity < 0 ? _world.NewEntity() : viewEntity;
-                viewObject.ConvertGameObjectToEntity(_world, viewEntity);
+                viewObject.ConvertGameObjectToEntity(_world,viewEntity);
             }
             
             if(request.Owner.Unpack(_world,out var ownerEntity))

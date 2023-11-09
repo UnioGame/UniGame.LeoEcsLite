@@ -125,10 +125,10 @@
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ConnectEntity(EcsWorld world,int ecsEntity)
         {
+            entity = ecsEntity;
+            
             _world = world;
             _packedEntity = world.PackEntity(ecsEntity);
-            
-            entity = ecsEntity;
             _state = EntityState.Created;
         }
 
