@@ -142,7 +142,7 @@
             var elapsed = timer.ElapsedMilliseconds;
             timer.Restart();
             if(stop) timer.Stop();
-            GameLog.LogRuntime($"ECS FEATURE SOURCE: LOAD {message} TIME = {elapsed} ms");
+            GameLog.Log($"ECS FEATURE SOURCE: LOAD {message} TIME = {elapsed} ms");
         }
 
         private void ApplyPostInitialize(IEcsSystems ecsSystems)

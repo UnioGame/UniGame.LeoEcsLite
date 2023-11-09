@@ -79,7 +79,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 #if DEBUG
                 var elapsed = timer.ElapsedMilliseconds;
                 timer.Stop();
-                GameLog.LogRuntime($"\tECS SUB FEATURE SOURCE: LOAD TIME {featureInstance.FeatureName} | {featureInstance.GetType().Name} = {elapsed} ms");
+                GameLog.Log($"\tECS SUB FEATURE SOURCE: LOAD TIME {featureInstance.FeatureName} | {featureInstance.GetType().Name} = {elapsed} ms");
 #endif
             }
 
@@ -93,7 +93,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 #if DEBUG
                 var elapsed = timer.ElapsedMilliseconds;
                 timer.Stop();
-                GameLog.LogRuntime($"ECS FEATURE SOURCE: LOAD TIME {ecsFeature.FeatureName} | {ecsFeature.GetType().Name} = {elapsed} ms");
+                GameLog.Log($"ECS FEATURE SOURCE: LOAD TIME {ecsFeature.FeatureName} | {ecsFeature.GetType().Name} = {elapsed} ms");
 #endif
             }
 
@@ -106,7 +106,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 #if DEBUG
             var elapsedTime = timer.ElapsedMilliseconds;
             timer.Stop();
-            GameLog.LogRuntime($"ECS FEATURE SOURCE: LOAD TIME SELF {FeatureName} | {this.GetType().Name} = {elapsedTime} ms");
+            GameLog.Log($"ECS FEATURE SOURCE: LOAD TIME SELF {FeatureName} | {this.GetType().Name} = {elapsedTime} ms");
 #endif
         }
         
