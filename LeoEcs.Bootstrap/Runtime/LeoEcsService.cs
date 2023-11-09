@@ -60,7 +60,7 @@
             _context = context;
             _world = world;
             _config = config;
-
+            
             _ecsExecutorFactory = ecsExecutorFactory;
             _plugins = plugins;
             _ownThisWorld = ownThisWorld;

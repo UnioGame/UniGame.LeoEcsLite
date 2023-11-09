@@ -8,6 +8,11 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
     [CreateAssetMenu(menuName = "UniGame/LeoEcs/ECS Features Configuration", fileName = nameof(LeoEcsFeaturesConfiguration))]
     public class LeoEcsFeaturesConfiguration : ScriptableObject, ILeoEcsSystemsConfig
     {
+        [FoldoutGroup("world config")]
+        [InlineProperty]
+        [HideLabel]
+        public EcsWorldConfiguration worldConfiguration = new EcsWorldConfiguration();
+        
         [Space(8)]
         [SerializeField]
         //[Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]

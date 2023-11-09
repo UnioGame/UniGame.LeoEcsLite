@@ -61,7 +61,8 @@
                 .Select(x => x.Create())
                 .ToList();
 
-            var world = new EcsWorld();
+            var worldConfig = config.worldConfiguration.Create();
+            var world = new EcsWorld(in worldConfig);
             
             context.Publish(world);
             

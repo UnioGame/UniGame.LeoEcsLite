@@ -15,7 +15,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         [GUIColor(0.2f,0.9f,0f)]
         [ValueDropdown(nameof(GetUpdateIds))]
         public string updateType;
-        
+
         [Space(8)]
         [SerializeField]
         [InlineProperty]
