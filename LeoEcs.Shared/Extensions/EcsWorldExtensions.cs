@@ -17,8 +17,8 @@ namespace UniGame.LeoEcs.Shared.Extensions
 #endif
     public static class EcsWorldExtensions
     {
-        private static MemorizeItem<EcsWorld,ILifeTime> _memorizeItem = MemorizeTool
-            .Memorize<EcsWorld, ILifeTime>(static x =>
+        private static MemorizeItem<EcsWorld,LifeTimeDefinition> _memorizeItem = MemorizeTool
+            .Memorize<EcsWorld, LifeTimeDefinition>(static x =>
             {
                 var lifeTime = new LifeTimeDefinition();
                 UpdateWorldLifeTime(x,lifeTime).Forget();
@@ -41,7 +41,22 @@ namespace UniGame.LeoEcs.Shared.Extensions
                     lifeTime.Terminate();
                 }
                 
-            });
+            },x => x.Terminate());
+        
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void OnWorldExtensionInit()
+        {
+            Application.quitting -= Clear;
+            Application.quitting += Clear;
+            Clear();
+        }
+        
+        public static void Clear()
+        {
+            _memorizeItem.Dispose();
+        }
+#endif
 
 #if ENABLE_IL2CPP
         [Il2CppSetOption (Option.NullChecks, false)]
