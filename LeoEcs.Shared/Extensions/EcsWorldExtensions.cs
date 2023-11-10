@@ -112,6 +112,7 @@ namespace UniGame.LeoEcs.Shared.Extensions
         [Il2CppSetOption (Option.NullChecks, false)]
         [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
 #endif
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void PackAll(this EcsWorld world,List<EcsPackedEntity> container, IEnumerable<int> entities)
         {
             foreach (var entity in entities)
@@ -124,6 +125,7 @@ namespace UniGame.LeoEcs.Shared.Extensions
         [Il2CppSetOption (Option.NullChecks, false)]
         [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
 #endif
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool UnpackAll(this EcsWorld world,List<int> result, List<EcsPackedEntity> packedEntities)
         {
             var unpackResult = true;
@@ -138,6 +140,44 @@ namespace UniGame.LeoEcs.Shared.Extensions
             }
 
             return unpackResult;
+        }
+        
+#if ENABLE_IL2CPP
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int PackAll(this EcsWorld world,int[] source,EcsPackedEntity[] result, int count)
+        {
+            var counter = 0;
+            for (var i = 0; i < count; i++)
+            {
+                var entity = source[i];
+                if(entity < 0) continue;
+                result[counter] = world.PackEntity(source[i]);
+                counter++;
+            }
+            return counter;
+        }
+        
+#if ENABLE_IL2CPP
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int UnpackAll(this EcsWorld world, EcsPackedEntity[] packedEntities,int[] result, int amount)
+        {
+            var counter = 0;
+            for (var i = 0; i < amount; i++)
+            {
+                ref var packedEntity = ref packedEntities[i];
+                if (!packedEntity.Unpack(world, out var entity))
+                    continue;
+                result[counter] = entity;
+                counter++;
+            }
+
+            return counter;
         }
 
 #if ENABLE_IL2CPP

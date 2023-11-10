@@ -3,9 +3,17 @@ using UniGame.LeoEcs.Shared.Systems;
 namespace UniGame.LeoEcs.Shared.Extensions
 {
     using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
     using Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.Shared.Systems;
     using Leopotam.EcsLite;
 
+#if ENABLE_IL2CPP
+    using Unity.IL2CPP.CompilerServices;
+
+    [Il2CppSetOption(Option.NullChecks, false)]
+    [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+    [Il2CppSetOption(Option.DivideByZeroChecks, false)]
+#endif
     public static class LeoEcsExtensions
     {
         public static IEcsSystems CreateOn<TTrigger,TTarget>(this IEcsSystems systems)
@@ -53,6 +61,7 @@ namespace UniGame.LeoEcs.Shared.Extensions
             systems.Add(new UpdateCounterRequestSystem<TRequest>(cyclesAmount));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool EntityHasAll<T1, T2>(this EcsWorld world,int entity)
             where T1 : struct
             where T2 : struct
