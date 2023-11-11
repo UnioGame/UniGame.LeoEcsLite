@@ -23,9 +23,9 @@
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DistanceCheckValue IsSqrClosest(float3 sourcePosition, float3 destinationPosition, ref EntityBounds destinationBounds, float minDistance)
+        public static DistanceCheckValue IsSqrClosest(ref float3 sourcePosition,ref  float3 destinationPosition, ref EntityBounds destinationBounds, float minDistance)
         {
-            var sqrDistance = GetSqrDistance(sourcePosition, destinationPosition, ref destinationBounds);
+            var sqrDistance = GetSqrDistance(ref sourcePosition,ref  destinationPosition, ref destinationBounds);
             var isClosest =  sqrDistance <= minDistance;
             return new DistanceCheckValue(sqrDistance,isClosest);
         }
@@ -40,7 +40,7 @@
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float GetSqrDistance(float3 sourcePosition, float3 destinationPosition, ref EntityBounds destinationBounds)
+        public static float GetSqrDistance(ref float3 sourcePosition,ref  float3 destinationPosition, ref EntityBounds destinationBounds)
         {
             var direction = math.normalize(sourcePosition - destinationPosition);
             var closestPoint = destinationPosition + direction * destinationBounds.Radius;
