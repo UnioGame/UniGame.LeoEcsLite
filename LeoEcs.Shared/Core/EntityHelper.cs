@@ -18,7 +18,7 @@
         public static DistanceCheckValue IsClosest(float3 sourcePosition, float3 destinationPosition, ref EntityBounds destinationBounds, float minDistance)
         {
             var distance = GetDistance(sourcePosition, destinationPosition, ref destinationBounds);
-            var isClosest = distance <= minDistance || Mathf.Approximately(distance, minDistance);
+            var isClosest = distance <= minDistance;
             return new DistanceCheckValue(distance,isClosest);
         }
         
@@ -26,7 +26,7 @@
         public static DistanceCheckValue IsSqrClosest(float3 sourcePosition, float3 destinationPosition, ref EntityBounds destinationBounds, float minDistance)
         {
             var sqrDistance = GetSqrDistance(sourcePosition, destinationPosition, ref destinationBounds);
-            var isClosest =  sqrDistance <= minDistance || Mathf.Approximately(sqrDistance, minDistance);
+            var isClosest =  sqrDistance <= minDistance;
             return new DistanceCheckValue(sqrDistance,isClosest);
         }
         
