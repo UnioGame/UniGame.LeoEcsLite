@@ -3,7 +3,6 @@
     using System;
     using System.Runtime.CompilerServices;
     using Unity.Mathematics;
-    using UnityEngine;
 
 #if ENABLE_IL2CPP
     using Unity.IL2CPP.CompilerServices;
