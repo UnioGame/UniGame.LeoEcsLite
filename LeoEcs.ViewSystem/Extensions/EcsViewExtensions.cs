@@ -54,7 +54,7 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             return world.ViewFilter<TModel>().End();
         }
         
-        public static void MakeViewRequest(
+        public static int MakeViewRequest(
             this EcsWorld world,
             Type viewType,
             ViewType layoutType = ViewType.None,
@@ -64,11 +64,11 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             bool stayWorld = false)
         {
             var target = new EcsPackedEntity();
-            MakeViewRequest(world, viewType.Name,ref target,ref target, layoutType, 
+            return MakeViewRequest(world, viewType.Name,ref target,ref target, layoutType, 
                 parent, tag, viewName, stayWorld);
         }
         
-        public static void MakeViewRequest(
+        public static int MakeViewRequest(
             this EcsWorld world,
             Type viewType,
             ref  EcsPackedEntity targetEntity,
@@ -79,11 +79,11 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             string viewName = null,
             bool stayWorld = false)
         {
-            MakeViewRequest(world, viewType.Name,ref targetEntity,ref ownerEntity, layoutType, 
+            return MakeViewRequest(world, viewType.Name,ref targetEntity,ref ownerEntity, layoutType, 
                 parent, tag, viewName, stayWorld);
         }
         
-        public static void MakeViewInContainerRequest<TView>(
+        public static int MakeViewInContainerRequest<TView>(
             this EcsWorld world, 
             bool useBusyContainer = false,
             EcsPackedEntity owner = default,
@@ -91,10 +91,10 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             string viewName = null,
             bool stayWorld = false)
         {
-            world.MakeViewInContainerRequest(typeof(TView).Name, useBusyContainer, owner, tag, viewName, stayWorld);
+            return world.MakeViewInContainerRequest(typeof(TView).Name, useBusyContainer, owner, tag, viewName, stayWorld);
         }
         
-        public static void MakeViewInContainerRequest(
+        public static int MakeViewInContainerRequest(
             this EcsWorld world, 
             string view,
             bool useBusyContainer = false,
@@ -114,24 +114,26 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             component.StayWorld = stayWorld;
             component.UseBusyContainer = useBusyContainer;
             component.Owner = owner;
+
+            return entity;
         }
         
-        public static void MakeViewRequest<TView>(
+        public static int MakeViewRequest<TView>(
             this EcsWorld world, 
             ViewType layoutType)
         {
-            MakeViewRequest(world,typeof(TView),layoutType);
+            return MakeViewRequest(world,typeof(TView),layoutType);
         }
         
-        public static void MakeViewRequest(
+        public static int MakeViewRequest(
             this EcsWorld world, 
             string viewId,
             ViewType layoutType)
         {
-            MakeViewRequest(world, viewId, layoutType.ToStringFromCache());
+            return MakeViewRequest(world, viewId, layoutType.ToStringFromCache());
         }
         
-        public static void MakeViewRequest(
+        public static int MakeViewRequest(
             this EcsWorld world, 
             string viewId,
             string layoutType)
@@ -143,18 +145,20 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             
             component.View = viewId;
             component.LayoutType = layoutType;
+
+            return entity;
         }
         
-        public static void MakeViewRequest(
+        public static int MakeViewRequest(
             this EcsWorld world, 
             Type viewType,
             ViewType layoutType)
         {
-            MakeViewRequest(world,viewType.Name, layoutType);
+            return MakeViewRequest(world,viewType.Name, layoutType);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void MakeViewRequest(
+        public static int MakeViewRequest(
             this EcsWorld world, 
             string view,
             ref EcsPackedEntity target,
@@ -166,11 +170,11 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             bool stayWorld = false)
         {
             var layout = layoutType == ViewType.None ? string.Empty : layoutType.ToStringFromCache();
-            MakeViewRequest(world,view,ref target,ref owner, layout, parent, tag, viewName, stayWorld);
+            return MakeViewRequest(world,view,ref target,ref owner, layout, parent, tag, viewName, stayWorld);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void MakeViewRequest(
+        public static int MakeViewRequest(
             this EcsWorld world, 
             string view,
             ref EcsPackedEntity target,
@@ -193,13 +197,17 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
             component.StayWorld = stayWorld;
             component.Target = target;
             component.Owner = owner;
+
+            return entity;
         }
         
-        public static void MakeViewRequest(this EcsWorld world,ref CreateViewRequest request)
+        public static int MakeViewRequest(this EcsWorld world,ref CreateViewRequest request)
         {
             var entity = world.NewEntity();
             ref var component = ref world.GetOrAddComponent<CreateViewRequest>(entity);
             component.Apply(ref request);
+
+            return entity;
         }
         
         public static CreateViewRequest CreateViewRequest(

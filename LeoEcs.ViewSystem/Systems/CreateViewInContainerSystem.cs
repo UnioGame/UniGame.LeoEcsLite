@@ -73,9 +73,7 @@
                     ref var transformComponent = ref _transformPool.Get(containerEntity);
                     
                     //create view in container
-                    var createViewEntity = _world.NewEntity();
-                    
-                    ref var createViewRequest = ref _world.AddComponent<CreateViewRequest>(createViewEntity);
+                    ref var createViewRequest = ref _world.AddComponent<CreateViewRequest>(requestEntity);
                     
                     createViewRequest.ViewId = request.View;
                     createViewRequest.ViewName = request.ViewName;
@@ -86,7 +84,7 @@
                     createViewRequest.LayoutType =string.Empty;
               
                     //mark container as busy
-                    _busyContainerPool.GetOrAddComponent<ViewContainerBusyComponent>(containerEntity);
+                    _busyContainerPool.GetOrAddComponent(containerEntity);
                     
                     //remove request only when container found
                     _createViewInContainerRequestPool.TryRemove(requestEntity);
