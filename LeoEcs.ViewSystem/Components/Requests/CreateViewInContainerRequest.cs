@@ -17,7 +17,7 @@
     [Serializable]
     public struct CreateViewInContainerRequest
     {
-        [FormerlySerializedAs("ViewId")] public string View;
+        public string View;
 
         /// <summary>
         /// if true then use busy container, else wait for free one

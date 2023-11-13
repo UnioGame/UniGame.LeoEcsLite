@@ -183,11 +183,13 @@ namespace UniGame.LeoEcs.Shared.Extensions
         public static int UnpackAll(this EcsWorld world, EcsPackedEntity[] packedEntities,int[] result, int amount)
         {
             var counter = 0;
+            
             for (var i = 0; i < amount; i++)
             {
                 ref var packedEntity = ref packedEntities[i];
                 if (!packedEntity.Unpack(world, out var entity))
                     continue;
+                
                 result[counter] = entity;
                 counter++;
             }
