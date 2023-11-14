@@ -6,11 +6,9 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
 {
     using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
-    using UniGame.Core.Runtime.ScriptableObjects;
     using Abstract;
 
 #if UNITY_EDITOR
-    using UnityEditor;
     using UniModules.Editor;
 #endif
     
