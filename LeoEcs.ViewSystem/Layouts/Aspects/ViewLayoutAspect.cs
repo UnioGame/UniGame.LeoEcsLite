@@ -2,7 +2,7 @@
 {
     using Components;
     using Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.ViewSystem.Components;
-    using LeoEcsLite.LeoEcs.Bootstrap.Runtime.Abstract;
+    using Bootstrap.Runtime.Abstract;
     using Leopotam.EcsLite;
 
     public class ViewLayoutAspect : EcsAspect

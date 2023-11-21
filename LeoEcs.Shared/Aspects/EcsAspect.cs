@@ -1,4 +1,4 @@
-﻿namespace UniGame.LeoEcsLite.LeoEcs.Bootstrap.Runtime.Abstract
+﻿namespace UniGame.LeoEcs.Bootstrap.Runtime.Abstract
 {
     using System;
     using Leopotam.EcsLite;

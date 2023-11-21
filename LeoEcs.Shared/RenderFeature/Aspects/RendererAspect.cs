@@ -2,7 +2,7 @@
 {
     using System;
     using Leopotam.EcsLite;
-    using UniGame.LeoEcsLite.LeoEcs.Bootstrap.Runtime.Abstract;
+    using Bootstrap.Runtime.Abstract;
 
     [Serializable]
     public class RendererAspect : EcsAspect

@@ -3,7 +3,7 @@
     using System;
     using Components;
     using Converter.Runtime.Components;
-    using LeoEcsLite.LeoEcs.Bootstrap.Runtime.Abstract;
+    using Bootstrap.Runtime.Abstract;
     using Leopotam.EcsLite;
     using Shared.Components;
     using UnityEngine;

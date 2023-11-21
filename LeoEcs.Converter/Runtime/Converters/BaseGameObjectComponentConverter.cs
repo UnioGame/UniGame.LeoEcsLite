@@ -18,9 +18,16 @@ namespace UniGame.LeoEcs.Converter.Runtime.Converters
             ref var gameObjectComponent = ref world.GetOrAddComponent<GameObjectComponent>(entity);
             ref var objectComponent = ref world.GetOrAddComponent<UnityObjectComponent>(entity);
 
+            ref var transformPositionComponent = ref world.GetOrAddComponent<TransformPositionComponent>(entity);
+            ref var directionComponent = ref world.GetOrAddComponent<TransformDirectionComponent>(entity);
+            
             transformComponent.Value = target.transform;
             gameObjectComponent.Value = target;
             objectComponent.Value = target;
+            transformPositionComponent.Position = target.transform.position;
+            directionComponent.Forward = target.transform.forward;
+            directionComponent.Up = target.transform.up;
+            directionComponent.Right = target.transform.right;
         }
     }
 }

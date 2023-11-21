@@ -22,7 +22,11 @@
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DistanceCheckValue IsSqrClosest(ref float3 sourcePosition,ref  float3 destinationPosition, ref EntityBounds destinationBounds, float minDistance)
+        public static DistanceCheckValue IsSqrClosest(
+            ref float3 sourcePosition,
+            ref float3 destinationPosition, 
+            ref EntityBounds destinationBounds, 
+            float minDistance)
         {
             var sqrDistance = GetSqrDistance(ref sourcePosition,ref  destinationPosition, ref destinationBounds);
             var isClosest =  sqrDistance <= minDistance;

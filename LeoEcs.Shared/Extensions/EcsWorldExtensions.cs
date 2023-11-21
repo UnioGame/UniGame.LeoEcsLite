@@ -162,6 +162,25 @@ namespace UniGame.LeoEcs.Shared.Extensions
         [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
 #endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int UnpackAll(this EcsWorld world,EcsPackedEntity[] from,int[] to)
+        {
+            var amount = 0;
+            foreach (var ecsPackedEntity in from)
+            {
+                if (!ecsPackedEntity.Unpack(world, out var entity))
+                    continue;
+                to[amount] = entity;
+                amount++;
+            }
+
+            return amount;
+        }
+        
+#if ENABLE_IL2CPP
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int PackAll(this EcsWorld world,int[] source,EcsPackedEntity[] result, int count)
         {
             var counter = 0;

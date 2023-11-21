@@ -41,4 +41,6 @@
             world.TryRemoveComponent<PlayableDirectorComponent>(entity);
         }
     }
+    
+    
 }
