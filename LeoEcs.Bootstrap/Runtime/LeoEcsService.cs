@@ -86,8 +86,12 @@
 
             foreach (var systems in _systemsMap.Values)
             {
-                systems.Init();
                 ApplyPostInitialize(systems);
+            }
+            
+            foreach (var systems in _systemsMap.Values)
+            {
+                systems.Init();
             }
             
 #if DEBUG
