@@ -2,10 +2,11 @@
 {
     using System;
     using Leopotam.EcsLite;
+    using Unity.Mathematics;
     using UnityEngine;
 
     /// <summary>
-    /// ADD DESCRIPTION HERE
+    /// point in the world space
     /// </summary>
 #if ENABLE_IL2CPP
     using Unity.IL2CPP.CompilerServices;
@@ -17,11 +18,11 @@
     [Serializable]
     public struct PositionComponent : IEcsAutoReset<PositionComponent>
     {
-        public Vector3 Value;
+        public float3 Value;
         
         public void AutoReset(ref PositionComponent c)
         {
-            c.Value = Vector3.zero;
+            c.Value = float3.zero;
         }
     }
 }

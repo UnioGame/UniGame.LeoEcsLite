@@ -20,14 +20,23 @@ namespace UniGame.LeoEcs.Converter.Runtime.Converters
 
             ref var transformPositionComponent = ref world.GetOrAddComponent<TransformPositionComponent>(entity);
             ref var directionComponent = ref world.GetOrAddComponent<TransformDirectionComponent>(entity);
-            
-            transformComponent.Value = target.transform;
+            ref var scaleComponent = ref world.GetOrAddComponent<TransformScaleComponent>(entity);
+            ref var rotationComponent = ref world.GetOrAddComponent<TransformRotationComponent>(entity);
+
+            var transform = target.transform;
+            transformComponent.Value = transform;
             gameObjectComponent.Value = target;
             objectComponent.Value = target;
-            transformPositionComponent.Position = target.transform.position;
-            directionComponent.Forward = target.transform.forward;
-            directionComponent.Up = target.transform.up;
-            directionComponent.Right = target.transform.right;
+            transformPositionComponent.Position = transform.position;
+            directionComponent.Forward = transform.forward;
+            directionComponent.Up = transform.up;
+            directionComponent.Right = transform.right;
+            scaleComponent.Scale = transform.lossyScale;
+            scaleComponent.LocalScale = transform.localScale;
+
+            rotationComponent.Quaternion = transform.rotation;
+            rotationComponent.LocalRotation = transform.localRotation;
+            rotationComponent.Euler = transform.eulerAngles;
         }
     }
 }

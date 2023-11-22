@@ -40,6 +40,8 @@
             {
                 _unityAspect.Position.GetOrAddComponent(entity);
                 _unityAspect.Direction.GetOrAddComponent(entity);
+                _unityAspect.Scale.GetOrAddComponent(entity);
+                _unityAspect.Rotation.GetOrAddComponent(entity);
             }
         }
     }

@@ -12,8 +12,7 @@
         public override UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)
         {
             ecsSystems.Add(new AddTransformComponentsSystem());
-            ecsSystems.Add(new UpdateTransformPositionSystem());
-            ecsSystems.Add(new UpdateTransformDirectionSystem());
+            ecsSystems.Add(new UpdateTransformDataSystem());
             
             return UniTask.CompletedTask;
         }

@@ -2,15 +2,14 @@
 {
     using System;
     using Unity.Mathematics;
-    using UnityEngine.Serialization;
 
     /// <summary>
     /// Component with single transform data 
     /// </summary>
     [Serializable]
-    public struct TransformPositionComponent
+    public struct TransformScaleComponent
     {
-        public float3 Position;
-        public float3 LocalPosition;
+        public float3 Scale;
+        public float3 LocalScale;
     }
 }

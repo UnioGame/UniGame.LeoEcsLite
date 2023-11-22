@@ -11,5 +11,7 @@
         public EcsPool<TransformComponent> Transform;
         public EcsPool<TransformPositionComponent> Position;
         public EcsPool<TransformDirectionComponent> Direction;
+        public EcsPool<TransformScaleComponent> Scale;
+        public EcsPool<TransformRotationComponent> Rotation;
     }
 }
