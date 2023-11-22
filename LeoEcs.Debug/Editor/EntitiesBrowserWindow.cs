@@ -2,18 +2,12 @@ using UnityEditor;
 
 namespace UniGame.LeoEcs.Debug.Editor
 {
-    using System;
-    using System.Collections.Generic;
     using Converter.Runtime;
     using Leopotam.EcsLite;
     using Runtime.ObjectPool;
-    using Runtime.ObjectPool.Extensions;
-    using Shared.Components;
     using Sirenix.OdinInspector;
     using Sirenix.OdinInspector.Editor;
     using UnityEngine;
-    using UnityEngine.UIElements;
-    using Object = UnityEngine.Object;
     using Random = UnityEngine.Random;
 
     public class EntitiesBrowserWindow : OdinEditorWindow
