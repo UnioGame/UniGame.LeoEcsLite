@@ -16,8 +16,8 @@
     {
         #region inspector
         
-        [HideLabel]
         [InlineProperty]
+        [HideLabel]
         public LeoEcsSystemsGroupConfiguration groupConfiguration = new LeoEcsSystemsGroupConfiguration();
 
         #endregion

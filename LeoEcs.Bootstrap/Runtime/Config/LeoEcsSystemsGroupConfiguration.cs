@@ -34,15 +34,12 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         /// <summary>
         /// ecs group systems
         /// </summary>
-#if ODIN_INSPECTOR
-        [InlineProperty]
-#endif
         [SerializeReference]
         [Searchable]
         private List<IEcsSystem> _systems = new();
         
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
-        [InlineEditor()]
+        [ListDrawerSettings(ListElementLabelName = "@FeatureName")]
         public List<BaseLeoEcsFeature> nestedFeatures = new();
 
         [Searchable]

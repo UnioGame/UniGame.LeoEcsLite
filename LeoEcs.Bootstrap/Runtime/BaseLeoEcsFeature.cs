@@ -12,7 +12,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
     using UniModules.Editor;
 #endif
     
-    public abstract class BaseLeoEcsFeature : ScriptableObject,ILeoEcsFeature
+    public class BaseLeoEcsFeature : ScriptableObject, ILeoEcsFeature
     {
         [ShowIf(nameof(ShowFeatureInfo))]
         [SerializeField]
@@ -23,8 +23,11 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
         public virtual string FeatureName => name;
 
         public virtual bool ShowFeatureInfo => true;
-        
-        public abstract UniTask InitializeFeatureAsync(IEcsSystems ecsSystems);
+
+        public virtual UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)
+        {
+            return UniTask.CompletedTask;
+        }
 
         public virtual bool IsMatch(string searchString)
         {
@@ -43,11 +46,12 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
             return !string.IsNullOrEmpty(source) && 
                    source.Contains(filter, StringComparison.OrdinalIgnoreCase);
         }
-
+    
         [Button]
         private void Save()
         {
 #if UNITY_EDITOR
+            this.MarkDirty();
             this.SaveAsset();
 #endif
         }
