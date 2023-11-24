@@ -4,6 +4,7 @@
     using Components;
     using Converter.Runtime.Components;
     using Bootstrap.Runtime.Abstract;
+    using Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.ViewSystem.Components.Events;
     using Leopotam.EcsLite;
     using Shared.Components;
     using UnityEngine;
@@ -18,5 +19,8 @@
         public EcsPool<ViewOrderComponent> Order;
         
         public EcsPool<TransformComponent> Transform;
+        
+        //events
+        public EcsPool<ViewStatusSelfEvent> StatusChanged;
     }
 }

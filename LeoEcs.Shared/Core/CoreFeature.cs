@@ -7,6 +7,7 @@
     using Death.Systems;
     using Leopotam.EcsLite;
     using Leopotam.EcsLite.ExtendedSystems;
+    using Timer;
     using UniGame.LeoEcs.Bootstrap.Runtime;
     using UniGame.LeoEcs.Shared.Components;
     using UnityEngine;
@@ -14,7 +15,9 @@
     [CreateAssetMenu(menuName = "Game/Feature/Core/Core Feature", fileName = "Core Feature")]
     public class CoreFeature : BaseLeoEcsFeature
     {
-        public override UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)
+        public TimerFeature timerFeature = new TimerFeature();
+        
+        public override async UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)
         {
             ecsSystems.Add(new ProcessDestroySilentSystem());
             
@@ -43,8 +46,8 @@
             ecsSystems.DelHere<ValidateDeadChildEntitiesRequest>();
             
             ecsSystems.Add(new ProcessDestroySilentSystem());
-            
-            return UniTask.CompletedTask;
+
+            await timerFeature.InitializeFeatureAsync(ecsSystems);
         }
     }
 }

@@ -38,8 +38,12 @@ namespace UniGame.LeoEcs.ViewSystem.Systems
                 ref var viewComponent = ref _viewAspect.View.Get(entity);
                 ref var viewStatusComponent = ref _viewAspect.Status.Get(entity);
 
+                var activeStatus = viewStatusComponent.Status;
                 var view = viewComponent.View;
                 viewStatusComponent.Status = view.Status.Value;
+
+                if (activeStatus != viewStatusComponent.Status)
+                    _viewAspect.StatusChanged.Add(entity);
             }
         }
     }

@@ -7,6 +7,7 @@ namespace UniGame.LeoEcs.ViewSystem
     using UniGame.Context.Runtime.Extension;
     using UniGame.Core.Runtime;
     using Components;
+    using Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.ViewSystem.Components.Events;
     using Layouts.Components;
     using Layouts.Systems;
     using LeoEcsLite.LeoEcs.ViewSystem.Systems;
@@ -27,6 +28,8 @@ namespace UniGame.LeoEcs.ViewSystem
             
             _ecsViewTools = new EcsViewTools(context, viewSystem);
 
+            ecsSystems.DelHere<ViewStatusSelfEvent>();
+            
             //layouts
             ecsSystems.Add(new RegisterNewViewLayoutSystem(viewSystem));
             ecsSystems.DelHere<RegisterViewLayoutSelfRequest>();
