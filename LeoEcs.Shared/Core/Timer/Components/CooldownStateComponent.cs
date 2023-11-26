@@ -1,4 +1,4 @@
-﻿namespace Game.Ecs.Characteristics.Cooldown.Components
+﻿namespace UniGame.LeoEcs.Timer.Components
 {
     using Leopotam.EcsLite;
 

@@ -1,4 +1,4 @@
-﻿namespace Game.Ecs.Characteristics.Cooldown.Components.Events
+﻿namespace UniGame.LeoEcs.Timer.Components.Events
 {
     using System;
 

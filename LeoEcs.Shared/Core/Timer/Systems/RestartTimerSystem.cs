@@ -1,9 +1,9 @@
 ﻿namespace Game.Ecs.Core.Timer.Systems
 {
     using System;
-    using Characteristics.Cooldown.Components;
-    using Characteristics.Cooldown.Components.Requests;
     using Leopotam.EcsLite;
+    using UniGame.LeoEcs.Timer.Components;
+    using UniGame.LeoEcs.Timer.Components.Requests;
     using Time.Service;
     using UniGame.LeoEcs.Bootstrap.Runtime.Abstract;
     using UniGame.LeoEcs.Bootstrap.Runtime.Attributes;

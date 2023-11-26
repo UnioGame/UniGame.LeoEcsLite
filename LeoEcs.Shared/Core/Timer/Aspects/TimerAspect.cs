@@ -1,9 +1,9 @@
 ﻿namespace UniGame.LeoEcs.Bootstrap.Runtime.Abstract
 {
     using System;
-    using Game.Ecs.Characteristics.Cooldown.Components;
-    using Game.Ecs.Characteristics.Cooldown.Components.Events;
-    using Game.Ecs.Characteristics.Cooldown.Components.Requests;
+    using Timer.Components;
+    using Timer.Components.Events;
+    using Timer.Components.Requests;
     using Leopotam.EcsLite;
 
     [Serializable]
@@ -13,6 +13,7 @@
         public EcsPool<CooldownStateComponent> State;
         public EcsPool<CooldownActiveComponent> Active;
         public EcsPool<CooldownCompleteComponent> Completed;
+        public EcsPool<CooldownAutoRestartComponent> AutoRestart;
         
         //requests
         public EcsPool<RestartCooldownSelfRequest> Restart;

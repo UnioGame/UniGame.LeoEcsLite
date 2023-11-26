@@ -1,12 +1,12 @@
 ﻿namespace Game.Ecs.Core.Timer
 {
     using System;
-    using Characteristics.Cooldown.Components;
-    using Characteristics.Cooldown.Components.Events;
-    using Characteristics.Cooldown.Components.Requests;
     using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
     using Leopotam.EcsLite.ExtendedSystems;
+    using UniGame.LeoEcs.Timer.Components;
+    using UniGame.LeoEcs.Timer.Components.Events;
+    using UniGame.LeoEcs.Timer.Components.Requests;
     using Systems;
     using UniGame.LeoEcs.Bootstrap.Runtime.Abstract;
 

@@ -18,7 +18,8 @@
         
         public void ApplyInjection(
             IEcsSystems ecsSystems, 
-            FieldInfo field, object target, 
+            FieldInfo field, 
+            object target, 
             IReadOnlyList<IEcsDiInjection> injections)
         {
             var fieldType = field.FieldType;

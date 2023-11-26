@@ -1,8 +1,8 @@
 ﻿namespace Game.Ecs.Core.Timer.Systems
 {
     using System;
-    using Characteristics.Cooldown.Components;
     using Leopotam.EcsLite;
+    using UniGame.LeoEcs.Timer.Components;
     using UniGame.LeoEcs.Bootstrap.Runtime.Abstract;
     using UniGame.LeoEcs.Bootstrap.Runtime.Attributes;
     using UnityEngine;

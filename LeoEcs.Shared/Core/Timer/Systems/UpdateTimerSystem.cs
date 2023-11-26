@@ -2,9 +2,9 @@
 {
     using System;
     using System.Linq;
-    using Characteristics.Cooldown.Components;
-    using Characteristics.Cooldown.Components.Events;
     using Leopotam.EcsLite;
+    using UniGame.LeoEcs.Timer.Components;
+    using UniGame.LeoEcs.Timer.Components.Events;
     using Time.Service;
     using UniGame.Core.Runtime.Extension;
     using UniGame.LeoEcs.Bootstrap.Runtime.Abstract;
@@ -58,6 +58,9 @@
                 _timerAspect.Active.Del(entity);
                 _timerAspect.Completed.Add(entity);
                 _timerAspect.Finished.Add(entity);
+                
+                if(_timerAspect.AutoRestart.Has(entity))
+                    _timerAspect.Restart.GetOrAddComponent(entity);
             }
         }
     }
