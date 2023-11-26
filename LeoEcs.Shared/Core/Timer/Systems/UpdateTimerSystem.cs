@@ -1,18 +1,13 @@
 ﻿namespace Game.Ecs.Core.Timer.Systems
 {
     using System;
-    using System.Linq;
     using Leopotam.EcsLite;
     using UniGame.LeoEcs.Timer.Components;
     using UniGame.LeoEcs.Timer.Components.Events;
     using Time.Service;
-    using UniGame.Core.Runtime.Extension;
     using UniGame.LeoEcs.Bootstrap.Runtime.Abstract;
     using UniGame.LeoEcs.Shared.Extensions;
-    using UniGame.Runtime.ObjectPool.Extensions;
-    using UnityEngine.Pool;
     using UniGame.LeoEcs.Bootstrap.Runtime.Attributes;
-    using UnityEngine.UI;
 
     /// <summary>
     /// update active timer
@@ -58,9 +53,6 @@
                 _timerAspect.Active.Del(entity);
                 _timerAspect.Completed.Add(entity);
                 _timerAspect.Finished.Add(entity);
-                
-                if(_timerAspect.AutoRestart.Has(entity))
-                    _timerAspect.Restart.GetOrAddComponent(entity);
             }
         }
     }

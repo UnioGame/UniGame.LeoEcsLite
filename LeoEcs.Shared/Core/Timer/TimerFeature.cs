@@ -31,6 +31,8 @@
         
         public UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)
         {
+            ecsSystems.Add(new AutoRestartTimerSystem());
+            
             ecsSystems.DelHere<CooldownFinishedSelfEvent>();
             
             ecsSystems.Add(new RestartTimerSystem());
