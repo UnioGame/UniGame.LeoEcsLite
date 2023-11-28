@@ -61,7 +61,7 @@
             
             _view = GetComponent<IView>();
             
-            if (!isActiveAndEnabled && _view == null) return;
+            if (!isActiveAndEnabled || _view == null) return;
 
             _ecsWorld = world;
             _viewPackedEntity = world.PackEntity(entity);
