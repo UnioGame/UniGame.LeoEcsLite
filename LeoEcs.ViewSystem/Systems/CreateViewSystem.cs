@@ -92,11 +92,11 @@
                     .OpenView(model,request.ViewId,requestLayout,request.Tag,request.ViewName),
             };
 
-            var entity = await UpdateViewEntity(view,request);
-
-            var packedEntity = _world.PackEntity(entity);
+            var entity = await UpdateViewEntity(view,request);  
+            if(entity<0) return;
             
-            if(entity<0 || !packedEntity.Unpack(_world,out var viewEntity)) return;
+            var packedEntity = _world.PackEntity(entity);
+            if(!packedEntity.Unpack(_world,out var viewEntity)) return;
             
             UpdateViewEntityComponent(entity, model, request);
         }
