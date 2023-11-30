@@ -22,6 +22,9 @@
         private EcsWorld _world;
 
         private UnityAspect _unityAspect;
+        private EcsFilter _scaleFilter;
+        private EcsFilter _rotationFilter;
+        private EcsFilter _directionFilter;
 
         public void Init(IEcsSystems systems)
         {
@@ -32,6 +35,24 @@
                 .Inc<TransformPositionComponent>()
                 .Exc<PrepareToDeathComponent>()
                 .End();
+            
+            _scaleFilter = _world
+                .Filter<TransformComponent>()
+                .Inc<TransformScaleComponent>()
+                .Exc<PrepareToDeathComponent>()
+                .End();
+            
+            _rotationFilter = _world
+                .Filter<TransformComponent>()
+                .Inc<TransformRotationComponent>()
+                .Exc<PrepareToDeathComponent>()
+                .End();
+            
+            _directionFilter = _world
+                .Filter<TransformComponent>()
+                .Inc<TransformDirectionComponent>()
+                .Exc<PrepareToDeathComponent>()
+                .End();
         }
         
         public void Run(IEcsSystems systems)
@@ -39,36 +60,53 @@
             foreach (var entity in _filter)
             {
                 ref var transformComponent = ref _unityAspect.Transform.Get(entity);
+                ref var positionComponent = ref _unityAspect.Position.Get(entity);
                 
                 if (transformComponent.Value == null) continue;
                 
                 //==position
-                
-                ref var positionComponent = ref _unityAspect.Position.Get(entity);
-                
                 var transform = transformComponent.Value;
                 positionComponent.Position = transform.position;
                 positionComponent.LocalPosition = transform.localPosition;
-                
+            }
+            
+            foreach (var entity in _scaleFilter)
+            {
+                ref var transformComponent = ref _unityAspect.Transform.Get(entity);
+                if (transformComponent.Value == null) continue;
+                var transform = transformComponent.Value;
+  
                 //==scale
-                
                 ref var scaleComponent = ref _unityAspect.Scale.Get(entity);
-                
                 scaleComponent.Scale = transform.lossyScale;
                 scaleComponent.LocalScale = transform.localScale;
-                
+            }
+
+            foreach (var entity in _rotationFilter)
+            {
+                ref var transformComponent = ref _unityAspect.Transform.Get(entity);
+                if (transformComponent.Value == null) continue;
+                var transform = transformComponent.Value;
+
                 //==rotation
-                
+
                 ref var rotationComponent = ref _unityAspect.Rotation.Get(entity);
-                
+
                 rotationComponent.Euler = transform.eulerAngles;
                 rotationComponent.Quaternion = transform.rotation;
                 rotationComponent.LocalRotation = transform.localRotation;
-                
+            }
+            
+            foreach (var entity in _directionFilter)
+            {
+                ref var transformComponent = ref _unityAspect.Transform.Get(entity);
+                if (transformComponent.Value == null) continue;
+                var transform = transformComponent.Value;
+
                 //==direction
-                
+
                 ref var directionComponent = ref _unityAspect.Direction.Get(entity);
-                
+
                 directionComponent.Forward = transform.forward;
                 directionComponent.Right = transform.right;
                 directionComponent.Up = transform.up;
