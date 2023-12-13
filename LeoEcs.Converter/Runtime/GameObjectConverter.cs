@@ -47,8 +47,7 @@
             OnApply(target, world, entity, cancellationToken);
         }
 
-        protected virtual void OnApply(GameObject target, EcsWorld world, int entity,
-            CancellationToken cancellationToken = default)
+        protected virtual void OnApply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
         {
             
         }

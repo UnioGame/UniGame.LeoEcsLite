@@ -17,7 +17,7 @@
         where TViewModel : class, IViewModel
     {
         [PropertySpace(8)]
-        [FoldoutGroup("ecs settings")]
+        [FoldoutGroup("settings")]
         [InlineProperty]
         [HideLabel]
         public EcsViewSettings settings = new();
