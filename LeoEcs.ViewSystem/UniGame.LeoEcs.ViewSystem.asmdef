@@ -32,7 +32,9 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "LEO_ECS_ENABLE"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }
