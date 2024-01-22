@@ -290,9 +290,9 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         public static async UniTask<EcsWorld> WaitWorldReady(CancellationToken cancellationToken = default)
         {
-            await UniTask.WaitUntil(() => LeoEcsConvertersData.World != null && 
-                                          LeoEcsConvertersData.World.IsAlive(), cancellationToken: cancellationToken);
-            return LeoEcsConvertersData.World;
+            await UniTask.WaitUntil(() => LeoEcsGlobalData.World != null && 
+                                          LeoEcsGlobalData.World.IsAlive(), cancellationToken: cancellationToken);
+            return LeoEcsGlobalData.World;
         }
     }
 }

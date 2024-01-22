@@ -51,7 +51,7 @@
         [InlineProperty]
         public List<ComponentEditorView> components = new List<ComponentEditorView>();
 
-        public EcsWorld World => LeoEcsConvertersData.World;
+        public EcsWorld World => LeoEcsGlobalData.World;
 
         public bool IsAlive => World != null && World.IsAlive();
         

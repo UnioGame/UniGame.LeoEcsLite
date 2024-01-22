@@ -8,7 +8,7 @@
                 
         public static ILifeTime DestroyEntityWith(this ILifeTime lifeTime, int entity)
         {
-            var world = LeoEcsConvertersData.World;
+            var world = LeoEcsGlobalData.World;
             return lifeTime.DestroyEntityWith(entity, world);
         }
     }

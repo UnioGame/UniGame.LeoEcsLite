@@ -105,7 +105,7 @@
             
             if(_state != EntityState.Creating) return;
 
-            var world = LeoEcsConvertersData.World ?? 
+            var world = LeoEcsGlobalData.World ?? 
                         await gameObject.WaitWorldReady(_entityLifeTime.Token);
 
             if (world.IsAlive() == false)   

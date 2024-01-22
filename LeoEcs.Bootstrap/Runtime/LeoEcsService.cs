@@ -71,7 +71,7 @@
         
         public void SetDefaultWorld(EcsWorld world)
         {
-            LeoEcsConvertersData.World = world;
+            LeoEcsGlobalData.World = world;
         }
         
         public override async UniTask InitializeAsync()

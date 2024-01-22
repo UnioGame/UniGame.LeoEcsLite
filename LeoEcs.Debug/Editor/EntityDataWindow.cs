@@ -65,7 +65,7 @@
         public void UpdateView()
         {
             if (entityId < 0) return;
-            var world = LeoEcsConvertersData.World;
+            var world = LeoEcsGlobalData.World;
             if (world == null || world.IsAlive() == false) return;
             
             _viewBuilder.Initialize(world);

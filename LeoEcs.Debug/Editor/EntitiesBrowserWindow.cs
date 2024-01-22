@@ -75,7 +75,7 @@ namespace UniGame.LeoEcs.Debug.Editor
 
         public bool HasEcsWorld => World != null;
 
-        public EcsWorld World => LeoEcsConvertersData.World;
+        public EcsWorld World => LeoEcsGlobalData.World;
         
         [PropertyOrder(-1)]
         [ResponsiveButtonGroup()]
@@ -84,7 +84,7 @@ namespace UniGame.LeoEcs.Debug.Editor
         public void Refresh()
         {
             view = new EntitiesEditorView();
-            view.Initialize(LeoEcsConvertersData.World);
+            view.Initialize(LeoEcsGlobalData.World);
             
             Clear();
             
