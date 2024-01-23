@@ -29,7 +29,7 @@
             return World;
         }
         
-        public static async UniTask<T> GetValue<T>()
+        public static async UniTask<T> GetValueAsync<T>()
         {
             await WaitAliveWorld()
                 .AttachExternalCancellation(LifeTime.Token);
