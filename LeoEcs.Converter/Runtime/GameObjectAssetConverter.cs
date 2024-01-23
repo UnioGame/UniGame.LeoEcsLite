@@ -1,14 +1,14 @@
-﻿using System;
-using System.Threading;
-using Leopotam.EcsLite;
-using Sirenix.OdinInspector;
-using UniGame.LeoEcs.Converter.Runtime.Abstract;
-using UnityEngine;
-
-namespace UniGame.LeoEcs.Converter.Runtime
+﻿namespace UniGame.LeoEcsLite.LeoEcs.Converter.Runtime
 {
+    using System;
+    using Leopotam.EcsLite;
+    using Sirenix.OdinInspector;
+    using UniGame.LeoEcs.Converter.Runtime;
+    using UniGame.LeoEcs.Converter.Runtime.Abstract;
+    using UnityEngine;
+
     [CreateAssetMenu(menuName = "UniGame/LeoEcs/Converter/GameObject Converter",fileName = "GameObject Converter")]
-    public class GameObjectAssetConverter : ScriptableObject,IComponentConverter,ILeoEcsMonoComponentConverter
+    public class GameObjectAssetConverter : ScriptableObject,IEcsComponentConverter
     {
         [HideLabel]
         [InlineProperty]
@@ -18,14 +18,14 @@ namespace UniGame.LeoEcs.Converter.Runtime
         
         public bool IsEnabled => converter.IsEnabled;
         
-        public void Apply(EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public void Apply(EcsWorld world, int entity)
         {
-            converter.Apply(world,entity,cancellationToken);
+            converter.Apply(world,entity);
         }
 
-        public void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public void Apply(GameObject target, EcsWorld world, int entity)
         {
-            converter.Apply(target,world,entity,cancellationToken);
+            converter.Apply(target,world,entity);
         }
 
         public bool IsMatch(string searchString)

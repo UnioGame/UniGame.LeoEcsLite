@@ -14,7 +14,7 @@
         [SerializeField]
         public Animator animator;
         
-        public override void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public override void Apply(GameObject target, EcsWorld world, int entity)
         {
             var animatorPool = world.GetPool<AnimatorComponent>();
             ref var animatorComponent = ref animatorPool.GetOrAddComponent(entity);

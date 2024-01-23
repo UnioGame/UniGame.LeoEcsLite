@@ -11,10 +11,11 @@
     [Serializable]
     public class ParentEntityComponentConverter : LeoEcsConverter
     {
-        public sealed override void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public sealed override void Apply(GameObject target, EcsWorld world, int entity)
         {
             var parentEntity = target.GetParentEntity();
             if(parentEntity<0) return;
+            
             ref var parentEntityComponent = ref world.GetOrAddComponent<ParentEntityComponent>(entity);
             parentEntityComponent.Value = world.PackEntity(parentEntity);
         }

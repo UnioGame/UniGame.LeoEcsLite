@@ -4,7 +4,7 @@
     using Abstract;
     using Leopotam.EcsLite;
 
-    public interface ILeoEcsMonoConverter : IMonoConverterProvider,
+    public interface ILeoEcsMonoConverter : 
         IComponentConverterProvider,
         IEcsEntity,
         IConnectableToEntity
@@ -19,11 +19,6 @@
     public interface IConnectableToEntity
     {
         void ConnectEntity(EcsWorld world, int ecsEntity);
-    }
-    
-    public interface IMonoConverterProvider
-    {
-        IReadOnlyList<ILeoEcsComponentConverter> MonoConverters { get; }
     }
 
     public interface IComponentConverterProvider

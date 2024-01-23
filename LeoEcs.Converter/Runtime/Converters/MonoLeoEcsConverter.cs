@@ -1,17 +1,19 @@
 ﻿namespace UniGame.LeoEcs.Converter.Runtime.Converters
 {
-    using System.Threading;
     using Abstract;
     using Leopotam.EcsLite;
+    using Shared.Components;
+    using Shared.Extensions;
     using Sirenix.OdinInspector;
     using UnityEngine;
     using UnityEngine.Serialization;
 
     [RequireComponent(typeof(LeoEcsMonoConverter))]
-    public class MonoLeoEcsConverter<TConverter> : MonoBehaviour,
-        ILeoEcsMonoComponentConverter,
+    public class MonoLeoEcsConverter<TConverter> : 
+        MonoBehaviour,
+        IEcsComponentConverter,
         IConverterEntityDestroyHandler
-        where TConverter : ILeoEcsMonoComponentConverter
+        where TConverter : IEcsComponentConverter
     {
         #region inspector
         
@@ -28,20 +30,27 @@
         public bool IsRuntime => Application.isPlaying;
         
         public string Name => converter == null ? "EMPTY" : converter.Name;
-        
+        public void Apply(EcsWorld world, int entity)
+        {
+            throw new System.NotImplementedException();
+        }
+
         #endregion
 
         public EcsPackedEntity Entity{get; private set;}
         protected EcsWorld World{get; private set;}
         
-        public void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public void Apply(GameObject target, EcsWorld world, int entity)
         {
-            if (converter == null) 
-                return;
+            if (converter == null) return;
             
-            converter.Apply(target, world, entity, cancellationToken);
+            ref var gameObjectComponent = ref world
+                .GetOrAddComponent<GameObjectComponent>(entity);
+            gameObjectComponent.Value = target;
+            
+            converter.Apply(world, entity);
 
-            OnApply(gameObject, world, entity, cancellationToken);
+            OnApply(gameObject, world, entity);
 
             Entity = world.PackEntity(entity);
             World = world;
@@ -53,7 +62,7 @@
                 destroyHandler.OnEntityDestroy(world, entity);
         }
 
-        protected virtual void OnApply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        protected virtual void OnApply(GameObject target, EcsWorld world, int entity)
         {
             
         }
@@ -63,6 +72,14 @@
             if (converter is ILeoEcsGizmosDrawer gizmosDrawer)
                 gizmosDrawer.DrawGizmos(gameObject);
         }
-        
+
+        public bool IsMatch(string searchString)
+        {
+            if (string.IsNullOrEmpty(searchString)) return true;
+            if (searchString.Contains(name)) return true;
+            if (converter.IsMatch(searchString)) return true;
+            
+            return false;
+        }
     }
 }

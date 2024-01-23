@@ -27,9 +27,7 @@ namespace UniGame.LeoEcs.ViewSystem.Converters
 
         public SkinId skinTag;
         
-        public override void Apply(GameObject target, 
-            EcsWorld world, int entity, 
-            CancellationToken cancellationToken = default)
+        public override void Apply(GameObject target, EcsWorld world, int entity)
         {
             world.MakeViewRequest(viewType, layoutType,null,skinTag);
         }

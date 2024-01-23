@@ -50,12 +50,12 @@
             await UniTask.WhenAll(converters.Select(x => Convert(entity, world, x)));
         }
 
-        private UniTask Convert(int entity, EcsWorld world, IComponentConverter converter)
+        private UniTask Convert(int entity, EcsWorld world, IEcsComponentConverter converter)
         {
             if (!converter.IsEnabled)
                 return UniTask.CompletedTask;
             
-            converter.Apply(world,entity,LifeTime.Token);
+            converter.Apply(world,entity);
             
             return UniTask.CompletedTask;
         }

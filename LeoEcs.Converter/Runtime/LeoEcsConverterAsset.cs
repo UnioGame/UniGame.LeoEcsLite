@@ -17,7 +17,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
     
     [CreateAssetMenu(menuName = "UniGame/LeoEcs/Converter/Ecs Converter",fileName = "Ecs Converter Asset")]
     public class LeoEcsConverterAsset : ScriptableObject,
-        IComponentConverter,
+        IEcsComponentConverter,
         ILeoEcsGizmosDrawer, 
         IEcsConverterProvider,
         IConverterEntityDestroyHandler
@@ -38,11 +38,11 @@ namespace UniGame.LeoEcs.Converter.Runtime
 
         public IEnumerable<IEcsComponentConverter> Converters => converters;
         
-        public void Apply(EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public void Apply(EcsWorld world, int entity)
         {
             if (IsEnabled == false) return;
             
-            OnApply(world,entity,cancellationToken);
+            OnApply(world,entity);
 
             if (!useConverters) return;
             
@@ -50,15 +50,15 @@ namespace UniGame.LeoEcs.Converter.Runtime
                 .Where(x => IsEnabled)
                 .Select(x => x.Value);
             
-            world.ApplyEcsComponents(entity,converters,cancellationToken);
+            world.ApplyEcsComponents(entity,converters);
         }
 
-        public IComponentConverter GetOrAddConverter(Type converterType)
+        public IEcsComponentConverter GetOrAddConverter(Type converterType)
         {
             var converter = GetConverter(converterType);
             if (converter != null) return converter;
             
-            converter = converterType.CreateWithDefaultConstructor() as IComponentConverter;
+            converter = converterType.CreateWithDefaultConstructor() as IEcsComponentConverter;
             var converterValue = new ComponentConverterValue();
             converterValue.converter = converter;
             converters.Add(converterValue);
@@ -74,7 +74,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
             }
         }
         
-        public bool AddConverter(IComponentConverter converter, bool replace = false)
+        public bool AddConverter(IEcsComponentConverter converter, bool replace = false)
         {
             var sourceConverter = GetConverter(converter.GetType());
             if (sourceConverter != null && replace == false) return false;
@@ -88,7 +88,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
             return true;
         }
         
-        public T GetOrAddConverter<T>() where T : class, IComponentConverter,new()
+        public T GetOrAddConverter<T>() where T : class, IEcsComponentConverter,new()
         {
             var converter = GetConverter<T>();
             if (converter != null) return converter;
@@ -99,7 +99,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
             return converter;
         }
         
-        public void RemoveConverter<T>() where T : IComponentConverter
+        public void RemoveConverter<T>() where T : IEcsComponentConverter
         {
             converters.RemoveAll(x => x.Value is T);
             
@@ -111,9 +111,9 @@ namespace UniGame.LeoEcs.Converter.Runtime
             }
         }
         
-        public IComponentConverter GetConverter(Type target)
+        public IEcsComponentConverter GetConverter(Type target)
         {
-            var result = default(IComponentConverter);
+            var result = default(IEcsComponentConverter);
             foreach (var converter in converters)
             {
                 var converterValue = converter.Value;

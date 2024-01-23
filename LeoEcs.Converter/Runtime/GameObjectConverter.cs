@@ -15,8 +15,7 @@
 #endif
     
     [Serializable]
-    public class GameObjectConverter 
-        : IComponentConverter, ILeoEcsMonoComponentConverter
+    public class GameObjectConverter : IEcsComponentConverter
     {
         [InlineButton(nameof(OpenScript),SdfIconType.Folder2Open)]
         [GUIColor("GetButtonColor")]
@@ -26,7 +25,7 @@
         
         public bool IsEnabled => enabled;
         
-        public void Apply(EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public void Apply(EcsWorld world, int entity)
         {
             var haveComponent = world.HasComponent<GameObjectComponent>(entity);
             if (!haveComponent)
@@ -39,15 +38,19 @@
             
             ref var gameObjectComponent = ref world.GetComponent<GameObjectComponent>(entity);
 
-            Apply(gameObjectComponent.Value, world, entity, cancellationToken);
+            Apply(gameObjectComponent.Value, world, entity);
         }
 
-        public void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public void Apply(GameObject target, EcsWorld world, int entity)
         {
-            OnApply(target, world, entity, cancellationToken);
+            ref var gameObjectComponent = ref world
+                .GetOrAddComponent<GameObjectComponent>(entity);
+            gameObjectComponent.Value = target;
+            
+            OnApply(target, world, entity);
         }
 
-        protected virtual void OnApply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        protected virtual void OnApply(GameObject target, EcsWorld world, int entity)
         {
             
         }

@@ -6,6 +6,7 @@
     using Abstract;
     using LeoEcsLite.LeoEcs.Shared.Components;
     using Leopotam.EcsLite;
+    using Shared.Components;
     using Shared.Extensions;
     using Sirenix.OdinInspector;
     using UniCore.Runtime.ProfilerTools;
@@ -30,14 +31,14 @@
         [Space(8)]
         [SerializeReference]
         [ListDrawerSettings(ListElementLabelName = "@Name",DefaultExpandedState = false)]
-        public List<ILeoEcsMonoComponentConverter> converters = new List<ILeoEcsMonoComponentConverter>();
+        public List<IEcsComponentConverter> converters = new List<IEcsComponentConverter>();
 
         private int _parentEntity = -1;
         
-        public override void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public override void Apply(GameObject target, EcsWorld world, int entity)
         {
             if (!world.HasComponent<ParentEntityComponent>(entity)) return;
-            var parentComponent = world.GetComponent<ParentEntityComponent>(entity);
+            var parentComponent = world.GetOrAddComponent<ParentEntityComponent>(entity);
 
             if (!parentComponent.Value.Unpack(world, out var parentEntity))
             {
@@ -47,13 +48,17 @@
                 return;
             }
 
+            ref var gameObjectComponent = ref world
+                .GetOrAddComponent<GameObjectComponent>(entity);
+            gameObjectComponent.Value = target;
+            
             _parentEntity = parentEntity;
             
             foreach (var converter in converters)
-                converter.Apply(target,world, _parentEntity, cancellationToken);
+                converter.Apply(world, _parentEntity);
 
             foreach (var converter in configurations)
-                converter.Apply(world, _parentEntity, cancellationToken);
+                converter.Apply(world, _parentEntity);
         }
 
         public void OnEntityDestroy(EcsWorld world, int entity)

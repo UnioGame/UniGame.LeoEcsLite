@@ -14,7 +14,7 @@
         [SerializeField] 
         public bool addDisabledOnAwake = true;
         
-        public override void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public override void Apply(GameObject target, EcsWorld world, int entity)
         {
             world.AddComponent<CanDisableComponent>(entity);
 

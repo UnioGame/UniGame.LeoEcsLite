@@ -11,14 +11,14 @@
 
     [Serializable]
     [InlineProperty]
-    public class ComponentConverterValue : IComponentConverter
+    public class ComponentConverterValue : IEcsComponentConverter
     {
         [SerializeReference]
         [InlineProperty]
         [ShowIf(nameof(IsSerializableConverter))]
         [HideLabel]
         [FoldoutGroup("$GroupTitle",false)]
-        public IComponentConverter converter;
+        public IEcsComponentConverter converter;
         
         [InlineEditor()] 
         [FoldoutGroup("$GroupTitle",false)]
@@ -46,9 +46,9 @@
 
         public string Name => Value?.GetType().Name;
         
-        public IComponentConverter Value => GetValue();
+        public IEcsComponentConverter Value => GetValue();
 
-        public IComponentConverter GetValue()
+        public IEcsComponentConverter GetValue()
         {
             if (converter != null) return converter;
             if (convertersAsset != null) return convertersAsset;
@@ -68,10 +68,10 @@
         
         public bool IsEnabled => Value?.IsEnabled ?? false;
         
-        public void Apply(EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public void Apply(EcsWorld world, int entity)
         {
             if(Value.IsEnabled == false) return;
-            Value.Apply(world,entity,cancellationToken);
+            Value.Apply(world,entity);
         }
 
         public bool IsMatch(string searchString)

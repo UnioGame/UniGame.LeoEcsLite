@@ -14,7 +14,7 @@
 #endif
     
     [Serializable]
-    public abstract class LeoEcsConverter : ILeoEcsMonoComponentConverter,IComponentConverter
+    public abstract class LeoEcsConverter : IEcsComponentConverter
     {
         [SerializeField]
         [InlineButton(nameof(OpenScript),SdfIconType.Folder2Open)]
@@ -27,9 +27,9 @@
 
         public bool IsRuntime => Application.isPlaying;
         
-        public abstract void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default);
+        public abstract void Apply(GameObject target, EcsWorld world, int entity);
         
-        public void Apply(EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public void Apply(EcsWorld world, int entity)
         {
             if (!world.HasComponent<GameObjectComponent>(entity)) return;
 
@@ -37,14 +37,14 @@
 
             if (gameObjectComponent.Value == null) return;
             
-            Apply(gameObjectComponent.Value,world,entity,cancellationToken);
+            Apply(gameObjectComponent.Value,world,entity);
         }
         
         public virtual bool IsMatch(string searchString)
         {
             if (string.IsNullOrEmpty(searchString)) return true;
 
-            if (this.GetType().Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            if (GetType().Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
 
             return false;
@@ -53,7 +53,7 @@
         public void OpenScript()
         {
 #if UNITY_EDITOR
-            this.GetType().OpenScript();
+            GetType().OpenScript();
 #endif
         }
         

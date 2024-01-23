@@ -1,6 +1,5 @@
 namespace UniGame.LeoEcs.ViewSystem.Behavriour
 {
-    using System.Threading;
     using Converter.Runtime;
     using Converter.Runtime.Abstract;
     using Core.Runtime;
@@ -15,10 +14,12 @@ namespace UniGame.LeoEcs.ViewSystem.Behavriour
     using UnityEngine.UI;
 
     [RequireComponent(typeof(LeoEcsMonoConverter))]
-    public class OpenViewButton : MonoBehaviour, ILeoEcsComponentConverter, ILifeTimeContext
+    public class OpenViewButton : MonoBehaviour, IEcsComponentConverter, ILifeTimeContext
     {
         #region inspector
 
+        public bool isEnabled = true;
+        
         public Button trigger;
         
         /// <summary>
@@ -37,8 +38,11 @@ namespace UniGame.LeoEcs.ViewSystem.Behavriour
 
         public ILifeTime LifeTime => _lifeTime;
 
-        public void Apply(GameObject target, EcsWorld world, 
-            int entity, CancellationToken cancellationToken = default)
+        public bool IsEnabled => isEnabled;
+
+        public string Name => GetType().Name;
+
+        public void Apply(EcsWorld world, int entity)
         {
             _lifeTime = this.GetAssetLifeTime();
             trigger ??= GetComponent<Button>();
@@ -54,5 +58,15 @@ namespace UniGame.LeoEcs.ViewSystem.Behavriour
                 trigger = GetComponent<Button>();
         }
 
+        
+        public bool IsMatch(string searchString)
+        {
+            if(string.IsNullOrEmpty(searchString)) return true;
+         
+            if(Name.Contains(searchString, System.StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            return false;
+        }
     }
 }

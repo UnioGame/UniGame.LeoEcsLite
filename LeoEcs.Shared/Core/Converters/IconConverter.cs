@@ -17,7 +17,7 @@
         [SerializeField]
         public AssetReferenceT<Sprite> _icon;
         
-        public override void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public override void Apply(GameObject target, EcsWorld world, int entity)
         {
             ref var icon = ref world.AddComponent<IconComponent>(entity);
             icon.Value = _icon;
@@ -30,7 +30,7 @@
         [SerializeField]
         public AssetReferenceT<Sprite> icon;
         
-        public override void Apply(GameObject source,EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public override void Apply(GameObject source,EcsWorld world, int entity)
         {
             Convert(source,world,entity).Forget();
         }

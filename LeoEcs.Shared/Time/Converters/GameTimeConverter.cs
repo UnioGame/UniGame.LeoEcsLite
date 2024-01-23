@@ -10,7 +10,7 @@ namespace Game.Ecs.Time.Converters
     [Serializable]
     public class GameTimeConverter : LeoEcsConverter
     {
-        public override void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public override void Apply(GameObject target, EcsWorld world, int entity)
         {
             var gameTimePool = world.GetPool<EntityGameTimeComponent>();
             gameTimePool.Add(entity);

@@ -10,8 +10,8 @@
         
         T GetConverter<T>() where T : class;
 
-        void RemoveConverter<T>() where T : IComponentConverter;
+        void RemoveConverter<T>() where T : IEcsComponentConverter;
         
-        IComponentConverter GetConverter(Type target);
+        IEcsComponentConverter GetConverter(Type target);
     }
 }

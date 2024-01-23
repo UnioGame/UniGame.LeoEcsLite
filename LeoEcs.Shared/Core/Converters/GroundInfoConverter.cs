@@ -13,7 +13,7 @@
         [SerializeField]
         public float _checkDistance = 0.3f;
         
-        public override void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public override void Apply(GameObject target, EcsWorld world, int entity)
         {
             var groundInfoPool = world.GetPool<GroundInfoComponent>();
             

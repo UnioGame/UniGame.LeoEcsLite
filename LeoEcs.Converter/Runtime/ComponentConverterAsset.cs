@@ -7,13 +7,15 @@ using UnityEngine;
 namespace UniGame.LeoEcs.Converter.Runtime
 {
     [CreateAssetMenu(menuName = "UniGame/LeoEcs/Converter/Simple Component Converter",fileName = "Simple Component Converter")]
-    public abstract class ComponentConverterAsset : ScriptableObject, IComponentConverter
+    public abstract class ComponentConverterAsset : ScriptableObject, IEcsComponentConverter
     {
         public bool enabled = true;
 
         public bool IsEnabled => enabled;
+
+        public string Name => name;
         
-        public abstract void Apply(EcsWorld world, int entity, CancellationToken cancellationToken = default);
+        public abstract void Apply(EcsWorld world, int entity);
         
         public virtual bool IsMatch(string searchString)
         {

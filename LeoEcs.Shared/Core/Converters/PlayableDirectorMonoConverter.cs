@@ -14,7 +14,7 @@
         [SerializeField]
         private PlayableDirector _playableDirector;
         
-        public override void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public override void Apply(GameObject target, EcsWorld world, int entity)
         {
             var playableDirectorPool = world.GetPool<PlayableDirectorComponent>();
             ref var playableDirectorComponent = ref playableDirectorPool.GetOrAddComponent(entity);
@@ -29,7 +29,7 @@
         [SerializeField]
         public PlayableDirector playableDirector;
         
-        public override void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public override void Apply(GameObject target, EcsWorld world, int entity)
         {
             var playableDirectorPool = world.GetPool<PlayableDirectorComponent>();
             ref var playableDirectorComponent = ref playableDirectorPool.GetOrAddComponent(entity);

@@ -1,6 +1,5 @@
 ﻿namespace UniGame.LeoEcs.ViewSystem.Converters
 {
-    using System.Threading;
     using Converter.Runtime;
     using Converter.Runtime.Abstract;
     using Leopotam.EcsLite;
@@ -11,11 +10,13 @@
 
     [RequireComponent(typeof(LeoEcsMonoConverter))]
     public abstract class EcsUiView<TViewModel> : View<TViewModel>,
-        ILeoEcsComponentConverter,
+        IEcsComponentConverter,
         IConverterEntityDestroyHandler,
         IEcsView
         where TViewModel : class, IViewModel
     {
+        public bool isEnabled = true;
+        
         [PropertySpace(8)]
         [FoldoutGroup("settings")]
         [InlineProperty]
@@ -23,12 +24,15 @@
         public EcsViewSettings settings = new();
         
         private EcsViewDataConverter<TViewModel> _dataConverter = new();
-        
-        public void Apply(GameObject target, EcsWorld world, 
-            int entity, CancellationToken cancellationToken = default)
+
+        public virtual bool IsEnabled => isEnabled;
+
+        public virtual string Name => GetType().Name;
+
+        public void Apply(EcsWorld world, int entity)
         {
             _dataConverter.SetUp(settings);
-            _dataConverter.Apply(target,world,entity,cancellationToken);
+            _dataConverter.Apply(world,entity);
             
             OnApply(world,entity);
         }
@@ -43,6 +47,10 @@
         protected virtual void EntityDestroy(EcsWorld world, int entity){}
         
         protected virtual void OnApply(EcsWorld world, int entity){}
-
+        
+        public bool IsMatch(string searchString)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -32,7 +32,7 @@
         [SerializeField]
         public Transform weaponRoot;
 
-        public override void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public override void Apply(GameObject target, EcsWorld world, int entity)
         {
             var avatarPool = world.GetPool<EntityAvatarComponent>();
             ref var avatar = ref avatarPool.GetOrAddComponent(entity);

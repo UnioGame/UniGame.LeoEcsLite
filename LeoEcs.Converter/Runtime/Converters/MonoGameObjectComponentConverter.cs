@@ -1,6 +1,8 @@
 ﻿namespace UniGame.LeoEcs.Converter.Runtime.Converters
 {
-    public class MonoGameObjectComponentConverter : MonoLeoEcsConverter<BaseGameObjectComponentConverter>
+    public class MonoGameObjectComponentConverter 
+        : MonoLeoEcsConverter<BaseGameObjectComponentConverter>
     {
+        
     }
 }

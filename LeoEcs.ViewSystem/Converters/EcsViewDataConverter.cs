@@ -17,7 +17,7 @@
 
     [Serializable]
     public class EcsViewDataConverter<TData> :
-        ILeoEcsMonoComponentConverter,
+        GameObjectConverter,
         IConverterEntityDestroyHandler
         where TData : class, IViewModel
     {
@@ -45,7 +45,7 @@
             settings = overrideSettings;
         }
         
-        public void Apply(GameObject target, EcsWorld world, int targetEntity, CancellationToken cancellationToken = default)
+        protected override void OnApply(GameObject target, EcsWorld world, int targetEntity)
         {
             //reset lifetime
             _entityLifeTime ??= new LifeTimeDefinition();

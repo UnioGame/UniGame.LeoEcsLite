@@ -1,9 +1,7 @@
 ﻿namespace UniGame.LeoEcs.ViewSystem.Converters
 {
-    using System.Threading;
     using Components;
     using Converter.Runtime;
-    using Converter.Runtime.Abstract;
     using Converter.Runtime.Components;
     using Leopotam.EcsLite;
     using Shared.Extensions;
@@ -14,8 +12,7 @@
 
     [RequireComponent(typeof(LeoEcsMonoConverter))]
     public class EcsViewConverter : MonoLeoEcsConverter, 
-        IEcsViewConverter,
-        ILeoEcsComponentConverter
+        IEcsViewConverter
     {
         #region inspector
 
@@ -55,7 +52,7 @@
             entity = -1;
         }
         
-        public sealed override void Apply(GameObject target, EcsWorld world, int targetEntity, CancellationToken cancellationToken = default)
+        public sealed override void Apply(GameObject target, EcsWorld world, int targetEntity)
         {
             entity = targetEntity;
             

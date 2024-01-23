@@ -6,13 +6,15 @@ using UniGame.LeoEcs.Converter.Runtime.Abstract;
 namespace UniGame.LeoEcs.Converter.Runtime
 {
     [Serializable]
-    public abstract class EcsComponentConverter : IComponentConverter
+    public abstract class EcsComponentConverter : IEcsComponentConverter
     {
         public bool isEnabled = true;
         
         public virtual bool IsEnabled => isEnabled;
 
-        public abstract void Apply(EcsWorld world, int entity, CancellationToken cancellationToken = default);
+        public virtual string Name => GetType().Name;
+        
+        public abstract void Apply(EcsWorld world, int entity);
         
         protected bool IsSubstring(string value, string search)
         {

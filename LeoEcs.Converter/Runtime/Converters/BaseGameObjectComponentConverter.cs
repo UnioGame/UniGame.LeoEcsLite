@@ -3,16 +3,15 @@ using UniGame.LeoEcs.Shared.Extensions;
 namespace UniGame.LeoEcs.Converter.Runtime.Converters
 {
     using System;
-    using System.Threading;
     using LeoEcsLite.LeoEcs.Shared.Components;
     using Leopotam.EcsLite;
     using Shared.Components;
     using UnityEngine;
 
     [Serializable]
-    public class BaseGameObjectComponentConverter : LeoEcsConverter
+    public class BaseGameObjectComponentConverter : GameObjectConverter
     {
-        public sealed override void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        protected sealed override void OnApply(GameObject target, EcsWorld world, int entity)
         {
             ref var transformComponent = ref world.GetOrAddComponent<TransformComponent>(entity);
             ref var gameObjectComponent = ref world.GetOrAddComponent<GameObjectComponent>(entity);

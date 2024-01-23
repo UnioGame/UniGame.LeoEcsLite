@@ -20,10 +20,7 @@
     {
         public Renderer renderer;
         
-        protected override void OnApply(GameObject target,
-            EcsWorld world, 
-            int entity,
-            CancellationToken cancellationToken = default)
+        protected override void OnApply(GameObject target, EcsWorld world, int entity)
         {
             var render = renderer != null ? renderer : target.GetComponent<Renderer>();
             if(render == null) return;

@@ -18,8 +18,7 @@
         protected override void OnApply(
             GameObject target,
             EcsWorld world,
-            int entity, 
-            CancellationToken cancellationToken = default)
+            int entity)
         {
             ref var transformComponent = ref world.GetOrAddComponent<TransformComponent>(entity);
             

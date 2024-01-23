@@ -1,10 +1,14 @@
 ﻿namespace UniGame.LeoEcs.Converter.Runtime.Abstract
 {
-    using System.Threading;
     using Leopotam.EcsLite;
+    using Sirenix.OdinInspector;
 
-    public interface IEcsComponentConverter
+    public interface IEcsComponentConverter : 
+        ILeoEcsConverterStatus,
+        ISearchFilterable
     {
-        void Apply(EcsWorld world, int entity, CancellationToken cancellationToken = default);
+        public string Name { get; }
+        
+        void Apply(EcsWorld world, int entity);
     }
 }

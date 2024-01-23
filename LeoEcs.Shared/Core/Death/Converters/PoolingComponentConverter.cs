@@ -11,7 +11,7 @@
     [Serializable]
     public class PoolingComponentConverter : GameObjectConverter
     {
-        protected override void OnApply(GameObject target,EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        protected override void OnApply(GameObject target,EcsWorld world, int entity)
         {
             world.GetOrAddComponent<PoolingComponent>(entity);
         }

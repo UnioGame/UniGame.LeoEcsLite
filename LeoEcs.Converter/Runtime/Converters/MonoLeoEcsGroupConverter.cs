@@ -6,27 +6,33 @@
     using Abstract;
     using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
+    using Shared.Components;
+    using Shared.Extensions;
     using Sirenix.OdinInspector;
     using UnityEngine;
 
-    public class MonoLeoEcsGroupConverter : MonoLeoEcsConverter<LeoEcsGroupConverter>
+    public class MonoLeoEcsGroupConverter : MonoLeoEcsConverter<EcsComponentsGroupConverter>
     {
     }
 
     [Serializable]
-    public class LeoEcsGroupConverter : LeoEcsConverter
+    public class EcsComponentsGroupConverter : LeoEcsConverter
     {
         [SerializeField]
         private string groupName;
         
         [InlineProperty]
         [SerializeReference]
-        private List<ILeoEcsMonoComponentConverter> _converters = new List<ILeoEcsMonoComponentConverter>();
+        private List<IEcsComponentConverter> _converters = new();
 
-        public override void Apply(GameObject target, EcsWorld world, int entity, CancellationToken cancellationToken = default)
+        public override void Apply(GameObject target, EcsWorld world, int entity)
         {
+            ref var gameObjectComponent = ref world
+                .GetOrAddComponent<GameObjectComponent>(entity);
+            gameObjectComponent.Value = target;
+            
             foreach (var converter  in _converters)
-                converter.Apply(target, world, entity, cancellationToken);
+                converter.Apply(world, entity);
         }
     }
 }
