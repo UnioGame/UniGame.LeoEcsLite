@@ -9,7 +9,7 @@
     using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
     using Sirenix.OdinInspector;
-    using UniModules.UniGameFlow.GameFlow.Runtime.Services;
+    using GameFlow.Runtime.Services;
     using UnityEngine;
 
     [Serializable]
