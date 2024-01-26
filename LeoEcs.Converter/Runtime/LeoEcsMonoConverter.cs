@@ -163,7 +163,8 @@ namespace UniGame.LeoEcs.Converter.Runtime
             _state = EntityState.Creating;
             _entityLifeTime.Release();
 
-            Convert().AttachExternalCancellation(_entityLifeTime.Token)
+            Convert()
+                .AttachExternalCancellation(_entityLifeTime.Token)
                 .Forget();
         }
 

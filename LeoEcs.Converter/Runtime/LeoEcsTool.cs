@@ -61,8 +61,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
             this EcsWorld world, 
             GameObject target, 
             int entityId, 
-            IEnumerable<IEcsComponentConverter> converterTasks,
-            CancellationToken cancellationToken = default)
+            IEnumerable<IEcsComponentConverter> converterTasks)
         {
             ApplyEcsComponents(target,world, entityId, converterTasks);
         }
@@ -173,6 +172,7 @@ namespace UniGame.LeoEcs.Converter.Runtime
             converters.Clear();
 
             SelectMonoConverters(gameObject, converters);
+            SelectMonoConverter(gameObject, converters);
 
             ApplyEcsComponents(world,gameObject,entity, converters, false);
 
@@ -188,6 +188,16 @@ namespace UniGame.LeoEcs.Converter.Runtime
         public static void SelectMonoConverters(GameObject gameObject,List<IEcsComponentConverter> converters)
         {
             gameObject.GetComponents(converters);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SelectMonoConverter(GameObject gameObject,List<IEcsComponentConverter> converters)
+        {
+            var container = gameObject.GetComponent<LeoEcsMonoConverter>();
+            if (container == null) return;
+            
+            converters.AddRange(container.serializableConverters);
+            converters.AddRange(container.assetConverters);
         }
         
         public static int ConvertGameObjectToEntity(this GameObject target, 
