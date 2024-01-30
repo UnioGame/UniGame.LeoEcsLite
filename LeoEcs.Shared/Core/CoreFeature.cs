@@ -19,6 +19,7 @@
         
         public override async UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)
         {
+            ecsSystems.Add(new KillMeNextTimeHandleSystem());
             ecsSystems.Add(new ProcessDestroySilentSystem());
             
             ecsSystems.Add(new UpdateRenderStatusSystem());
