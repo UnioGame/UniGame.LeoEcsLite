@@ -7,10 +7,4 @@ namespace UniGame.LeoEcs.ViewSystem.Components
     public struct CloseTargetViewByTypeRequest
     {
     }
-
-    [Serializable]
-    public struct CloseViewRequest
-    {
-        
-    }
 }

@@ -68,7 +68,7 @@ namespace UniGame.LeoEcs.ViewSystem
             ecsSystems.DelHere<CloseAllViewsRequest>();
             ecsSystems.DelHere<CloseViewByTypeRequest>();
             ecsSystems.DelHere<CloseTargetViewByTypeRequest>();
-            ecsSystems.DelHere<CloseViewRequest>();
+            ecsSystems.DelHere<CloseViewSelfRequest>();
             ecsSystems.DelHere<UpdateViewRequest>();
         }
 
