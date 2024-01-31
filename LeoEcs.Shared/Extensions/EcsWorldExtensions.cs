@@ -296,13 +296,16 @@ namespace UniGame.LeoEcs.Shared.Extensions
         [Il2CppSetOption (Option.NullChecks, false)]
         [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
 #endif
-        public static bool AddRawComponent<TComponent>(this EcsWorld world, int entity, TComponent component)
+        public static ref TComponent AddRawComponent<TComponent>(this EcsWorld world, int entity, TComponent component)
             where TComponent : struct
         {
             var pool = world.GetPoolByType(typeof(TComponent));
-            if (pool.Has(entity)) return false;
+            if (pool.Has(entity))
+                pool.Del(entity);
+            
             pool.AddRaw(entity,component);
-            return true;
+            var typePool = world.GetPool<TComponent>();
+            return ref typePool.Get(entity);
         }
 
 #if ENABLE_IL2CPP
