@@ -6,7 +6,7 @@
     using UniGame.LeoEcs.Bootstrap.Runtime;
     using UnityEngine;
 
-    [CreateAssetMenu(menuName = "Game/Feature/Core/Core Late Feature", fileName = "Core Late Feature")]
+    [CreateAssetMenu(menuName = "Game/Features/Core/Core Late Feature", fileName = "Core Late Feature")]
     public sealed class CoreLateUpdateFeature : BaseLeoEcsFeature
     {
         public override UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)

@@ -44,9 +44,12 @@
             {
                 ref var cooldownComponent = ref _timerAspect.Cooldown.Get(entity);
                 ref var stateComponent = ref _timerAspect.State.Get(entity);
+                ref var remainsTimeComponent = ref _timerAspect.Remains.GetOrAddComponent(entity);
                 
                 var cooldown = cooldownComponent.Value;
                 var timePassed = GameTime.Time - stateComponent.LastTime;
+                
+                remainsTimeComponent.Value = cooldown - timePassed;
                 
                 if(timePassed < cooldown) continue;
                 

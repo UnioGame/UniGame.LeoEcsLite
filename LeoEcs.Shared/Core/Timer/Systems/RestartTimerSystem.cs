@@ -42,10 +42,15 @@
         {
             foreach (var entity in _filter)
             {
+                ref var cooldownComponent = ref _timerAspect.Cooldown.Get(entity);
                 ref var stateComponent = ref _timerAspect.State.GetOrAddComponent(entity);
+                
                 stateComponent.LastTime = GameTime.Time;
                 _timerAspect.Active.GetOrAddComponent(entity);
                 _timerAspect.Completed.TryRemove(entity);
+                
+                ref var remainsTimeComponent = ref _timerAspect.Remains.GetOrAddComponent(entity);
+                remainsTimeComponent.Value = cooldownComponent.Value;
             }
         }
     }

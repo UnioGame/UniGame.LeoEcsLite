@@ -13,6 +13,7 @@
         public EcsPool<CooldownStateComponent> State;
         public EcsPool<CooldownActiveComponent> Active;
         public EcsPool<CooldownCompleteComponent> Completed;
+        public EcsPool<CooldownRemainsTimeComponent> Remains;
         public EcsPool<CooldownAutoRestartComponent> AutoRestart;
         
         //requests
