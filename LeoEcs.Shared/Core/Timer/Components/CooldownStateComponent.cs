@@ -8,7 +8,7 @@
     public struct CooldownStateComponent : IEcsAutoReset<CooldownStateComponent>
     {
         /// <summary>
-        /// Время последнего использования умения.
+        /// time of last update.
         /// </summary>
         public float LastTime;
 
