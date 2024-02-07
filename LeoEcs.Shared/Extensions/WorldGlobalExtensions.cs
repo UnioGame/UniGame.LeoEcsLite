@@ -1,6 +1,8 @@
 ﻿namespace UniGame.LeoEcs.Shared.Extensions
 {
+    using System;
     using Leopotam.EcsLite;
+    using UniModules.UniCore.Runtime.Extension;
     using UniModules.UniCore.Runtime.Utils;
     using UniModules.UniGame.Context.Runtime.Context;
 
@@ -15,6 +17,17 @@
                 return context;
             });
 
+        public static bool HasFlag<T>(this EcsWorld world, T flag)
+            where T  : Enum
+        {
+            var context = _globalValues[world];
+            if(!context.Contains<T>()) return false;
+            
+            var value = context.Get<T>();
+            var isSet = value.IsFlagSet(flag);
+            return isSet;
+        }
+        
         public static T GetGlobal<T>(this EcsWorld world)
         {
             var globals = _globalValues[world];
