@@ -9,7 +9,7 @@
     using UniCore.Runtime.ProfilerTools;
     using UnityEngine;
 
-    [CreateAssetMenu(menuName = "UniGame/LeoEcs/Feature/ECS Feature", fileName = "ECS Feature")]
+    [CreateAssetMenu(menuName = "UniGame/LeoEcs/Features/ECS Feature", fileName = "ECS Feature")]
     public class LeoEcsFeatureGroupAsset : 
         BaseLeoEcsFeature, 
         ILeoEcsSystemsGroup
