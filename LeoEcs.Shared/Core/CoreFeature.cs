@@ -12,7 +12,7 @@
     using UniGame.LeoEcs.Shared.Components;
     using UnityEngine;
 
-    [CreateAssetMenu(menuName = "Game/Features/Core/Core Feature", fileName = "Core Feature")]
+    [CreateAssetMenu(menuName = "Game/Feature/Core/Core Feature", fileName = "Core Feature")]
     public class CoreFeature : BaseLeoEcsFeature
     {
         public TimerFeature timerFeature = new TimerFeature();
