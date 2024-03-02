@@ -50,16 +50,6 @@ namespace UniGame.LeoEcs.Shared.Extensions
         {
             systems.Add(new FireOnSystem<TFilter1,TFilter2,TFilter3,TComponent>());
         }
-        
-        public static void DelEventHere<TRequest>(this IEcsSystems systems, int cyclesAmount = 1)
-        {
-            systems.Add(new UpdateCounterRequestSystem<TRequest>(cyclesAmount));
-        }
-        
-        public static void DelRequestHere<TRequest>(this IEcsSystems systems, int cyclesAmount = 0)
-        {
-            systems.Add(new UpdateCounterRequestSystem<TRequest>(cyclesAmount));
-        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool EntityHasAll<T1, T2>(this EcsWorld world,int entity)

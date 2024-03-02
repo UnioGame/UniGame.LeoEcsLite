@@ -86,7 +86,7 @@
 
             foreach (var systems in _systemsMap.Values)
             {
-                ApplyPostInitialize(systems);
+                ApplyBeforeInitialize(systems);
             }
             
             foreach (var systems in _systemsMap.Values)
@@ -149,7 +149,7 @@
             GameLog.Log($"ECS FEATURE SOURCE: LOAD {message} TIME = {elapsed} ms");
         }
 
-        private void ApplyPostInitialize(IEcsSystems ecsSystems)
+        private void ApplyBeforeInitialize(IEcsSystems ecsSystems)
         {
             foreach (var postInitializeAction in _postInitializeActions)
             {
