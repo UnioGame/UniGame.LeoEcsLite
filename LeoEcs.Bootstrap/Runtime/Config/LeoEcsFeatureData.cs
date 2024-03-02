@@ -11,12 +11,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
     [Serializable]
     public class LeoEcsFeatureData : ILeoEcsFeature
     {
-        private static List<IEcsSystem> emptySystems = new List<IEcsSystem>();
-        
-        public const string EcsEmptyFeatureName = "Empty Feature";
-
         [FoldoutGroup("$"+nameof(FeatureName))]
-        [InlineEditor]
         [HideLabel]
         [ShowIf(nameof(UseAssetGroup))]
         public BaseLeoEcsFeature featureGroupAsset;
@@ -25,26 +20,28 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         [SerializeReference]
         [HideLabel]
         [ShowIf(nameof(UseSerializedGroup))]
-        public ILeoEcsSystemsGroup featureGroup;
+        public ILeoEcsSystemsGroup featureGroup = null;
 
-        public string FeatureName => Feature == null 
-            ? EcsEmptyFeatureName 
+        public string FeatureName => Feature is null or EmptyFeature
+            ? EmptyFeature.EcsEmptyFeatureName 
             : Feature.FeatureName;
 
-        public bool UseSerializedGroup => featureGroup != null || 
-                                          (featureGroupAsset == null && featureGroup == null);
+        public bool IsEmptySerializedEmpty => featureGroup is null or EmptyFeature;
+        
+        public bool UseSerializedGroup => featureGroup != null && featureGroup is not EmptyFeature || 
+                                          (featureGroupAsset == null && IsEmptySerializedEmpty);
         
         public bool UseAssetGroup => featureGroupAsset != null || 
-                                     (featureGroupAsset == null && featureGroup == null);
+                                     (featureGroupAsset == null && IsEmptySerializedEmpty);
 
-        public ILeoEcsFeature Feature => UseSerializedGroup 
-            ? featureGroup 
-            : featureGroupAsset;
+        public ILeoEcsFeature Feature => UseAssetGroup 
+            ? featureGroupAsset
+            : featureGroup ;
 
         public bool IsFeatureEnabled => Feature is { IsFeatureEnabled: true };
 
         public IReadOnlyList<IEcsSystem> EcsSystems => Feature is not ILeoEcsSystemsGroup group
-            ? emptySystems 
+            ? EmptyFeature.EmptySystems 
             : group.EcsSystems;
         
         public bool IsMatch(string searchString)

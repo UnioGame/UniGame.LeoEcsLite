@@ -14,13 +14,15 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
     
     public class BaseLeoEcsFeature : ScriptableObject, ILeoEcsFeature
     {
+        public const string DefaultFeatureName = "EMPTY Feature";
+        
         [ShowIf(nameof(ShowFeatureInfo))]
         [SerializeField]
         public bool isEnabled = true;
 
         public virtual bool IsFeatureEnabled => isEnabled;
 
-        public virtual string FeatureName => name;
+        public virtual string FeatureName => this==null || string.IsNullOrEmpty(name) ? DefaultFeatureName : name;
 
         public virtual bool ShowFeatureInfo => true;
 
