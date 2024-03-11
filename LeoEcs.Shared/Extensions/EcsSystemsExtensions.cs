@@ -24,6 +24,29 @@ namespace UniGame.LeoEcs.Shared.Extensions
             return systems;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int First(this EcsFilter filter)
+        {
+            foreach (var entity in filter)
+            {
+                return entity;
+            }
+
+            return -1;
+        }
+        
+        // [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // public static ref TComponent First<TComponent>(this EcsFilter filter,EcsWorld world)
+        //     where TComponent : struct
+        // {
+        //     foreach (var entity in filter)
+        //     {
+        //         ref var component = ref world.GetComponent<TComponent>(entity);
+        //         return ref component;
+        //     }
+        //
+        //     return default;
+        // }
         
         public static IEcsSystems FireOn<TFilter,TComponent>(this IEcsSystems systems)
             where TFilter : struct
