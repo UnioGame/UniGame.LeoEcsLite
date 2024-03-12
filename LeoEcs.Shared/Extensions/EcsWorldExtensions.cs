@@ -310,6 +310,20 @@ namespace UniGame.LeoEcs.Shared.Extensions
             var typePool = world.GetPool<TComponent>();
             return ref typePool.Get(entity);
         }
+        
+#if ENABLE_IL2CPP
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void AddRawComponent(this EcsWorld world, int entity,Type componentType, object component)
+        {
+            var pool = world.GetPoolByType(componentType);
+            if (pool.Has(entity))
+                pool.Del(entity);
+            
+            pool.AddRaw(entity,component);
+        }
 
 #if ENABLE_IL2CPP
         [Il2CppSetOption (Option.NullChecks, false)]
