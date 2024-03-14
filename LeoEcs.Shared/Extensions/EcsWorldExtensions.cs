@@ -52,6 +52,8 @@ namespace UniGame.LeoEcs.Shared.Extensions
                 }
                 
             },x => x.LifeTime.Terminate());
+
+        private static object[] _removingComponents = Array.Empty<object>();
         
 #if UNITY_EDITOR
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -309,6 +311,23 @@ namespace UniGame.LeoEcs.Shared.Extensions
             pool.AddRaw(entity,component);
             var typePool = world.GetPool<TComponent>();
             return ref typePool.Get(entity);
+        }
+        
+#if ENABLE_IL2CPP
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void RemoveComponents<TType>(this EcsWorld world, int entity)
+        {
+            var components = world.GetComponents(entity, ref _removingComponents);
+            for (int i = 0; i < components; i++)
+            {
+                var component = _removingComponents[i];
+                if(component is not TType)continue;
+                var pool = world.GetPoolByType(component.GetType());
+                pool.Del(entity);
+            }
         }
         
 #if ENABLE_IL2CPP
