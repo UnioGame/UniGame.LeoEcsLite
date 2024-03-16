@@ -335,6 +335,20 @@ namespace UniGame.LeoEcs.Shared.Extensions
         [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
 #endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void AddRawComponents(this EcsWorld world, int entity,int count, object[] components)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                var component = components[i];
+                AddRawComponent(world, entity, component.GetType(), component);
+            }
+        }
+        
+#if ENABLE_IL2CPP
+        [Il2CppSetOption (Option.NullChecks, false)]
+        [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
+#endif
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void AddRawComponent(this EcsWorld world, int entity,Type componentType, object component)
         {
             var pool = world.GetPoolByType(componentType);
