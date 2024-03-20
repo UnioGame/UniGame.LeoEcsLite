@@ -6,12 +6,13 @@
     using UniGame.LeoEcs.Shared.Extensions;
     using UniGame.LeoEcs.ViewSystem.Components;
     using UniGame.ViewSystem.Runtime;
-    using Unity.IL2CPP.CompilerServices;
     
     /// <summary>
     /// await target event and create view
     /// </summary>
 #if ENABLE_IL2CPP
+    using Unity.IL2CPP.CompilerServices;
+
     [Il2CppSetOption(Option.NullChecks, false)]
     [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
