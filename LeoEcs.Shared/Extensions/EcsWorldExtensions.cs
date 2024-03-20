@@ -392,7 +392,6 @@ namespace UniGame.LeoEcs.Shared.Extensions
         }
 
 #if ENABLE_IL2CPP
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [Il2CppSetOption (Option.NullChecks, false)]
         [Il2CppSetOption (Option.ArrayBoundsChecks, false)]
 #endif
