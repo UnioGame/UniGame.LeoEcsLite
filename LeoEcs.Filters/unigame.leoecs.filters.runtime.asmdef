@@ -1,5 +1,5 @@
 {
-    "name": "UniGame.LeoEcs.Filters.Runtime",
+    "name": "unigame.leoecs.filters.runtime",
     "rootNamespace": "",
     "references": [
         "GUID:e59bf9fc7d5a44b18a819a92edd46163",

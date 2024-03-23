@@ -1,23 +1,26 @@
 {
-    "name": "UniGame.LeoEcs.Converter.Runtime",
+    "name": "unigame.leoecs.debug",
     "rootNamespace": "",
     "references": [
-        "GUID:c1d53fc1b1b71c647b00626be502b7b1",
         "GUID:e59bf9fc7d5a44b18a819a92edd46163",
         "GUID:e06a58708b83247ca9dc984644f5b40b",
+        "GUID:a758ff47af0484038b71625d05877e22",
         "GUID:a22362b82293644e1bbe51356c008d63",
         "GUID:f51ebe6a0ceec4240a699833d6309b23",
-        "GUID:593a5b492d29ac6448b1ebf7f035ef33",
-        "GUID:9e24947de15b9834991c9d8411ea37cf",
         "GUID:84651a3751eca9349aac36a66bba901b",
         "GUID:8e4577c9194c10845984cf27eb974fd1",
+        "GUID:9e24947de15b9834991c9d8411ea37cf",
+        "GUID:593a5b492d29ac6448b1ebf7f035ef33",
+        "GUID:a0b431bd9232ee0439a3722ec36414ed",
+        "GUID:4185675af2c91ce438157b41079cd107",
+        "GUID:c1d53fc1b1b71c647b00626be502b7b1",
+        "GUID:b10aac27e5bc3d74f9892b100a74487f",
         "GUID:2796129a6c23eb84a8181f62bf7332f1",
-        "GUID:d8b63aba1907145bea998dd612889d6b",
-        "GUID:e0cd26848372d4e5c891c569017e11f1",
-        "GUID:2665a8d13d1b3f18800f46e256720795",
-        "GUID:4f5c0c83dfd6a0743834baba2b4de79e"
+        "GUID:478a2357cc57436488a56e564b08d223"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

@@ -1,5 +1,5 @@
 {
-    "name": "UniGame.LeoEcs.ViewSystem",
+    "name": "unigame.leoecs.viewsystem",
     "rootNamespace": "",
     "references": [
         "GUID:079cabb64c86ebd47b8aa2e544990201",
