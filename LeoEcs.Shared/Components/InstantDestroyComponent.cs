@@ -1,19 +1,18 @@
 ﻿namespace UniGame.LeoEcsLite.LeoEcs.Bootstrap.Runtime.Components
 {
     using System;
-#if ENABLE_IL2CPP
-    using Unity.IL2CPP.CompilerServices;
-#endif
 
     /// <summary>
-    /// ADD DESCRIPTION HERE
+    /// mark entity as instant destroy
     /// </summary>
-    [Serializable]
 #if ENABLE_IL2CPP
+    using Unity.IL2CPP.CompilerServices;
+
     [Il2CppSetOption(Option.NullChecks, false)]
     [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 #endif
+    [Serializable]
     public struct InstantDestroyComponent
     {
         
