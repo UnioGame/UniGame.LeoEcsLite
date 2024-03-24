@@ -24,9 +24,8 @@
         where TData : struct 
         where TResult : struct
     {
-        private int _minChunkSize = 8;
-        private int _maxChunkSize = 256;
-        private float _chunkCoeff = 1.5f;
+        private int _minChunkSize = 32;
+        private float _chunkCoeff = 1f;
         
         private bool _isMultithreaded = true;
         private EcsWorld _world;
@@ -74,7 +73,7 @@
             _task.SetData(data,result);
             
             if(IsMultithreaded)
-                ThreadService.Run(_worker, dataCount, GetChunkSize(dataCount));
+                TaskThreadService.Run(_worker, dataCount, GetChunkSize(dataCount));
             else
                 Execute(0, dataCount);
             
@@ -83,11 +82,7 @@
 
         public virtual int GetChunkSize(int dataCount)
         {
-            var procCount = ThreadService.DescsCount;
-            var size = dataCount / _chunkCoeff / procCount;
-            size = math.max(_minChunkSize, size);
-            var chunkSize = (int)math.ceil(size);
-            return chunkSize;
+            return _minChunkSize;
         }
 
         public virtual NativeArray<TData> GetTaskData(ref TTask task) => default;
@@ -104,8 +99,6 @@
         where TData : struct
         where TResult : struct
     {
-        bool IsComplete { get; }
-        
         void Initialize(IEcsSystems systems);
         
         void SetData(NativeArray<TData> data, NativeArray<TResult> result);
