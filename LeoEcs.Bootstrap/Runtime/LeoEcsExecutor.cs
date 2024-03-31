@@ -2,17 +2,20 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Abstract;
+    using Core.Runtime.Extension;
     using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
     using Shared.Extensions;
+    using Systems;
     using UnityEngine;
     using UnityEngine.Profiling;
 
     [Serializable]
     public class LeoEcsExecutor : ILeoEcsExecutor
     {
-        private List<IEcsSystems> _systems = new List<IEcsSystems>();
+        private List<IEcsSystems> _systems = new();
         private EcsWorld _world;
         private LeoEcsPlayerUpdateType _loopTiming = LeoEcsPlayerUpdateType.Update;
         private PlayerLoopTiming _updateTiming = PlayerLoopTiming.Update;
@@ -36,7 +39,7 @@
             _updateTiming = _loopTiming.ConvertToPlayerLoopTiming();
             
             var worldLifeTime = _world.GetWorldLifeTime();
-            
+
             ExecuteAsync()
                 .AttachExternalCancellation(worldLifeTime.Token)
                 .Forget();
@@ -73,8 +76,10 @@
             while (_world.IsAlive() && Application.isPlaying && _isActive)
             {
                 foreach (var system in _systems)
+                {
                     system.Run();
-
+                }
+                
                 //wait next interval
                 await UniTask.Yield(_updateTiming);
             }

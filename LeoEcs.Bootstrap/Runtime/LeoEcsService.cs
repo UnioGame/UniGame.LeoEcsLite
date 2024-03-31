@@ -4,7 +4,6 @@
     using UniGame.UniNodes.GameFlow.Runtime;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
     using Abstract;
     using Config;
     using Converter.Runtime;
@@ -22,7 +21,7 @@
         private ILeoEcsSystemsConfig _config;
         private IEcsExecutorFactory _ecsExecutorFactory;
         private IEnumerable<ISystemsPlugin> _plugins;
-        private Dictionary<string, EcsSystems> _systemsMap;
+        private Dictionary<string, IEcsSystems> _systemsMap;
         private Dictionary<string, ILeoEcsExecutor> _systemsExecutors;
         private IContext _context;
 
@@ -38,9 +37,10 @@
         
         private List<IEcsSystem> _lateSystems = new() {};
 
-        private List<IEcsPostInitializeAction> _postInitializeActions = new() 
+        private List<IEcsPostInitializeAction> _initializePlugins = new() 
         {
             new EcsDiPostInitialize(),
+            new EcsProfileInitialize(),
         };
 
         public EcsWorld World => _world;
@@ -54,7 +54,7 @@
             bool ownThisWorld,
             float featureTimeout)
         {
-            _systemsMap = new Dictionary<string, EcsSystems>(8);
+            _systemsMap = new Dictionary<string,IEcsSystems>(8);
             _systemsExecutors = new Dictionary<string, ILeoEcsExecutor>(8);
 
             _context = context;
@@ -84,10 +84,7 @@
 
             _isInitialized = true;
 
-            foreach (var systems in _systemsMap.Values)
-            {
-                ApplyBeforeInitialize(systems);
-            }
+            ApplySystemsPlugins(_world);
             
             foreach (var systems in _systemsMap.Values)
             {
@@ -149,30 +146,52 @@
             GameLog.Log($"ECS FEATURE SOURCE: LOAD {message} TIME = {elapsed} ms");
         }
 
-        private void ApplyBeforeInitialize(IEcsSystems ecsSystems)
+        private void ApplySystemsPlugins(EcsWorld world)
         {
-            foreach (var postInitializeAction in _postInitializeActions)
+            var groupIds = new List<string>();
+            
+            foreach (var systems in _systemsMap)
             {
-                foreach (var system in ecsSystems.GetAllSystems())
-                    postInitializeAction.Apply(ecsSystems,system);
+                groupIds.Add(systems.Key);
+            }
+            
+            foreach (var groupId in groupIds)
+            {
+                foreach (var plugin in _initializePlugins)
+                {
+                    var systemsSource = _systemsMap[groupId];
+                    var newSystems = plugin.Apply(systemsSource,_context);
+                    if (!newSystems.replace) continue;
+                    
+                    var systems = newSystems.value.GetAllSystems();
+                    var systemsGroup = CreateEcsSystems(groupId, world);
+                    foreach(var system in systems)
+                        systemsGroup.Add(system);
+                }
             }
         }
         
         private async UniTask InitializeEcsService(EcsWorld world)
         {
-            var groups = _config.FeatureGroups
+            var groups = _config
+                .FeatureGroups
                 .Select(x => CreateEcsGroupAsync(x,world));
 
             await UniTask.WhenAll(groups);
         }
 
-        private async UniTask CreateEcsGroupAsync(LeoEcsConfigGroup updateGroup, EcsWorld world)
+        private List<ILeoEcsFeature> CollectFeatures(LeoEcsConfigGroup ecsGroup)
         {
             var features = new List<ILeoEcsFeature>();
-            foreach (var feature in updateGroup.features)
+            foreach (var feature in ecsGroup.features)
                 features.Add(feature.Feature);
-                
-            await CreateEcsGroupRunner(updateGroup.updateType, world, features);
+            return features;
+        }
+        
+        private async UniTask CreateEcsGroupAsync(LeoEcsConfigGroup ecsGroup, EcsWorld world)
+        {
+            var systemsGroup = CollectFeatures(ecsGroup);
+            await CreateEcsGroup(ecsGroup.updateType,world,systemsGroup);
         }
 
         private void ApplyPlugins(EcsWorld world)
@@ -187,13 +206,25 @@
             }
         }
 
-        private async UniTask CreateEcsGroupRunner(string updateType, EcsWorld world, IReadOnlyList<ILeoEcsFeature> runnerFeatures)
+        private IEcsSystems CreateEcsSystems(string groupId,EcsWorld world)
+        {
+            var systems = new EcsSystems(world,_context);
+            _systemsMap[groupId] = systems;
+            return systems;
+        }
+        
+        private IEcsSystems CreateEcsSystems(EcsWorld world)
+        {
+            return new EcsSystems(world,_context);
+        }
+        
+        private async UniTask CreateEcsGroup(
+            string updateType, 
+            EcsWorld world, 
+            IReadOnlyList<ILeoEcsFeature> runnerFeatures)
         {
             if (!_systemsMap.TryGetValue(updateType, out var ecsSystems))
-            {
-                ecsSystems = new EcsSystems(world,_context);
-                _systemsMap[updateType] = ecsSystems;
-            }
+                ecsSystems = CreateEcsSystems(updateType,world);
                         
             foreach (var startupSystem in _startupSystems)
                 ecsSystems.Add(startupSystem);
@@ -274,5 +305,11 @@
             
             return $"ECS Feature Timeout Error for {featureName}";
         }
+    }
+    
+    public struct EcsSystemsGroup
+    {
+        public string UpdateType;
+        public IEcsSystems Systems;
     }
 }

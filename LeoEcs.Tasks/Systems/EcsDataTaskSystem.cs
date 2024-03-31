@@ -6,7 +6,7 @@
     using UniGame.LeoEcs.Bootstrap.Runtime.Attributes;
     using Unity.Collections;
     using Unity.Mathematics;
-
+    using UnityEngine.Profiling;
     /// <summary>
     /// thread support for ecs system
     /// </summary>
@@ -19,10 +19,8 @@
 #endif
     [Serializable]
     [ECSDI]
-    public class EcsDataTaskSystem<TTask,TData,TResult> : IEcsThreadSystem<TTask,TData,TResult>
-        where TTask : IEcsDataTask<TData,TResult> , new()
-        where TData : struct 
-        where TResult : struct
+    public class EcsDataTaskSystem<TTask> : IEcsThreadSystem<TTask>
+        where TTask : IEcsDataTask<TTask> , new()
     {
         private int _minChunkSize = 32;
         private float _chunkCoeff = 1f;
@@ -41,9 +39,7 @@
             _ecsSystems = systems;
             _world = systems.GetWorld();
             _worker = Execute;
-            
             _task = new TTask();
-            _task.Initialize(systems);
             
             OnInit(systems);
         }
@@ -62,32 +58,25 @@
         public void Run(IEcsSystems systems)
         {
             //_task = new TTask();
-            if (!SetupTask(ref _task)) return;
+            var taskCount = SetupTask(ref _task);
             
-            var data = GetTaskData(ref _task);
-            if (!data.IsCreated || data.Length <= 0) return;
-            
-            var dataCount = data.Length;
-            var result = new NativeArray<TResult>(dataCount, Allocator.Temp);
-            
-            _task.SetData(data,result);
+            if (taskCount<= 0) return;
+
+            Profiler.BeginSample("TaskSystem.ExecuteTask");
             
             if(IsMultithreaded)
-                TaskThreadService.Run(_worker, dataCount, GetChunkSize(dataCount));
+                TaskThreadService.Run(_worker, taskCount, GetChunkSize(taskCount));
             else
-                Execute(0, dataCount);
+                _task.Execute(0, taskCount);
+            
+            Profiler.EndSample();
             
             OnTaskComplete(ref _task);
         }
 
-        public virtual int GetChunkSize(int dataCount)
-        {
-            return _minChunkSize;
-        }
+        public virtual int GetChunkSize(int dataCount) => -1;
 
-        public virtual NativeArray<TData> GetTaskData(ref TTask task) => default;
-
-        public virtual bool SetupTask(ref TTask task) => true;
+        public virtual int SetupTask(ref TTask task) => 0;
 
         public virtual void OnTaskComplete(ref TTask task) { }
 
@@ -95,26 +84,18 @@
 
     }
     
-    public interface IEcsDataTask<TData,TResult> 
-        where TData : struct
-        where TResult : struct
+    public interface IEcsDataTask<TTask> where TTask : IEcsDataTask<TTask>
     {
-        void Initialize(IEcsSystems systems);
-        
-        void SetData(NativeArray<TData> data, NativeArray<TResult> result);
-        
         void Execute(int fromIndex, int beforeIndex);
     }
     
-    public interface IEcsThreadSystem<TTask,TData,TResult> : IEcsInitSystem, IEcsRunSystem 
-        where TTask : IEcsDataTask<TData,TResult> , new()
-        where TData : struct
-        where TResult : struct
+    public interface IEcsThreadSystem<TTask> : IEcsInitSystem, IEcsRunSystem 
+        where TTask : IEcsDataTask<TTask> , new()
     {
         bool IsMultithreaded { get; }
         
         int GetChunkSize(int dataCount);
         
-        NativeArray<TData> GetTaskData(ref TTask task);
+        int SetupTask(ref TTask task);
     }
 }

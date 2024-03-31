@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Abstract;
     using Attributes;
+    using Core.Runtime;
     using Leopotam.EcsLite;
     using UniModules.UniCore.Runtime.ReflectionUtils;
 
@@ -21,6 +22,15 @@
                 new EcsDiPoolInjection(),
                 new EcsDiAspectInjection(),
             };
+        }
+
+        public (IEcsSystems value, bool replace) Apply(IEcsSystems ecsSystems,IContext context)
+        {
+            foreach (var ecsSystem in ecsSystems.GetAllSystems())
+            {
+                Apply(ecsSystems,ecsSystem);
+            }
+            return (ecsSystems,false);
         }
         
         public void Apply(IEcsSystems ecsSystems,IEcsSystem system)

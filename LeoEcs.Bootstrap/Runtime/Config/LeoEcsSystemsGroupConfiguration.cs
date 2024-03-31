@@ -53,7 +53,11 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 
         public IReadOnlyList<IEcsSystem> EcsSystems => _systems;
         
-        
+        public void RegisterSystems(List<IEcsSystem> systems)
+        {
+            systems.AddRange(EcsSystems);
+        }
+
         public async UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)
         {
             if (!IsFeatureEnabled) return;

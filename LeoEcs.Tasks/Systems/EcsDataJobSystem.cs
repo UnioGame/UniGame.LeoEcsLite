@@ -1,16 +1,12 @@
 ﻿namespace Game.Ecs.EcsThreads.Systems
 {
-    using System;
     using Leopotam.EcsLite;
     using UniGame.Core.Runtime;
     using UniModules.UniCore.Runtime.DataFlow;
-    using Unity.Collections;
     using Unity.Jobs;
 
-    public abstract class EcsDataJobSystem<TJob,TData,TResult> : IEcsJobDataSystemBase,IEcsInitSystem,IEcsDestroySystem
-        where TJob : struct, IEcsDataJob<TData,TResult>
-        where TData : unmanaged
-        where TResult : unmanaged
+    public abstract class EcsDataJobSystem<TJob> : IEcsJobDataParallelFor<TJob>,IEcsDestroySystem
+        where TJob : struct, IEcsDataJobParallelFor
     {
         public IEcsSystems ecsSystems;
         public EcsWorld world;
@@ -41,55 +37,47 @@
         
         public void Run(IEcsSystems systems)
         {
-            ref var jobHandle = ref Schedule();
+            var defaultHandle = default(JobHandle);
+            ref var jobHandle = ref Schedule(systems,ref defaultHandle);
             
             jobHandle.Complete();
             
-            OnJobComplete();
+            UpdateJobResults(ref _job);
         }
 
-        public ref JobHandle Schedule(JobHandle dependsOn = default(JobHandle))
+        public ref JobHandle Schedule(IEcsSystems systems,ref JobHandle dependsOn)
         {
-            var data = GetJobData();
-            if (!data.IsCreated || data.Length <= 0) return ref _jobHandle;
-
             _job = default;
-            _job.Init(ref data);
             
-            SetJobData(ref _job);
+            var count = UpdateJobData(ref _job);
+            if (count <= 0) return ref dependsOn;
             
             var chunkSize = GetChunkSize();
-            _jobHandle = _job.Schedule(data.Length,chunkSize ,dependsOn);
+            _jobHandle = _job.Schedule(count,chunkSize ,dependsOn);
             return ref _jobHandle;
         }
         
         public virtual int GetChunkSize() => _defaultJobsCount;
         
         //custom data setup for job
-        public virtual void SetJobData(ref TJob job) { }
+        public virtual int UpdateJobData(ref TJob job) => -1;
 
-        public virtual void OnJobComplete() { }
-
-        public abstract NativeArray<TData> GetJobData();
+        public virtual void UpdateJobResults(ref TJob job) { }
 
         protected virtual void OnInit(IEcsSystems systems, ILifeTime lifeTime) { }
 
     }
     
     
-    public interface IEcsJobDataSystemBase : IEcsRunSystem,IEcsInitSystem
+    public interface IEcsJobDataParallelFor<TJob> : IEcsRunSystem,IEcsInitSystem
+        where TJob : struct, IEcsDataJobParallelFor
     {
-        ref JobHandle Schedule(JobHandle dependsOn = default(JobHandle));
+        ref JobHandle Schedule(IEcsSystems systems,ref JobHandle dependsOn);
         int GetChunkSize();
-        void OnJobComplete();
+        void UpdateJobResults(ref TJob job);
     }
     
-    public interface IEcsDataJob<TData,TResult> : IJobParallelFor
-        where TData : unmanaged
-        where TResult : unmanaged
+    public interface IEcsDataJobParallelFor : IJobParallelFor
     {
-        void Init(ref NativeArray<TData> data);
-
-        NativeArray<TResult> GetResult();
     }
 }

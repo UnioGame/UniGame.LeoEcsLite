@@ -25,6 +25,11 @@
         #region public properties
 
         public IReadOnlyList<IEcsSystem> EcsSystems => groupConfiguration.EcsSystems;
+        
+        public void RegisterSystems(List<IEcsSystem> systems)
+        {
+            systems.AddRange(EcsSystems);
+        }
 
         public override string FeatureName => string.IsNullOrEmpty(groupConfiguration.FeatureName)
             ? name

@@ -6,12 +6,13 @@
     using System.Runtime.CompilerServices;
     using System.Threading;
     using Unity.Mathematics;
+    using UnityEngine;
     using UnityEngine.Serialization;
 
     public static class TaskThreadService
     {
-        public static readonly int DescsCount;
-        public static readonly int MainThread;
+        public static int DescsCount;
+        public static int MainThread;
         public static int WorkersCount;
         public static int MinChunkSize = 8;
 
@@ -22,13 +23,26 @@
         static ConcurrentQueue<TaskDesc> _tasks = new();
         static ThreadWorkerHandler _task;
 
-        static TaskThreadService()
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        public static void SetupTaskService()
         {
+            if (_descs != null)
+            {
+                for (var i = 0; i < _descs.Length; i++)
+                {
+                    ref var desc = ref _descs[i];
+                    desc.HasWork.Dispose();
+                    if(desc.Thread.IsAlive)
+                        desc.Thread.Abort();
+                }
+            }
+
             MainThread = Thread.CurrentThread.ManagedThreadId;
             DescsCount = Environment.ProcessorCount;
             WorkersCount = DescsCount;
 
             _descs = new ThreadDesc[DescsCount];
+            
             for (var i = 0; i < _descs.Length; i++)
             {
                 ref var desc = ref _descs[i];
@@ -39,7 +53,7 @@
                 _freeWorkers.Enqueue(i);
             }
         }
-
+        
         public static void Run(ThreadWorkerHandler worker, int count, int chunkSize)
         {
 #if DEBUG && !LEOECSLITE_NO_SANITIZE_CHECKS
@@ -51,9 +65,10 @@
             if (count <= 0) return;
 
             _task = worker;
-
+            
             WorkersCount = math.max(WorkersCount, 1);
 
+            chunkSize = chunkSize < 0 ? count/WorkersCount : chunkSize;
             chunkSize = math.max(chunkSize, MinChunkSize);
 
             var jobsCount = count / chunkSize;
@@ -66,6 +81,9 @@
 
             FillJobsQueue(count, chunkSize, WorkersCount);
 
+            foreach (var threadDesc in _descs)
+                threadDesc.HasWork.Set();
+            
             var spin = new SpinWait();
             var done = false;
             do
@@ -85,6 +103,9 @@
                 
             } while (!done);
 
+            foreach (var threadDesc in _descs)
+                threadDesc.HasWork.Reset();
+            
             _task = null;
         }
 
@@ -129,10 +150,13 @@
             var spin = new SpinWait();
 
             ref var desc = ref _descs[(int)raw];
+            
             try
             {
                 while (Thread.CurrentThread.IsAlive)
                 {
+                    desc.HasWork.Wait();
+                    
                     if (desc.Tasks.TryDequeue(out var task))
                     {
                         desc.IsActive = true;

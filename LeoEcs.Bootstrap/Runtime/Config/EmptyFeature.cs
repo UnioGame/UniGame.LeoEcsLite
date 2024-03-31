@@ -30,5 +30,10 @@
 
         public string FeatureName => EcsEmptyFeatureName;
         public IReadOnlyList<IEcsSystem> EcsSystems => EmptySystems;
+        
+        public void RegisterSystems(List<IEcsSystem> systems)
+        {
+            systems.AddRange(EcsSystems);
+        }
     }
 }

@@ -6,5 +6,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Abstract
     public interface ILeoEcsSystemsGroup : ILeoEcsFeature
     {
         IReadOnlyList<IEcsSystem> EcsSystems { get; }
+        
+        void RegisterSystems(List<IEcsSystem> systems);
     }
 }
