@@ -12,7 +12,7 @@
     {
         public (IEcsSystems value, bool replace) Apply(IEcsSystems ecsSystems,IContext context)
         {
-#if ENABLE_ECS_PROFILE
+#if ENABLE_ECS_DEBUG
             
             var profileSystems = new List<EcsProfileSystem>();
             var systems = ecsSystems.GetAllSystems();
