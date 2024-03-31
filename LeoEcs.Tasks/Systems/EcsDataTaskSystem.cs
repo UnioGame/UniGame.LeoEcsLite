@@ -61,15 +61,11 @@
             var taskCount = SetupTask(ref _task);
             
             if (taskCount<= 0) return;
-
-            Profiler.BeginSample("TaskSystem.ExecuteTask");
             
             if(IsMultithreaded)
                 TaskThreadService.Run(_worker, taskCount, GetChunkSize(taskCount));
             else
                 _task.Execute(0, taskCount);
-            
-            Profiler.EndSample();
             
             OnTaskComplete(ref _task);
         }
