@@ -46,10 +46,11 @@
             for (var i = 0; i < _descs.Length; i++)
             {
                 ref var desc = ref _descs[i];
-                desc.Thread = new Thread(ThreadProc) { IsBackground = true };
                 desc.Tasks = _tasks;
-                desc.Thread.Start(i);
                 desc.HasWork = new ManualResetEventSlim(false, 10);
+                desc.Thread = new Thread(ThreadProc) { IsBackground = true };
+                desc.Thread.Start(i);
+                
                 _freeWorkers.Enqueue(i);
             }
         }
