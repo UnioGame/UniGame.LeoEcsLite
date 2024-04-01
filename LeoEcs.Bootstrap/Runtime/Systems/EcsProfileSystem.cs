@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using Leopotam.EcsLite;
     using UniGame.LeoEcs.Bootstrap.Runtime.Attributes;
+    using UniModules.UniCore.Runtime.ReflectionUtils;
     using Unity.Profiling;
     using UnityEngine.Profiling;
     /// <summary>
@@ -45,7 +46,7 @@
             _preInitSystem = system as IEcsPreInitSystem;
             _initSystem = system as IEcsInitSystem;
             
-            _systemName = system.GetType().Name;
+            _systemName = system.GetType().GetFormattedName();
             _profileTag = $"ECS.RUN.{_systemName}";
             _marker = new ProfilerMarker(_profileTag);
         }
