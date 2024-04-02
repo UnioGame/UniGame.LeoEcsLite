@@ -22,7 +22,7 @@
         public void AutoReset(ref LifeTimeComponent c)
         {
             c.Value ??= LifeTime.Create();
-            c.Value.Release();
+            c.Value.Restart();
         }
     }
 }
