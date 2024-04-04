@@ -1,5 +1,5 @@
 {
-    "name": "UniGame.LeoEcs.Shared.Runtime",
+    "name": "unigame.laeoecs.shared.runtime",
     "rootNamespace": "",
     "references": [
         "GUID:e59bf9fc7d5a44b18a819a92edd46163",
@@ -27,8 +27,14 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [
-        "LEO_ECS_ENABLE"
+        "LEO_ECS_ENABLED"
     ],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.leopotam.ecslite",
+            "expression": "2023.0.0",
+            "define": "LEO_ECS_ENABLED"
+        }
+    ],
     "noEngineReferences": false
 }

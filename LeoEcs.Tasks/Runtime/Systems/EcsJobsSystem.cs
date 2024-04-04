@@ -4,7 +4,6 @@
     using System.Linq;
     using Leopotam.EcsLite;
     using UniGame.Core.Runtime.Extension;
-    using UniGame.LeoEcs.Shared.Extensions;
     using UniGame.Runtime.ObjectPool.Extensions;
     using UnityEngine;
     using UnityEngine.Pool;

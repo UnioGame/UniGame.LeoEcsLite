@@ -1,5 +1,5 @@
 {
-    "name": "unigame.laeoecs.shared.runtime",
+    "name": "unigame.leoecs.tasks.runtime",
     "rootNamespace": "",
     "references": [
         "GUID:e59bf9fc7d5a44b18a819a92edd46163",
@@ -40,7 +40,15 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": [],
+    "defineConstraints": [
+        "LEO_ECS_ENABLED"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.leopotam.ecslite",
+            "expression": "2023",
+            "define": "LEO_ECS_ENABLED"
+        }
+    ],
     "noEngineReferences": false
 }
