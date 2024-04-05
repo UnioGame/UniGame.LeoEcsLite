@@ -7,12 +7,19 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
     using System.Diagnostics;
     using Abstract;
     using Leopotam.EcsLite;
-    using Sirenix.OdinInspector;
     using UniCore.Runtime.ProfilerTools;
     using UnityEngine;
     using UnityEngine.Serialization;
     using Object = UnityEngine.Object;
 
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+
+#if TRI_INSPECTOR
+    using TriInspector;
+#endif
+    
     [Serializable]
     public class LeoEcsSystemsGroupConfiguration : ILeoEcsSystemsGroup
     {
@@ -20,13 +27,17 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         
         public bool showFeatureInfo = true;
         
-        [FormerlySerializedAs("_name")]
+#if ODIN_INSPECTOR
         [BoxGroup(FeatureInfoGroup)]
+#endif
+        [FormerlySerializedAs("_name")]
         [ShowIf(nameof(showFeatureInfo))]
         [SerializeField]
         public string name;
         
+#if ODIN_INSPECTOR
         [BoxGroup(FeatureInfoGroup)]
+#endif
         [ShowIf(nameof(showFeatureInfo))]
         [SerializeField]
         public bool _active = true;
@@ -35,14 +46,20 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
         /// ecs group systems
         /// </summary>
         [SerializeReference]
+#if ODIN_INSPECTOR
         [Searchable]
+#endif
         private List<IEcsSystem> _systems = new();
         
+#if ODIN_INSPECTOR
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
         [ListDrawerSettings(ListElementLabelName = "@FeatureName")]
+#endif
         public List<BaseLeoEcsFeature> nestedFeatures = new();
 
+#if ODIN_INSPECTOR
         [Searchable]
+#endif
         [SerializeReference]
         public List<ILeoEcsFeature> serializableFeatures = new();
 
@@ -128,11 +145,13 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
                     return true;
             }
 
+#if ODIN_INSPECTOR
             foreach (var featureAsset in serializableFeatures)
             {
                 if (featureAsset.IsMatch(searchString))
                     return true;
             }
+#endif
             
             return false;
         }

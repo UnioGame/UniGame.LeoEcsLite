@@ -60,12 +60,13 @@
                     return true;
             }
 
+#if ODIN_INSPECTOR
             foreach (var featureAsset in serializableFeatures)
             {
                 if (featureAsset.IsMatch(searchString))
                     return true;
             }
-            
+#endif
             return false;
         }
 

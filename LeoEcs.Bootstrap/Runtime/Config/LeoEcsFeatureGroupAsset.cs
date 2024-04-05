@@ -5,10 +5,17 @@
     using System.Diagnostics;
     using Abstract;
     using Leopotam.EcsLite;
-    using Sirenix.OdinInspector;
     using UniCore.Runtime.ProfilerTools;
     using UnityEngine;
 
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+
+#if TRI_INSPECTOR
+    using TriInspector;
+#endif
+    
     [CreateAssetMenu(menuName = "UniGame/LeoEcs/Features/ECS Feature", fileName = "ECS Feature")]
     public class LeoEcsFeatureGroupAsset : 
         BaseLeoEcsFeature, 
@@ -79,8 +86,10 @@
         {
             return UniTask.CompletedTask;
         }
-        
+
+#if ODIN_INSPECTOR
         [OnInspectorInit]
+#endif
         private void OnInspectorInitialize()
         {
             if (groupConfiguration != null && 

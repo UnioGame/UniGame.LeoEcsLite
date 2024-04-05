@@ -4,19 +4,30 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
     using Cysharp.Threading.Tasks;
     using System.Collections.Generic;
     using Leopotam.EcsLite;
-    using Sirenix.OdinInspector;
     using Abstract;
     using UnityEngine;
 
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+
+#if TRI_INSPECTOR
+    using TriInspector;
+#endif
+    
     [Serializable]
     public class LeoEcsFeatureData : ILeoEcsFeature
     {
+#if ODIN_INSPECTOR
         [FoldoutGroup("$"+nameof(FeatureName))]
+#endif
         [HideLabel]
         [ShowIf(nameof(UseAssetGroup))]
         public BaseLeoEcsFeature featureGroupAsset;
 
+#if ODIN_INSPECTOR
         [FoldoutGroup("$"+nameof(FeatureName))]
+#endif
         [SerializeReference]
         [HideLabel]
         [ShowIf(nameof(UseSerializedGroup))]
@@ -63,10 +74,11 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
             foreach (var system in EcsSystems)
             {
                 if (system == null) continue;
-                    
+
+#if ODIN_INSPECTOR
                 if (system is ISearchFilterable searchFilterable && searchFilterable.IsMatch(searchString))
                     return true;
-
+#endif
                 var typeName = system.GetType().Name;
                 if (typeName.Contains(searchString, StringComparison.OrdinalIgnoreCase)) 
                     return true;

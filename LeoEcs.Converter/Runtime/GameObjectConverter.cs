@@ -1,14 +1,19 @@
 ﻿namespace UniGame.LeoEcs.Converter.Runtime
 {
     using System;
-    using System.Collections.Generic;
-    using System.Threading;
     using Leopotam.EcsLite;
-    using Sirenix.OdinInspector;
     using Abstract;
     using UniGame.LeoEcs.Shared.Components;
     using UniGame.LeoEcs.Shared.Extensions;
     using UnityEngine;
+    
+#if TRI_INSPECTOR
+    using TriInspector;
+#endif
+    
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
     
 #if UNITY_EDITOR
     using UniModules.Editor;
@@ -17,7 +22,9 @@
     [Serializable]
     public class GameObjectConverter : IEcsComponentConverter
     {
+#if ODIN_INSPECTOR
         [InlineButton(nameof(OpenScript),SdfIconType.Folder2Open)]
+#endif
         [GUIColor("GetButtonColor")]
         public bool enabled = true;
  
@@ -64,6 +71,9 @@
             return false;
         }
 
+#if TRI_INSPECTOR
+        [Button]
+#endif
         public void OpenScript()
         {
 #if UNITY_EDITOR

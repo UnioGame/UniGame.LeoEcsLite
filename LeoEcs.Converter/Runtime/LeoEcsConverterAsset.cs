@@ -6,11 +6,18 @@ namespace UniGame.LeoEcs.Converter.Runtime
     using System.Collections.Generic;
     using System.Threading;
     using Leopotam.EcsLite;
-    using Sirenix.OdinInspector;
     using Abstract;
     using UniModules.UniCore.Runtime.Utils;
     using UnityEngine;
 
+#if TRI_INSPECTOR
+    using TriInspector;
+#endif
+    
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+    
 #if UNITY_EDITOR
     using UniModules.Editor;
 #endif
@@ -22,13 +29,19 @@ namespace UniGame.LeoEcs.Converter.Runtime
         IEcsConverterProvider,
         IConverterEntityDestroyHandler
     {
+#if ODIN_INSPECTOR
         [BoxGroup("settings")]
+#endif
         public bool enabled = true;
         
+#if ODIN_INSPECTOR
         [BoxGroup("settings")]
+#endif
         public bool useConverters = false;
         
+#if ODIN_INSPECTOR
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
+#endif
         [ShowIf(nameof(useConverters))]
         public List<ComponentConverterValue> converters = new List<ComponentConverterValue>();
 

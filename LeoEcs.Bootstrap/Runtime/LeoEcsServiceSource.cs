@@ -8,10 +8,17 @@
     using Core.Runtime;
     using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
-    using Sirenix.OdinInspector;
     using GameFlow.Runtime.Services;
     using UnityEngine;
 
+#if ODIN_INSPECTOR
+using Sirenix.OdinInspector;
+#endif
+
+#if TRI_INSPECTOR
+    using TriInspector;
+#endif
+    
     [Serializable]
     [CreateAssetMenu(menuName = "UniGame/LeoEcs/EcsSystemsSource", fileName = nameof(LeoEcsServiceSource))]
     public class LeoEcsServiceSource : ServiceDataSourceAsset<ILeoEcsService>,IEcsExecutorFactory

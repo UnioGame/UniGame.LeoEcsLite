@@ -5,10 +5,17 @@
     using Abstract;
     using Core.Runtime.Extension;
     using Leopotam.EcsLite;
-    using Sirenix.OdinInspector;
     using UniModules.UniCore.Runtime.ReflectionUtils;
     using UnityEngine;
 
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+
+#if TRI_INSPECTOR
+    using TriInspector;
+#endif
+    
     [Serializable]
     [InlineProperty]
     public class ComponentConverterValue : IEcsComponentConverter
@@ -17,17 +24,23 @@
         [InlineProperty]
         [ShowIf(nameof(IsSerializableConverter))]
         [HideLabel]
+#if ODIN_INSPECTOR
         [FoldoutGroup("$GroupTitle",false)]
+#endif
         public IEcsComponentConverter converter;
         
         [InlineEditor()] 
+#if ODIN_INSPECTOR
         [FoldoutGroup("$GroupTitle",false)]
+#endif
         [ShowIf(nameof(IsAssetConverter))]
         [HideLabel]
         public ComponentConverterAsset convertersAsset;
 
         [InlineEditor()] 
+#if ODIN_INSPECTOR
         [FoldoutGroup("$GroupTitle",false)]
+#endif
         [ShowIf(nameof(IsNestedConverter))]
         [HideLabel]
         public LeoEcsConverterAsset nesterConverter;
@@ -79,8 +92,10 @@
             if (string.IsNullOrEmpty(searchString)) return true;
             if (!string.IsNullOrEmpty(GroupTitle) && 
                 GroupTitle.Contains(searchString,StringComparison.CurrentCultureIgnoreCase)) return true;
-            
-            var result = Value?.IsMatch(searchString) ?? false;
+            var result = false;
+#if ODIN_INSPECTOR
+            result = Value?.IsMatch(searchString) ?? false;
+#endif
             return result;
         }
     }

@@ -6,9 +6,16 @@
     using Leopotam.EcsLite;
     using Shared.Components;
     using Shared.Extensions;
-    using Sirenix.OdinInspector;
     using UnityEngine;
 
+#if TRI_INSPECTOR
+    using TriInspector;
+#endif
+    
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+    
 #if UNITY_EDITOR
     using UniModules.Editor;
 #endif
@@ -17,7 +24,9 @@
     public abstract class LeoEcsConverter : IEcsComponentConverter
     {
         [SerializeField]
+#if ODIN_INSPECTOR
         [InlineButton(nameof(OpenScript),SdfIconType.Folder2Open)]
+#endif
         [GUIColor("GetButtonColor")]
         private bool _isEnabled = true;
 
@@ -50,6 +59,9 @@
             return false;
         }
 
+#if TRI_INSPECTOR
+        [Button]
+#endif
         public void OpenScript()
         {
 #if UNITY_EDITOR

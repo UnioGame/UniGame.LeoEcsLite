@@ -5,7 +5,14 @@
     using Abstract;
     using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
+    
+#if ODIN_INSPECTOR
     using Sirenix.OdinInspector;
+#endif
+
+#if TRI_INSPECTOR
+    using TriInspector;
+#endif
 
     [Serializable]
     public class EmptyFeature : ILeoEcsSystemsGroup

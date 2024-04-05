@@ -8,9 +8,16 @@
     using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
     using Shared.Extensions;
-    using Sirenix.OdinInspector;
     using UnityEngine;
 
+#if TRI_INSPECTOR
+    using TriInspector;
+#endif
+    
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+    
     [Serializable]
     [CreateAssetMenu(menuName = "UniGame/LeoEcs/Converter/Entity Converter",fileName = "Entity Converter")]
     public class EcsEntityConverter : LifetimeScriptableObject

@@ -8,11 +8,18 @@ namespace UniGame.LeoEcs.Converter.Runtime
     using Cysharp.Threading.Tasks;
     using Editor;
     using Leopotam.EcsLite;
-    using Sirenix.OdinInspector;
     using UniModules.UniCore.Runtime.DataFlow;
     using UnityEngine;
     using UnityEngine.Serialization;
 
+#if TRI_INSPECTOR
+    using TriInspector;
+#endif
+    
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+    
     public class LeoEcsMonoConverter : 
         MonoBehaviour, 
         ILeoEcsMonoConverter,
@@ -20,40 +27,57 @@ namespace UniGame.LeoEcs.Converter.Runtime
     {
         #region inspector data
         
+#if ODIN_INSPECTOR
         [BoxGroup("converter settings")]
+#endif
         [SerializeField] 
         public bool createEntityOnEnabled = true;
         
+#if ODIN_INSPECTOR
         [BoxGroup("converter settings")]
+#endif
         [SerializeField] 
         public bool createEntityOnStart = false;
 
         [Space]
+#if ODIN_INSPECTOR
         [BoxGroup("converter settings")]
+#endif
         [SerializeField] 
         public bool destroyEntityOnDisable = true;
         
+#if ODIN_INSPECTOR
         [BoxGroup("converter settings")]
+#endif
         [SerializeField] 
         public bool destroyOnDestroy = false;
         
         [FormerlySerializedAs("_serializableConverters")]
+#if ODIN_INSPECTOR
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
+#endif
         [Space(8)]
         [InlineProperty]
         [SerializeReference]
         public List<IEcsComponentConverter> serializableConverters = new List<IEcsComponentConverter>();
 
         [Space(8)] 
+#if ODIN_INSPECTOR
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)] 
-        [InlineEditor()]
         [ListDrawerSettings(ListElementLabelName = "@Name")]
+#endif
+        [InlineEditor()]
+#if TRI_INSPECTOR
+        [ListDrawerSettings()]
+#endif
         public List<LeoEcsConverterAsset> assetConverters = new List<LeoEcsConverterAsset>();
 
+#if ODIN_INSPECTOR
+        [BoxGroup("runtime info")] 
+#endif
         [FormerlySerializedAs("ecsEntityId")]
         [Space]
         [ReadOnly]
-        [BoxGroup("runtime info")] 
         [ShowIf(nameof(IsRuntime))] 
         [SerializeField]
         public int entity = -1;
@@ -280,10 +304,15 @@ namespace UniGame.LeoEcs.Converter.Runtime
             }
         }
 
+#if ODIN_INSPECTOR
         [BoxGroup("runtime info")] 
+        [Button(ButtonSizes.Large,Icon = SdfIconType.Book)]
+#endif
         [EnableIf(nameof(IsPlayingAndReady))]
         [GUIColor(1f,0.5f,0.1f)]
-        [Button(ButtonSizes.Large,Icon = SdfIconType.Book)]
+#if TRI_INSPECTOR
+        [Button(ButtonSizes.Large)]
+#endif
         public void ShowComponents()
         {
             EntityEditorCommands.OpenEntityInfo(entity);

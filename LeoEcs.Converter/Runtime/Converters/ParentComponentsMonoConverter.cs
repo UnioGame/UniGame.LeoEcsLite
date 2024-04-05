@@ -2,16 +2,22 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading;
     using Abstract;
     using LeoEcsLite.LeoEcs.Shared.Components;
     using Leopotam.EcsLite;
     using Shared.Components;
     using Shared.Extensions;
-    using Sirenix.OdinInspector;
     using UniCore.Runtime.ProfilerTools;
     using UnityEngine;
 
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+
+#if TRI_INSPECTOR
+    using TriInspector;
+#endif
+    
     public class ParentComponentsMonoConverter : MonoLeoEcsConverter<ParentComponentsConverter>
     {
     }
@@ -22,15 +28,25 @@
         IConverterEntityDestroyHandler
     {
         [Space(8)] 
+#if TRI_INSPECTOR
+        [ListDrawerSettings(AlwaysExpanded = false)]
+#endif
+#if ODIN_INSPECTOR
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)] 
-        [InlineEditor()]
         [ListDrawerSettings(ListElementLabelName = "@Name",DefaultExpandedState = false)]
+#endif
+        [InlineEditor()]
         public List<LeoEcsConverterAsset> configurations = new List<LeoEcsConverterAsset>();
         
-        [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
+#if ODIN_INSPECTOR
+        [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)] 
+        [ListDrawerSettings(ListElementLabelName = "@Name",DefaultExpandedState = false)]
+#endif
+#if TRI_INSPECTOR
+        [ListDrawerSettings(AlwaysExpanded = false)]
+#endif
         [Space(8)]
         [SerializeReference]
-        [ListDrawerSettings(ListElementLabelName = "@Name",DefaultExpandedState = false)]
         public List<IEcsComponentConverter> converters = new List<IEcsComponentConverter>();
 
         private int _parentEntity = -1;

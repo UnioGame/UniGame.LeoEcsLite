@@ -1,6 +1,13 @@
 ﻿using System;
-using Sirenix.OdinInspector;
 using UniGame.LeoEcs.Bootstrap.Runtime.Abstract;
+
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+
+#if TRI_INSPECTOR
+    using TriInspector;
+#endif
 
 namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 {

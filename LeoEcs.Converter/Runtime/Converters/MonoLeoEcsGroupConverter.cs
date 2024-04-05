@@ -2,15 +2,20 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading;
     using Abstract;
-    using Cysharp.Threading.Tasks;
     using Leopotam.EcsLite;
     using Shared.Components;
     using Shared.Extensions;
-    using Sirenix.OdinInspector;
     using UnityEngine;
 
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+
+#if TRI_INSPECTOR
+    using TriInspector;
+#endif
+    
     public class MonoLeoEcsGroupConverter : MonoLeoEcsConverter<EcsComponentsGroupConverter>
     {
     }

@@ -3,24 +3,35 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 {
     using System;
     using System.Collections.Generic;
-    using Abstract;
-    using Sirenix.OdinInspector;
     using UnityEngine;
-    using UnityEngine.Pool;
     using System.Collections;
     
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+
+#if TRI_INSPECTOR
+    using TriInspector;
+#endif
+    
     [Serializable]
-    public class LeoEcsConfigGroup : ISearchFilterable
+    public class LeoEcsConfigGroup
+#if ODIN_INSPECTOR
+    : ISearchFilterable
+#endif
     {
         [GUIColor(0.2f,0.9f,0f)]
+#if ODIN_INSPECTOR
         [ValueDropdown(nameof(GetUpdateIds))]
+#endif
         public string updateType;
 
         [Space(8)]
         [SerializeField]
         [InlineProperty]
+#if ODIN_INSPECTOR
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
-        //[ListDrawerSettings(ListElementLabelName = "FeatureName")]
+#endif
         public List<LeoEcsFeatureData> features = new List<LeoEcsFeatureData>();
 
         public override bool Equals(object obj)

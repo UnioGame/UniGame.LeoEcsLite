@@ -4,10 +4,17 @@
     using Leopotam.EcsLite;
     using Shared.Components;
     using Shared.Extensions;
-    using Sirenix.OdinInspector;
     using UnityEngine;
     using UnityEngine.Serialization;
 
+#if TRI_INSPECTOR
+    using TriInspector;
+#endif
+    
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+    
     [RequireComponent(typeof(LeoEcsMonoConverter))]
     public class MonoLeoEcsConverter<TConverter> : 
         MonoBehaviour,
@@ -77,8 +84,9 @@
         {
             if (string.IsNullOrEmpty(searchString)) return true;
             if (searchString.Contains(name)) return true;
+#if ODIN_INSPECTOR
             if (converter.IsMatch(searchString)) return true;
-            
+#endif
             return false;
         }
     }
