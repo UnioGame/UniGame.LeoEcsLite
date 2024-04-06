@@ -25,9 +25,11 @@
         #region inspector
         
         [FormerlySerializedAs("_converter")]
-        [HideLabel]
         [SerializeField]
+#if ODIN_INSPECTOR || TRI_INSPECTOR
+        [HideLabel]
         [InlineProperty]
+#endif
         public TConverter converter;
 
         public TConverter Converter => converter;
