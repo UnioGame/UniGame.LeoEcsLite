@@ -26,7 +26,9 @@
         [SerializeField]
         private string groupName;
         
+#if  ODIN_INSPECTOR || TRI_INSPECTOR
         [InlineProperty]
+#endif
         [SerializeReference]
         private List<IEcsComponentConverter> _converters = new();
 

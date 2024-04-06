@@ -1,9 +1,7 @@
 ﻿namespace UniGame.LeoEcs.Converter.Runtime
 {
     using System;
-    using System.Threading;
     using Abstract;
-    using Core.Runtime.Extension;
     using Leopotam.EcsLite;
     using UniModules.UniCore.Runtime.ReflectionUtils;
     using UnityEngine;
@@ -16,33 +14,45 @@
     using TriInspector;
 #endif
     
-    [Serializable]
+    
+#if  ODIN_INSPECTOR || TRI_INSPECTOR
     [InlineProperty]
+#endif
+    [Serializable]
     public class ComponentConverterValue : IEcsComponentConverter
     {
         [SerializeReference]
+#if  ODIN_INSPECTOR || TRI_INSPECTOR
         [InlineProperty]
         [ShowIf(nameof(IsSerializableConverter))]
         [HideLabel]
+#endif
 #if ODIN_INSPECTOR
         [FoldoutGroup("$GroupTitle",false)]
 #endif
         public IEcsComponentConverter converter;
         
+#if  ODIN_INSPECTOR || TRI_INSPECTOR
         [InlineEditor()] 
+#endif
 #if ODIN_INSPECTOR
         [FoldoutGroup("$GroupTitle",false)]
 #endif
+#if  ODIN_INSPECTOR || TRI_INSPECTOR
         [ShowIf(nameof(IsAssetConverter))]
         [HideLabel]
+#endif
         public ComponentConverterAsset convertersAsset;
 
-        [InlineEditor()] 
+        
+#if  ODIN_INSPECTOR || TRI_INSPECTOR
+        [InlineEditor] 
+        [ShowIf(nameof(IsNestedConverter))]
+        [HideLabel]
+#endif
 #if ODIN_INSPECTOR
         [FoldoutGroup("$GroupTitle",false)]
 #endif
-        [ShowIf(nameof(IsNestedConverter))]
-        [HideLabel]
         public LeoEcsConverterAsset nesterConverter;
 
         public string GroupTitle => GetValueTitle();

@@ -27,7 +27,9 @@
         [Tooltip("if true, when create entities for each converter")]
         public bool createEntityForEachConverter = true;
 
+#if  ODIN_INSPECTOR || TRI_INSPECTOR
         [InlineProperty]
+#endif
         public List<ComponentConverterValue> converters = new List<ComponentConverterValue>();
         
         #endregion

@@ -17,8 +17,10 @@
     [CreateAssetMenu(menuName = "UniGame/LeoEcs/Converter/GameObject Converter",fileName = "GameObject Converter")]
     public class GameObjectAssetConverter : ScriptableObject,IEcsComponentConverter
     {
+#if  ODIN_INSPECTOR || TRI_INSPECTOR
         [HideLabel]
         [InlineProperty]
+#endif
         public GameObjectConverter converter = new GameObjectConverter();
 
         public string Name => GetType().Name;

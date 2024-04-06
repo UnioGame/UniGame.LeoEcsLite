@@ -56,8 +56,10 @@ namespace UniGame.LeoEcs.Converter.Runtime
 #if ODIN_INSPECTOR
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
 #endif
-        [Space(8)]
+#if  ODIN_INSPECTOR || TRI_INSPECTOR
         [InlineProperty]
+#endif
+        [Space(8)]
         [SerializeReference]
         public List<IEcsComponentConverter> serializableConverters = new List<IEcsComponentConverter>();
 
@@ -66,7 +68,9 @@ namespace UniGame.LeoEcs.Converter.Runtime
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)] 
         [ListDrawerSettings(ListElementLabelName = "@Name")]
 #endif
+#if  ODIN_INSPECTOR || TRI_INSPECTOR
         [InlineEditor()]
+#endif
 #if TRI_INSPECTOR
         [ListDrawerSettings()]
 #endif
@@ -77,9 +81,11 @@ namespace UniGame.LeoEcs.Converter.Runtime
 #endif
         [FormerlySerializedAs("ecsEntityId")]
         [Space]
+        [SerializeField]
+#if  ODIN_INSPECTOR || TRI_INSPECTOR
         [ReadOnly]
         [ShowIf(nameof(IsRuntime))] 
-        [SerializeField]
+#endif
         public int entity = -1;
 
 #endregion
@@ -192,8 +198,10 @@ namespace UniGame.LeoEcs.Converter.Runtime
                 .Forget();
         }
 
+#if  ODIN_INSPECTOR || TRI_INSPECTOR
         [ShowIf(nameof(IsPlayingAndReady))]
         [Button("Destroy")]
+#endif
         private void DestroyObject()
         {
             DestroyEntity();
@@ -308,8 +316,10 @@ namespace UniGame.LeoEcs.Converter.Runtime
         [BoxGroup("runtime info")] 
         [Button(ButtonSizes.Large,Icon = SdfIconType.Book)]
 #endif
+#if  ODIN_INSPECTOR || TRI_INSPECTOR
         [EnableIf(nameof(IsPlayingAndReady))]
         [GUIColor(1f,0.5f,0.1f)]
+#endif
 #if TRI_INSPECTOR
         [Button(ButtonSizes.Large)]
 #endif

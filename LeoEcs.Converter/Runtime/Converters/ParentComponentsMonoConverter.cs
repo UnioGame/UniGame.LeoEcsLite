@@ -35,7 +35,9 @@
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)] 
         [ListDrawerSettings(ListElementLabelName = "@Name",DefaultExpandedState = false)]
 #endif
-        [InlineEditor()]
+#if TRI_INSPECTOR || ODIN_INSPECTOR
+        [InlineEditor]
+#endif
         public List<LeoEcsConverterAsset> configurations = new List<LeoEcsConverterAsset>();
         
 #if ODIN_INSPECTOR

@@ -42,7 +42,9 @@ namespace UniGame.LeoEcs.Converter.Runtime
 #if ODIN_INSPECTOR
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
 #endif
+#if  ODIN_INSPECTOR || TRI_INSPECTOR
         [ShowIf(nameof(useConverters))]
+#endif
         public List<ComponentConverterValue> converters = new List<ComponentConverterValue>();
 
         public bool IsEnabled => enabled;

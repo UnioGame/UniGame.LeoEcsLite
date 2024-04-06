@@ -27,7 +27,9 @@
 #if ODIN_INSPECTOR
         [InlineButton(nameof(OpenScript),SdfIconType.Folder2Open)]
 #endif
+#if TRI_INSPECTOR || ODIN_INSPECTOR
         [GUIColor("GetButtonColor")]
+#endif
         private bool _isEnabled = true;
 
         public virtual bool IsEnabled => _isEnabled;
