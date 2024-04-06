@@ -23,8 +23,10 @@
     {
         #region inspector
         
+#if ODIN_INSPECTOR || TRI_INSPECTOR
         [InlineProperty]
         [HideLabel]
+#endif
         public LeoEcsSystemsGroupConfiguration groupConfiguration = new LeoEcsSystemsGroupConfiguration();
 
         #endregion

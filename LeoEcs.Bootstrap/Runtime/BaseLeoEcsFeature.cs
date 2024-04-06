@@ -58,7 +58,9 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
                    source.Contains(filter, StringComparison.OrdinalIgnoreCase);
         }
     
+#if ODIN_INSPECTOR || TRI_INSPECTOR
         [Button]
+#endif
         private void Save()
         {
 #if UNITY_EDITOR

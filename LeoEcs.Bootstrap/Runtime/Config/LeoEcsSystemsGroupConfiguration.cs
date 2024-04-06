@@ -30,15 +30,19 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 #if ODIN_INSPECTOR
         [BoxGroup(FeatureInfoGroup)]
 #endif
-        [FormerlySerializedAs("_name")]
+#if ODIN_INSPECTOR || TRI_INSPECTOR
         [ShowIf(nameof(showFeatureInfo))]
+#endif
+        [FormerlySerializedAs("_name")]
         [SerializeField]
         public string name;
         
 #if ODIN_INSPECTOR
         [BoxGroup(FeatureInfoGroup)]
 #endif
+#if ODIN_INSPECTOR || TRI_INSPECTOR
         [ShowIf(nameof(showFeatureInfo))]
+#endif
         [SerializeField]
         public bool _active = true;
  
