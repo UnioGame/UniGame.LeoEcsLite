@@ -21,16 +21,20 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 #if ODIN_INSPECTOR
         [FoldoutGroup("$"+nameof(FeatureName))]
 #endif
+#if ODIN_INSPECTOR || TRI_INSPECTOR
         [HideLabel]
         [ShowIf(nameof(UseAssetGroup))]
+#endif
         public BaseLeoEcsFeature featureGroupAsset;
 
 #if ODIN_INSPECTOR
         [FoldoutGroup("$"+nameof(FeatureName))]
 #endif
         [SerializeReference]
+#if ODIN_INSPECTOR || TRI_INSPECTOR
         [HideLabel]
         [ShowIf(nameof(UseSerializedGroup))]
+#endif
         public ILeoEcsSystemsGroup featureGroup = null;
 
         public string FeatureName => Feature is null or EmptyFeature

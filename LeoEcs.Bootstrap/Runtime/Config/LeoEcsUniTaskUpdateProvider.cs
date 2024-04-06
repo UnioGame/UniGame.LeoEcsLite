@@ -12,7 +12,9 @@ using UniGame.LeoEcs.Bootstrap.Runtime.Abstract;
 namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 {
     [Serializable]
+#if ODIN_INSPECTOR || TRI_INSPECTOR
     [InlineProperty]
+#endif
     public class LeoEcsUniTaskUpdateProvider : ILeoEcsUpdateOrderProvider
     {
         public LeoEcsPlayerUpdateType updateType = LeoEcsPlayerUpdateType.Update;

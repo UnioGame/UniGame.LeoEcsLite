@@ -23,7 +23,9 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime
     {
         public const string DefaultFeatureName = "EMPTY Feature";
         
+#if ODIN_INSPECTOR || TRI_INSPECTOR
         [ShowIf(nameof(ShowFeatureInfo))]
+#endif
         [SerializeField]
         public bool isEnabled = true;
 

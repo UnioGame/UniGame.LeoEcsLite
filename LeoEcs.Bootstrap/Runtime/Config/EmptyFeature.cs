@@ -20,7 +20,9 @@
         public static readonly List<IEcsSystem> EmptySystems = new();
         public const string EcsEmptyFeatureName = "Empty Feature";
         
+#if ODIN_INSPECTOR || TRI_INSPECTOR
         [ReadOnly]
+#endif
         public string name = EcsEmptyFeatureName;
         
         public UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)

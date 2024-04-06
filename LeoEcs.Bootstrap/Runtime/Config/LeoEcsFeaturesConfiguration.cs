@@ -18,8 +18,10 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 #if ODIN_INSPECTOR
        [FoldoutGroup("world config")]
 #endif
+#if ODIN_INSPECTOR || TRI_INSPECTOR
         [InlineProperty]
         [HideLabel]
+#endif
         public EcsWorldConfiguration worldConfiguration = new EcsWorldConfiguration();
         
         [Space(8)]

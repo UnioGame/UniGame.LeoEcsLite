@@ -31,17 +31,20 @@ using Sirenix.OdinInspector;
         [Tooltip("timeout in ms for feature initialization")]
         public float featureTimeout = 20000f;
 
+        
+#if ODIN_INSPECTOR || TRI_INSPECTOR
         [InlineEditor] 
+#endif
         public LeoEcsFeaturesConfiguration ecsConfiguration;
 
-#if ODIN_INSPECTOR
+#if ODIN_INSPECTOR || TRI_INSPECTOR
         [InlineEditor]
 #endif
         [Space(10)]
         [SerializeField]
         public LeoEcsUpdateMapAsset updatesMap;
 
-#if ODIN_INSPECTOR
+#if ODIN_INSPECTOR || TRI_INSPECTOR
         [InlineEditor]
         [ShowIf(nameof(IsRuntimeConfigVisible))]
 #endif

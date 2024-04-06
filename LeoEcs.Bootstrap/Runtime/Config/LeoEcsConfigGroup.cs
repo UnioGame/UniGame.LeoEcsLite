@@ -20,7 +20,12 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
     : ISearchFilterable
 #endif
     {
+#if ODIN_INSPECTOR || TRI_INSPECTOR
         [GUIColor(0.2f,0.9f,0f)]
+#endif
+#if TRI_INSPECTOR
+        [Dropdown(nameof(GetUpdateIds))]
+#endif     
 #if ODIN_INSPECTOR
         [ValueDropdown(nameof(GetUpdateIds))]
 #endif
@@ -28,7 +33,9 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 
         [Space(8)]
         [SerializeField]
+#if ODIN_INSPECTOR || TRI_INSPECTOR
         [InlineProperty]
+#endif
 #if ODIN_INSPECTOR
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
 #endif
@@ -55,7 +62,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
             return false;
         }
 
-        public IEnumerable GetUpdateIds()
+        public IEnumerable<string> GetUpdateIds()
         {
             return LeoEcsUpdateQueueIds.GetUpdateIds();
         }
