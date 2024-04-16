@@ -29,6 +29,12 @@
     "defineConstraints": [
         "LEO_ECS_ENABLE"
     ],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.leopotam.ecslite",
+            "expression": "",
+            "define": "LEO_ECS_ENABLE"
+        }
+    ],
     "noEngineReferences": false
 }
