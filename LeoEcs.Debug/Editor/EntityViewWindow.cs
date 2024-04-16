@@ -1,11 +1,19 @@
 ﻿namespace UniGame.LeoEcs.Debug.Editor
 {
+#if ODIN_INSPECTOR
     using Sirenix.OdinInspector;
     using Sirenix.OdinInspector.Editor;
+#endif
+    
     using UnityEditor;
     using UnityEngine;
 
-    public class EntityViewWindow : OdinEditorWindow
+    public class EntityViewWindow
+#if ODIN_INSPECTOR
+        : OdinEditorWindow
+#else
+        : EditorWindow
+#endif
     {
         #region statics data
 
@@ -37,8 +45,10 @@
 
         #region inspector
 
+#if ODIN_INSPECTOR
         [HideLabel]
         [InlineProperty]
+#endif
         public EntityEditorView entityView;
 
         #endregion

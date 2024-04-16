@@ -27,7 +27,8 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [
-        "LEO_ECS_ENABLE"
+        "LEO_ECS_ENABLE",
+        "ODIN_INSPECTOR"
     ],
     "versionDefines": [
         {

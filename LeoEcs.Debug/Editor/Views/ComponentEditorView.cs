@@ -4,15 +4,17 @@
     using System.Buffers;
     using Converter.Runtime;
     using Core.Runtime.ObjectPool;
-    using Core.Runtime.SerializableType;
     using Leopotam.EcsLite;
     using Runtime.ObjectPool.Extensions;
-    using Sirenix.OdinInspector;
     using UniModules.Editor;
     using UniModules.UniCore.Runtime.ReflectionUtils;
-    using UniModules.UniGame.Editor.DrawersTools;
     using UnityEngine;
 
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+#endif
+    
+    
     [Serializable]
     public class ComponentEditorView : IPoolable,ISearchFilterable
     {

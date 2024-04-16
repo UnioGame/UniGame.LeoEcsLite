@@ -3,13 +3,24 @@
     using System.Collections;
     using System.Collections.Generic;
     using Converter.Runtime;
-    using Sirenix.OdinInspector;
-    using Sirenix.OdinInspector.Editor;
     using Unity.EditorCoroutines.Editor;
-    using UnityEditor;
     using UnityEngine;
 
-    public class EntityDataWindow : OdinEditorWindow
+#if UNITY_EDITOR
+    using UnityEditor;
+#endif
+    
+#if ODIN_INSPECTOR
+    using Sirenix.OdinInspector;
+    using Sirenix.OdinInspector.Editor;
+#endif
+    
+    public class EntityDataWindow 
+#if ODIN_INSPECTOR
+        : OdinEditorWindow
+#else
+        : EditorWindow
+#endif
     {
         #region statics data
 
@@ -44,16 +55,22 @@
 
         #region inspector
         
+#if ODIN_INSPECTOR
         [OnValueChanged(nameof(UpdateView))]
         [InlineButton(nameof(UpdateView),SdfIconType.Arrow90degLeft,"Refresh")]
+#endif
         public int entityId = -1;
         
+#if ODIN_INSPECTOR
         [OnValueChanged(nameof(SetAutoUpdate))]
+#endif
         public bool autoUpdate = false;
 
+#if ODIN_INSPECTOR
         [TitleGroup("Entity View")]
         [HideLabel]
         [InlineProperty]
+#endif
         public EntityEditorView entityView;
 
         #endregion
@@ -81,11 +98,13 @@
             EditorCoroutineUtility.StartCoroutine(AutoRefresh(), this);
         }
 
+#if ODIN_INSPECTOR
         protected override void OnDestroy()
         {
             base.OnDestroy();
             StopAutoRefresh();
         }
+#endif
         
         private void StopAutoRefresh()
         {
