@@ -7,11 +7,11 @@ namespace UniGame.LeoEcs.Shared.Components
     /// request component that will be deleted after "counter" cycles
     /// </summary>
     [Serializable]
-    public struct Component<T> : IEcsAutoReset<Component<T>>
+    public struct CounterComponent<T> : IEcsAutoReset<CounterComponent<T>>
     {
         public int counter;
         
-        public void AutoReset(ref Component<T> c)
+        public void AutoReset(ref CounterComponent<T> c)
         {
             c.counter = 0;
         }
