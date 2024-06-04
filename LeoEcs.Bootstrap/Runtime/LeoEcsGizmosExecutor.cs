@@ -18,10 +18,11 @@
         public void Dispose()
         {
             _gizmosSystems?.Clear();
+            
             Stop();
-#if UNITY_EDITOR
+            
             if (this == null || Application.isPlaying == false || gameObject == null) return;
-#endif
+
             Destroy(gameObject);
         }
 
