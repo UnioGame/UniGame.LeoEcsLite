@@ -76,7 +76,7 @@
         
         public override async UniTask InitializeAsync()
         {
-#if DEBUG
+#if GAME_DEBUG
             var stopwatch = Stopwatch.StartNew();
             stopwatch.Start();
 #endif
@@ -91,7 +91,7 @@
                 systems.Init();
             }
             
-#if DEBUG
+#if GAME_DEBUG
             LogServiceTime("InitializeAsync",stopwatch);
 #endif
         }
@@ -137,7 +137,7 @@
             _world = null;
         }
         
-        [Conditional("DEBUG")]
+        [Conditional("GAME_DEBUG")]
         private void LogServiceTime(string message, Stopwatch timer,bool stop = true)
         {
             var elapsed = timer.ElapsedMilliseconds;
@@ -242,7 +242,7 @@
         {
             if (!feature.IsFeatureEnabled) return;
                 
-#if DEBUG
+#if GAME_DEBUG
             var timer = Stopwatch.StartNew();   
             timer.Restart();
 #endif
@@ -258,7 +258,7 @@
                 featureLifeTime.Terminate();
             }
             
-#if DEBUG
+#if GAME_DEBUG
             LogServiceTime($"{feature.FeatureName} | {feature.GetType().Name}", timer,false);
 #endif
                 
@@ -279,14 +279,14 @@
                 var featureLifeTime = new LifeTimeDefinition();
                 if (leoEcsSystem is ILeoEcsInitializableFeature initFeature)
                 {
-#if DEBUG
+#if GAME_DEBUG
                     timer.Restart();
 #endif
                     await initFeature
                         .InitializeFeatureAsync(ecsSystems)
                         .AttachTimeoutLogAsync(GetErrorMessage(initFeature),_featureTimeout,featureLifeTime.Token);
                     
-#if DEBUG
+#if GAME_DEBUG
                     LogServiceTime($"\tSUB FEATURE {feature.GetType().Name}", timer);
 #endif
                     
