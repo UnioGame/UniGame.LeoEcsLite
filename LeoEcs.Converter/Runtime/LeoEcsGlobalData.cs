@@ -20,13 +20,6 @@
             LifeTime = new LifeTimeDefinition();
         }
 
-        public static bool HasFlag<T>(T flag)
-            where T : Enum
-        {
-            if (World != null && World.IsAlive()) return false;
-            return World.HasFlag<T>(flag);
-        }
-
         public static async UniTask<EcsWorld> WaitAliveWorld()
         {
             if (World != null && World.IsAlive()) return World;

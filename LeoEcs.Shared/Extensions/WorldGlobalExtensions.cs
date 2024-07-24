@@ -1,6 +1,8 @@
 ﻿namespace UniGame.LeoEcs.Shared.Extensions
 {
     using System;
+    using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
     using Leopotam.EcsLite;
     using UniModules.UniCore.Runtime.Extension;
     using UniModules.UniCore.Runtime.Utils;
@@ -8,24 +10,32 @@
 
     public static class WorldGlobalExtensions
     {
-        private static MemorizeItem<EcsWorld, EntityContext> _globalValues = MemorizeTool
-            .Memorize<EcsWorld, EntityContext>(x =>
+        private static MemorizeItem<EcsWorld, WorldValueMap> _globalValues = MemorizeTool
+            .Memorize<EcsWorld, WorldValueMap>(x =>
             {
-                var context = new EntityContext();
+                var context = new WorldValueMap();
                 var worldLifeTime = x.GetWorldLifeTime();
-                context.AddTo(worldLifeTime);
+                worldLifeTime.AddCleanUpAction(() => context.Clear());
                 return context;
             });
-
-        public static bool HasFlag<T>(this EcsWorld world, T flag)
-            where T  : Enum
+        
+        public static bool TryGetGlobal<T>(this EcsWorld world, out T value)
         {
-            var context = _globalValues[world];
-            if(!context.Contains<T>()) return false;
+            var globals = _globalValues[world];
+            value = default;
+            var targetType = typeof(T);
+
+            if (!globals.TryGetValue(targetType, out var targetValue)) return 
+                false;
             
-            var value = context.Get<T>();
-            var isSet = value.IsFlagSet(flag);
-            return isSet;
+            value = (T)targetValue;
+            return true;
+        }
+        
+        public static bool TryGetGlobal(this EcsWorld world,Type type, out object value)
+        {
+            var globals = _globalValues[world];
+            return globals.TryGetValue(type, out value);
         }
         
         public static T GetGlobal<T>(this EcsWorld world)
@@ -38,8 +48,25 @@
         public static T SetGlobal<T>(this EcsWorld world,T value)
         {
             var globals = _globalValues[world];
-            globals.Publish(value);
+            globals.Set(value);
             return value;
         }
+    }
+
+    public class WorldValueMap : Dictionary<Type, object>
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Contains<T>() => ContainsKey(typeof(T));
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public T Get<T>()
+        {
+            if(TryGetValue(typeof(T),out var value))
+                return (T)value;
+            return default;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Set<T>(T value) => this[typeof(T)] = value;
     }
 }

@@ -21,6 +21,7 @@
                 new EcsDiWorldInjection(),
                 new EcsDiPoolInjection(),
                 new EcsDiAspectInjection(),
+                new EcsDiFilterInjection(),
             };
         }
 

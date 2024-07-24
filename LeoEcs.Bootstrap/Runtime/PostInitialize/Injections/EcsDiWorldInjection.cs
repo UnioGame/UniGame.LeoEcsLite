@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Reflection;
     using Leopotam.EcsLite;
+    using Shared.Extensions;
 
     [Serializable]
     public class EcsDiWorldInjection : IEcsDiInjection
@@ -23,13 +24,19 @@
             if (_worldType == fieldType)
             {
                 var value = field.GetValue(target);
-                if(value==null) return;
+                if(value!=null) return;
                 field.SetValue(target,world);
                 return;
             }
-            
+
             if (_ecsSystems == fieldType)
+            {
                 field.SetValue(target,ecsSystems);
+                return;
+            }
+            
+            if(world.TryGetGlobal(fieldType,out var worldValue))
+                field.SetValue(target,worldValue);
         }
     }
 }
