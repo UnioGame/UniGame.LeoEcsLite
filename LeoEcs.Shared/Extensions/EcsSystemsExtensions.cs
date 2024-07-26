@@ -25,6 +25,15 @@ namespace UniGame.LeoEcs.Shared.Extensions
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool Has(this EcsFilter filter)
+        {
+            foreach (var _ in filter)
+                return true;
+
+            return false;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int First(this EcsFilter filter)
         {
             foreach (var entity in filter)

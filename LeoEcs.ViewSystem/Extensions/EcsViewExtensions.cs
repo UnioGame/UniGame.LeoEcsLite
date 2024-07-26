@@ -2,7 +2,6 @@ using System;
 using Leopotam.EcsLite;
 using UniGame.LeoEcs.Shared.Extensions;
 using UniGame.LeoEcs.ViewSystem.Components;
-using UniGame.LeoEcs.ViewSystem.Converters;
 using UniModules.UniGame.UiSystem.Runtime;
 using UnityEngine;
 
@@ -14,7 +13,6 @@ namespace UniGame.LeoEcs.ViewSystem.Extensions
 
     public static class EcsViewExtensions
     {
-        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static EcsWorld.Mask ViewFilter<TModel>(this EcsWorld world)
             where TModel : IViewModel
