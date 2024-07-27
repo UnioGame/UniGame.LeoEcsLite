@@ -6,7 +6,7 @@ Leo Ecs Lite Toolset for Unity3D
   - [Intro](#intro)
     - [Configurations](#configurations)
     - [Demo Ecs Features](#demo-ecs-features)
-  - [Unity Package Installation](#unity-package-installation)
+- [Unity Package Installation](#unity-package-installation)
 
 
 ## Intro
@@ -93,7 +93,7 @@ public class IdleLevelsFeature : LeoEcsFeature
 }
 ```
 
-## Unity Package Installation
+# Unity Package Installation
 
 **Odin Inspector or Tri-Inspector recommended to usage with this Package (https://odininspector.com | https://github.com/codewriter-packages/Tri-Inspector)**
 
