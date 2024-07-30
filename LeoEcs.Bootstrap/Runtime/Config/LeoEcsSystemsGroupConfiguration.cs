@@ -58,6 +58,7 @@ namespace UniGame.LeoEcs.Bootstrap.Runtime.Config
 #if ODIN_INSPECTOR
         [Searchable(FilterOptions = SearchFilterOptions.ISearchFilterableInterface)]
         [ListDrawerSettings(ListElementLabelName = "@FeatureName")]
+        [InlineEditor]
 #endif
         public List<BaseLeoEcsFeature> nestedFeatures = new();
 
