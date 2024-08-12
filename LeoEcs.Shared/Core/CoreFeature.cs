@@ -10,6 +10,7 @@
     using Timer;
     using UniGame.LeoEcs.Bootstrap.Runtime;
     using UniGame.LeoEcs.Shared.Components;
+    using UniGame.LeoEcs.Shared.Extensions;
     using UnityEngine;
 
     [CreateAssetMenu(menuName = "Game/Feature/Core/Core Feature", fileName = "Core Feature")]
@@ -19,6 +20,10 @@
         
         public override async UniTask InitializeFeatureAsync(IEcsSystems ecsSystems)
         {
+            var world = ecsSystems.GetWorld();
+            var worldLifeTime = world.GetWorldLifeTime();
+            world.SetGlobal(worldLifeTime);
+            
             ecsSystems.Add(new KillMeNextTimeHandleSystem());
             ecsSystems.Add(new ProcessDestroySilentSystem());
             
