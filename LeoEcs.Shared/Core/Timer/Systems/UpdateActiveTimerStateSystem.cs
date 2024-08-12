@@ -2,6 +2,7 @@
 {
     using System;
     using Leopotam.EcsLite;
+    using Time.Service;
     using UniGame.LeoEcs.Timer.Components;
     using UniGame.LeoEcs.Bootstrap.Runtime.Abstract;
     using UniGame.LeoEcs.Bootstrap.Runtime.Attributes;
@@ -41,7 +42,7 @@
             foreach (var entity in _filter)
             {
                 ref var stateComponent = ref _timerAspect.State.Add(entity);
-                stateComponent.LastTime = Time.time;
+                stateComponent.LastTime = GameTime.Time;
             }
         }
     }

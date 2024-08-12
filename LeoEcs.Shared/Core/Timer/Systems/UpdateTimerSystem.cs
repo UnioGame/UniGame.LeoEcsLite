@@ -34,6 +34,7 @@
             _filter = _world
                 .Filter<CooldownActiveComponent>()
                 .Inc<CooldownComponent>()
+                .Exc<CooldownCompleteComponent>()
                 .Exc<CooldownFinishedSelfEvent>()
                 .End();
         }
@@ -50,8 +51,8 @@
                 var timePassed = GameTime.Time - stateComponent.LastTime;
                 
                 remainsTimeComponent.Value = cooldown - timePassed;
-                
-                if(timePassed < cooldown) continue;
+
+                if (timePassed < cooldown) continue;
                 
                 _timerAspect.Active.Del(entity);
                 _timerAspect.Completed.Add(entity);
