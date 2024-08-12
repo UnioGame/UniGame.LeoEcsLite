@@ -11,6 +11,7 @@
     using Core.Runtime;
     using Game.Ecs.Core.Components;
     using Game.Modules.UnioModules.UniGame.LeoEcsLite.LeoEcs.ViewSystem.Components;
+    using Leopotam.EcsLite.Di;
     using Shared.Extensions;
     using UiSystem.Runtime;
     using Debug = UnityEngine.Debug;
@@ -24,37 +25,28 @@
 #endif
     [Serializable]
     [ECSDI]
-    public class CreateViewSystem : IEcsRunSystem,IEcsInitSystem
+    public class CreateViewSystem : IEcsRunSystem
     {
         private readonly IGameViewSystem _viewSystem;
         private readonly IContext _context;
         
-        public EcsFilter _createFilter;
         public EcsWorld _world;
 
         private EcsPool<CreateViewRequest> _createViewPool;
         private EcsPool<OwnerComponent> _ownerPool;
         private EcsPool<ViewParentComponent> _parentPool;
 
+        public EcsFilterInject<Inc<CreateViewRequest>> _createFilter;
+        
         public CreateViewSystem(IContext context,IGameViewSystem viewSystem)
         {
             _context = context;
             _viewSystem = viewSystem;
         }
         
-        public void Init(IEcsSystems systems)
-        {
-            _world = systems.GetWorld();
-            _createFilter = _world.Filter<CreateViewRequest>().End();
-            
-            _createViewPool = _world.GetPool<CreateViewRequest>();
-            _ownerPool = _world.GetPool<OwnerComponent>();
-            _parentPool = _world.GetPool<ViewParentComponent>();
-        }
-        
         public void Run(IEcsSystems systems)
         {
-            foreach (var entity in _createFilter)
+            foreach (var entity in _createFilter.Value)
             {
                 ref var request = ref _createViewPool.Get(entity);
                 

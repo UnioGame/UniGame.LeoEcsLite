@@ -1,9 +1,11 @@
 ﻿namespace UniGame.LeoEcs.ViewSystem.Systems
 {
     using System;
+    using Bootstrap.Runtime.Attributes;
     using Components;
     using Extensions;
     using Leopotam.EcsLite;
+    using Leopotam.EcsLite.Di;
 
 #if ENABLE_IL2CPP
     using Unity.IL2CPP.CompilerServices;
@@ -13,28 +15,17 @@
     [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 #endif
     [Serializable]
-    public class CloseViewSystem : IEcsInitSystem,IEcsRunSystem
+    [ECSDI]
+    public class CloseViewSystem : IEcsRunSystem
     {
         private EcsWorld _world;
-
-        private EcsFilter _closeFilter;
         private EcsPool<ViewComponent> _viewComponent;
 
-        public void Init(IEcsSystems systems)
-        {
-            _world = systems.GetWorld();
-            
-            _closeFilter = _world
-                .Filter<CloseViewSelfRequest>()
-                .Inc<ViewComponent>()
-                .End();
-            
-            _viewComponent = _world.GetPool<ViewComponent>();
-        }
+        private EcsFilterInject<Inc<CloseViewSelfRequest,ViewComponent>> _closeFilter;
         
         public void Run(IEcsSystems systems)
         {
-            foreach (var entity in _closeFilter)
+            foreach (var entity in _closeFilter.Value)
             {
                 ref var viewComponent = ref _viewComponent.Get(entity);
                 viewComponent.View.Close();
