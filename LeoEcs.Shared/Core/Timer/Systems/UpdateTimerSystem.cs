@@ -48,7 +48,10 @@
                 ref var remainsTimeComponent = ref _timerAspect.Remains.GetOrAddComponent(entity);
                 
                 var cooldown = cooldownComponent.Value;
-                var timePassed = GameTime.Time - stateComponent.LastTime;
+                var unscaleTime = cooldownComponent.UnscaleTime;
+                var timePassed = unscaleTime 
+                    ? GameTime.UnscaledTime - stateComponent.LastTime
+                    : GameTime.Time - stateComponent.LastTime;
                 
                 remainsTimeComponent.Value = cooldown - timePassed;
 

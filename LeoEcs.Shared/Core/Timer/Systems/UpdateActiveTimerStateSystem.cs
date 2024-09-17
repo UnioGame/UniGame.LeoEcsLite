@@ -41,8 +41,14 @@
         {
             foreach (var entity in _filter)
             {
+                ref var cooldownComponent = ref _timerAspect.Cooldown.Get(entity);
+                var unscaleTime = cooldownComponent.UnscaleTime;
+                
                 ref var stateComponent = ref _timerAspect.State.Add(entity);
-                stateComponent.LastTime = GameTime.Time;
+                
+                stateComponent.LastTime = unscaleTime
+                    ? GameTime.UnscaledTime
+                    : GameTime.Time;
             }
         }
     }
