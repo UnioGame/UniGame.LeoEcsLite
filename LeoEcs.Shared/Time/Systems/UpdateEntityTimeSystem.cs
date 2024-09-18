@@ -1,6 +1,7 @@
 namespace Game.Ecs.Time.Systems
 {
     using System;
+    using System.Runtime.CompilerServices;
     using Aspects;
     using Components;
     using Leopotam.EcsLite;
@@ -33,20 +34,28 @@ namespace Game.Ecs.Time.Systems
             _filter = _world
                 .Filter<EntityGameTimeComponent>()
                 .End();
+            
+            SetGameTime();
         }
         
         public void Run(IEcsSystems systems)
         {
-            GameTime.Time = Time.time;
-            GameTime.DeltaTime = Time.deltaTime;
-            GameTime.RealTime = Time.realtimeSinceStartup;
-            GameTime.UnscaledTime = Time.unscaledTime;
+            SetGameTime();
             
             foreach (var entity in _filter)
             {
                 ref var timeComponent = ref _timeAspect.GameTime.Get(entity);
                 timeComponent.Value += GameTime.DeltaTime;
             }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void SetGameTime()
+        {
+            GameTime.Time = Time.time;
+            GameTime.DeltaTime = Time.deltaTime;
+            GameTime.RealTime = Time.realtimeSinceStartup;
+            GameTime.UnscaledTime = Time.unscaledTime;
         }
     }
 }
