@@ -1,10 +1,8 @@
 ﻿namespace UniGame.LeoEcs.ViewSystem.Converters
 {
     using System;
-    using System.Threading;
     using Components;
     using Converter.Runtime;
-    using Converter.Runtime.Abstract;
     using Converter.Runtime.Components;
     using Leopotam.EcsLite;
     using Shared.Extensions;
@@ -14,6 +12,7 @@
     using UniModules.UniCore.Runtime.DataFlow;
     using UniRx;
     using UnityEngine;
+    using ViewSkinTagComponent = ViewSkinTagComponent;
 
     [Serializable]
     public class EcsViewDataConverter<TData> :
@@ -32,6 +31,7 @@
         private EcsWorld _world;
         private EcsPackedEntity _viewPackedEntity;
         private IUiView<TData> _view;
+        private ViewSkinTagComponent _viewSkinTag;
         private LifeTimeDefinition _entityLifeTime;
 
         #endregion
@@ -51,6 +51,7 @@
             _entityLifeTime ??= new LifeTimeDefinition();
             _entityLifeTime.Release();
             
+            _viewSkinTag = target.GetComponent<ViewSkinTagComponent>();
             _view = target.GetComponent<IUiView<TData>>();
             if (_view == null) return;
 
@@ -67,6 +68,13 @@
             viewComponent.View = _view;
             viewComponent.Type = _view.GetType();
 
+            if (_viewSkinTag)
+            {
+                ref var viewSkinTagComponent = ref world.GetOrAddComponent<Components.ViewSkinTagComponent>(entity);
+                viewSkinTagComponent.SkinId = _viewSkinTag.skinTag;
+            }
+
+            
             _view.OnViewModelChanged
                 .Subscribe(OnViewModelChanged)
                 .AddTo(_entityLifeTime);

@@ -19,6 +19,7 @@
         public EcsPool<ViewOrderComponent> Order;
         
         public EcsPool<TransformComponent> Transform;
+        public EcsPool<ViewSkinTagComponent> SkinTag;
         
         //events
         public EcsPool<ViewStatusSelfEvent> StatusChanged;
